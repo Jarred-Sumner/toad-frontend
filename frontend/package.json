@@ -1,0 +1,22 @@
+{
+  "name": "create-next-example-app",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "classnames": "^2.2.6",
+    "express": "^4.16.3",
+    "moment": "^2.22.2",
+    "next": "^6.0.3",
+    "next-routes": "^1.4.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-fastclick": "^3.0.2",
+    "react-ideal-image": "^0.0.5",
+    "react-waypoint": "^8.0.2",
+    "recompose": "^0.27.1"
+  }
+}
