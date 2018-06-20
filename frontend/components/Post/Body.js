@@ -4,7 +4,7 @@ import { defaultProps } from "recompose";
 
 // This will have all the formatting stuff later -- greentext, linkifying, etc.
 export const Body = defaultProps({
-  lineHeight: "18px",
+  lineHeight: "19px",
   wrap: true
 })(Text);
 

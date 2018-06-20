@@ -21,10 +21,6 @@ export class Page extends React.Component {
             height: 100%;
             background-color: ${backgroundColor || COLORS.background};
           }
-
-          .PageContainer {
-            padding: ${SPACING.huge}px;
-          }
         `}</style>
       </article>
     );

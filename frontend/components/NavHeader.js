@@ -61,11 +61,8 @@ export class NavHeader extends React.PureComponent {
             border-bottom: 1px solid ${COLORS.offwhite};
           }
 
+          .BoardsList,
           .BrandContainer {
-            display: flex;
-          }
-
-          .BoardsList {
             display: flex;
           }
 

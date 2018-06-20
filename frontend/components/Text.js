@@ -10,7 +10,7 @@ const TextComponent = ({
   color = COLORS.black,
   componentType = "div",
   weight = "regular",
-  lineHeight = "19px",
+  lineHeight,
   casing = "inherit",
   textDecoration = "none",
   letterSpacing = "default",
@@ -48,7 +48,7 @@ const TextComponent = ({
           color: ${color};
           display: inline;
           letter-spacing: 0;
-          line-height: ${lineHeight};
+          line-height: ${lineHeight || "default"};
           font-size: ${size};
           text-align: ${align};
           letter-spacing: ${letterSpacing};
@@ -83,7 +83,6 @@ const TextComponent = ({
 
         .Text--regular {
           font-weight: 400;
-          line-height: 1.58;
         }
 
         .Text--medium {

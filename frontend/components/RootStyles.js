@@ -148,7 +148,6 @@ export const RootStyles = ({ noScroll = false }) => (
     body,
     #__next,
     div[data-reactroot] {
-      height: 100%;
       ${noScroll ? "display: flex" : "default"};
       ${noScroll ? "flex-direction: column" : "unset"};
       ${noScroll ? "overflow: hidden;" : ""};

@@ -12,18 +12,15 @@ export class Comment extends React.PureComponent {
   render() {
     const { comment, backgroundColor = COLORS.offwhite } = this.props;
     return (
-      <div className="CommentContainer">
-        <React.Fragment />
+      <React.Fragment>
         <div className="Comment">
           <div className="Header">
-            <div className="Header">
-              <Author author={comment.author} />
-              <Spacer width={SPACING.small} />
+            <Author author={comment.author} />
+            <Spacer width={SPACING.small} />
 
-              <Text>{moment(comment.timestamp).fromNow()}</Text>
-              <Spacer width={SPACING.small} />
-              <Text>#{comment.id}</Text>
-            </div>
+            <Text>{moment(comment.timestamp).fromNow()}</Text>
+            <Spacer width={SPACING.small} />
+            <Text>#{comment.id}</Text>
           </div>
 
           <Spacer height={SPACING.normal} />
@@ -33,20 +30,30 @@ export class Comment extends React.PureComponent {
 
           <style jsx>{`
             .Header {
-              display: flex;
+              display: inline-flex;
+              align-self: flex-start;
               align-items: center;
             }
+
+            .BodyContainer {
+              display: inline-flex;
+              align-self: flex-start;
+              align-content: flex-start;
+            }
+
             .Comment {
               background-color: ${backgroundColor};
               padding: ${SPACING.normal}px;
               border-radius: 2px;
-              display: inline-block;
+              display: inline-flex;
+              align-self: flex-start;
+              flex-direction: column;
               width: auto;
               max-width: ${MAX_POST_CONTENT_WIDTH}px;
             }
           `}</style>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

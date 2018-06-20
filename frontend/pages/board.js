@@ -1,6 +1,9 @@
 import React from "react";
 import { Page } from "../components/Page";
 import { Post } from "../components/Post";
+import { Spacer } from "../components/Spacer";
+import { SPACING } from "../lib/spacing";
+import { COLORS } from "../lib/colors";
 
 const POSTS = [
   {
@@ -26,10 +29,63 @@ http://www.dailymail.co.uk/news/article-5852069/Google-struggling-hold-black-His
         "http://i.dailymail.co.uk/i/newpix/2018/06/15/19/4D3E017200000578-5846563-image-a-1_1529088620434.jpg"
     },
     timestamp: "2018-06-17T05:00:14.156Z"
+  },
+  {
+    id: 1235,
+    author: {
+      id: 0,
+      name: "Anonymous"
+    },
+    body: `Saw this on sale for 50$. Worth it for a college student?
+Specs: i5 3320m
+4gb
+500gb`,
+    photo: {
+      id: 12345,
+      width: 770,
+      height: 443,
+      url: "http://is2.4chan.org/g/1529444147559.jpg"
+    },
+    timestamp: "2018-06-18T05:00:14.156Z"
   }
 ];
 
 const COMMENTS = {
+  1235: [
+    {
+      id: 12346,
+      author: {
+        id: 0,
+        name: "Anonymous"
+      },
+      timestamp: "2018-06-18T05:00:14.156Z",
+      body:
+        "For 50 dollars I say go for it. Even if you end up dislike it you can sell it for at least 150 dollars."
+    },
+    {
+      id: 12347,
+      author: {
+        id: 0,
+        name: "Anonymous"
+      },
+      timestamp: "2018-06-18T05:00:14.156Z",
+      body: `>>66417879 (OP)
+Yeah, they're nice little laptops. White background makes the specs hard to see. OpenSUSE Leap KDE, 12GB RAM, i5 3320M, 250GB SDD, and a 9 cell battery (9-12 hours depending on workload).
+
+$50 is an absolute steal. Go for it dude.`
+    },
+    {
+      id: 12347,
+      author: {
+        id: 0,
+        name: "Anonymous"
+      },
+      timestamp: "2018-06-18T05:00:15.156Z",
+      body: `>>66417942
+>i5 3320M
+what can you do with that?`
+    }
+  ],
   1234: [
     {
       id: 12345,
@@ -86,8 +142,21 @@ class ViewBoardPage extends React.Component {
     return (
       <Page>
         {POSTS.map(post => (
-          <Post key={post.id} comments={COMMENTS[post.id]} post={post} />
+          <div className="PostWrapper" key={post.id}>
+            <Spacer height={SPACING.large} />
+            <Post comments={COMMENTS[post.id]} post={post} />
+            <Spacer height={SPACING.large} />
+          </div>
         ))}
+
+        <style jsx>{`
+          .PostWrapper {
+            display: block;
+            padding-left: ${SPACING.huge}px;
+            width: 100%;
+            border-bottom: 1px solid ${COLORS.offwhite};
+          }
+        `}</style>
       </Page>
     );
   }

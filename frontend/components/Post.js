@@ -24,8 +24,10 @@ const PostHeader = ({ post }) => (
 
     <style jsx>{`
       .Header {
-        display: flex;
-        align-items: center;
+        display: inline-flex;
+        white-space: nowrap;
+        flex-shrink: 0;
+        align-self: flex-start;
       }
     `}</style>
   </div>
@@ -45,47 +47,55 @@ export class Post extends React.PureComponent {
         <div className="Post">
           {post.photo && (
             <React.Fragment>
-              <Photo
-                width={dimensions.width}
-                maxWidth="100%"
-                height={dimensions.height}
-                photo={post.photo}
-              />
-              <Spacer width={SPACING.large} />
+              <div className="PhotoWrapper">
+                <div className="PhotoContainer">
+                  <Photo
+                    width={dimensions.width}
+                    maxWidth="100%"
+                    height={dimensions.height}
+                    photo={post.photo}
+                  />
+                </div>
+              </div>
             </React.Fragment>
           )}
 
           <div className="ContentContainer">
+            <Spacer width={SPACING.normal} />
             <PostHeader post={post} />
-            <Spacer height={SPACING.normal} />
+            <Spacer height={SPACING.small} />
             <div className="BodyContainer">
               <Body>{post.body}</Body>
             </div>
+
+            <Spacer height={SPACING.normal} />
+
+            {comments.map(comment => (
+              <React.Fragment key={comment.id}>
+                <Comment comment={comment} />
+                <Spacer height={SPACING.normal} />
+              </React.Fragment>
+            ))}
           </div>
-          <Spacer height={SPACING.normal} />
         </div>
 
-        <Spacer height={SPACING.normal} />
-
-        {comments.map(comment => (
-          <React.Fragment key={comment.id}>
-            <Comment comment={comment} />
-            <Spacer height={SPACING.normal} />
-          </React.Fragment>
-        ))}
-
         <style jsx>{`
-          .Post {
-            display: flex;
-            max-width: ${MAX_POST_PHOTO_WIDTH +
-              MAX_POST_CONTENT_WIDTH +
-              SPACING.large}px;
-            flex-wrap: wrap;
+          .PhotoContainer {
+            float: left;
+            margin-right: ${SPACING.large}px;
+            margin-bottom: ${SPACING.large}px;
+          }
+
+          .Post,
+          .PostContainer {
+            display: inline;
           }
 
           .ContentContainer {
-            max-width: ${MAX_POST_CONTENT_WIDTH}px;
+            display: block;
             width: 100%;
+            word-wrap: break-word;
+            max-width: 1024px;
           }
 
           @media (max-width: ${MEDIUM_BEAKPOINT}px) {

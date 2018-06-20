@@ -47,8 +47,7 @@ export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
 
       <style jsx>{`
         .photo {
-          align-self: flex-start;
-          display: block;
+          display: inline-block;
           height: ${height}px;
           max-width: ${maxWidth || "unset"};
           width: ${width}px;
@@ -60,7 +59,7 @@ export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
           height: ${height}px;
           width: ${width}px;
           max-width: ${maxWidth || "unset"};
-          display: block;
+          display: inline-block;
           border-radius: 2px;
           object-fit: cover;
           transition: transform 0.1s linear;
