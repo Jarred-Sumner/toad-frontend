@@ -1,0 +1,4 @@
+{
+  "presets": ["node8"],
+  "plugins": [["git-version", { "commitLength": 7 }]]
+}
