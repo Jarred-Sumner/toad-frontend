@@ -36,11 +36,13 @@ const PostHeader = ({ post }) => (
 export class Post extends React.PureComponent {
   render() {
     const { post, comments } = this.props;
-    const dimensions = calculateDimensions({
-      photo: post.photo,
-      maxWidth: MAX_POST_PHOTO_WIDTH,
-      maxHeight: MAX_POST_PHOTO_HEIGHT
-    });
+    const dimensions = post.photo
+      ? calculateDimensions({
+          photo: post.photo,
+          maxWidth: MAX_POST_PHOTO_WIDTH,
+          maxHeight: MAX_POST_PHOTO_HEIGHT
+        })
+      : null;
 
     return (
       <div className="PostContainer">

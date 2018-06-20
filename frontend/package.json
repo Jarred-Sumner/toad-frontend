@@ -9,14 +9,22 @@
     "bluebird": "^3.5.1",
     "classnames": "^2.2.6",
     "express": "^4.16.3",
+    "highlight.js": "^9.12.0",
     "moment": "^2.22.2",
     "next": "^6.0.3",
     "next-routes": "^1.4.2",
     "react": "^16.4.1",
+    "react-addons-shallow-compare": "^15.6.2",
     "react-dom": "^16.4.1",
     "react-fastclick": "^3.0.2",
+    "react-headroom": "^2.2.2",
     "react-ideal-image": "^0.0.5",
+    "react-lowlight": "^2.0.0",
+    "react-markdown": "^3.3.4",
     "react-waypoint": "^8.0.2",
-    "recompose": "^0.27.1"
+    "recompose": "^0.27.1",
+    "remark-breaks": "^1.0.0",
+    "remark-highlight.js": "^5.0.0",
+    "remark-react-lowlight": "^0.7.0"
   }
 }

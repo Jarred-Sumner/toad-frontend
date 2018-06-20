@@ -3,15 +3,19 @@ import { NavHeader } from "./NavHeader";
 import Head from "./head";
 import { SPACING } from "../lib/spacing";
 import { COLORS } from "../lib/colors";
+// import Headroom from "react-headroom";
 
 export class Page extends React.Component {
   render() {
-    const { children, backgroundColor } = this.props;
+    const { children, backgroundColor, renderSubheader } = this.props;
 
     return (
       <article className="Page">
         <Head />
-        <NavHeader />
+        <React.Fragment>
+          <NavHeader />
+          {renderSubheader && renderSubheader()}
+        </React.Fragment>
 
         <main className="PageContainer">{children}</main>
 

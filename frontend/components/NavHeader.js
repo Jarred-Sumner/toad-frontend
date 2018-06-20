@@ -60,6 +60,7 @@ export class NavHeader extends React.PureComponent {
           .NavHeader {
             display: flex;
             padding: ${SPACING.normal}px ${SPACING.huge}px;
+            background-color: ${COLORS.white};
             border-bottom: 1px solid ${COLORS.offwhite};
           }
 
