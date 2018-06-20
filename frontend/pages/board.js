@@ -4,6 +4,11 @@ import { Post } from "../components/Post";
 import { Spacer } from "../components/Spacer";
 import { SPACING } from "../lib/spacing";
 import { COLORS } from "../lib/colors";
+import { Gradient, GRADIENT_COLORS } from "../components/Gradient";
+import { Text } from "../components/Text";
+import GreenDot from "../components/GreenDot";
+import { Button } from "../components/Button";
+import { BOARD_LIST } from "../components/NavHeader";
 
 const POSTS = [
   {
@@ -139,8 +144,47 @@ This shit triggers me so much as a Latino. STOP CHANGING MY LANGUAGE REEEEEEEEEE
 
 class ViewBoardPage extends React.Component {
   render() {
+    const onlineCount = 12;
+    const color = GRADIENT_COLORS.blue;
+    const board = BOARD_LIST.find(
+      ({ id }) => id === this.props.url.query.board
+    );
+
     return (
       <Page>
+        <Gradient color={color}>
+          <div className="Header">
+            <Text
+              size="24px"
+              letterSpacing="0.33px"
+              weight="bold"
+              color={COLORS.white}
+            >
+              /{board.id}/ - {board.label}
+            </Text>
+            <Spacer height={SPACING.normal} />
+            <div className="OnlineNowBar">
+              <Button color={COLORS.white}>New post</Button>
+              <Spacer width={SPACING.normal} />
+              <GreenDot />
+              <Spacer width={SPACING.small} />
+              <Text
+                size="14px"
+                weight="bold"
+                letterSpacing="0.22px"
+                color={COLORS.white}
+              >
+                <Text underline weight="inherit" color="inherit" size="inherit">
+                  {onlineCount} toads
+                </Text>
+                &nbsp;online now
+              </Text>
+            </div>
+          </div>
+        </Gradient>
+
+        <Spacer height={SPACING.large} />
+
         {POSTS.map(post => (
           <div className="PostWrapper" key={post.id}>
             <Spacer height={SPACING.large} />
@@ -150,6 +194,18 @@ class ViewBoardPage extends React.Component {
         ))}
 
         <style jsx>{`
+          .Header {
+            padding-left: ${SPACING.huge}px;
+            padding-right: ${SPACING.huge}px;
+            padding-top: ${SPACING.normal}px;
+            padding-bottom: ${SPACING.normal}px;
+          }
+
+          .OnlineNowBar {
+            display: flex;
+            align-items: center;
+          }
+
           .PostWrapper {
             display: block;
             padding-left: ${SPACING.huge}px;

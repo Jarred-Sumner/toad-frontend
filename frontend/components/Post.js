@@ -73,7 +73,7 @@ export class Post extends React.PureComponent {
             {comments.map(comment => (
               <React.Fragment key={comment.id}>
                 <Comment comment={comment} />
-                <Spacer height={SPACING.normal} />
+                <Spacer height={SPACING.small} />
               </React.Fragment>
             ))}
           </div>

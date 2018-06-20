@@ -5,7 +5,7 @@ import { SPACING } from "../lib/spacing";
 import { COLORS } from "../lib/colors";
 import { Spacer } from "./Spacer";
 
-const BOARD_LIST = [
+export const BOARD_LIST = [
   {
     label: "Tech",
     id: "tech"
@@ -43,7 +43,9 @@ export class NavHeader extends React.PureComponent {
             <React.Fragment key={id}>
               <Link route="board" params={{ board: id }}>
                 <a>
-                  <Text underline>{label}</Text>
+                  <Text letterSpacing="0.2px" underline>
+                    {label}
+                  </Text>
                 </a>
               </Link>
               <Spacer width={SPACING.normal} />
