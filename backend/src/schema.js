@@ -19,19 +19,16 @@ type Post {
 
 type Thread {
   id: ID!
-  createdAt: DateTime
-  updatedAt: DateTime
-  bumpedAt: DateTime
   posts: [Post]
 }
 
 type Query {
-  Board(id: ID!, page: Int): [Thread]
-  Post(id: ID!): Post
+  BoardThreads(board: ID!, page: Int): [Thread]
+  Thread(id: ID!, board: ID!): Thread
 }
 
 type Mutation {
-  CreatePost(parentId: ID, body: String!): Thread
+  Post(parent: ID, body: String!): Thread
 }
 `
 

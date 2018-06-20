@@ -9,9 +9,10 @@ export default (sequelize, DataTypes) =>
       label: {
         type: DataTypes.STRING,
       },
-      createdAt: { type: DataTypes.DATE, defaultValue: sequelize.fn('now') },
+      created_at: { type: DataTypes.DATE, defaultValue: sequelize.fn('now') },
     },
     {
+      createdAt: 'created_at',
       updatedAt: false,
     }
   )

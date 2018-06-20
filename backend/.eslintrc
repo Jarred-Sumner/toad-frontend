@@ -8,10 +8,10 @@
     "no-param-reassign": 0,
     "consistent-return": 0,
     "camelcase": 1,
-    "import/prefer-default-export": 0
+    "import/prefer-default-export": 0,
+    "no-underscore-dangle": 1
   },
   "globals": {
-    "GIT_COMMIT": true,
-    "gql": true
+    "GIT_COMMIT": true
   }
 }
