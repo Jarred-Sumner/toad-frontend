@@ -41,8 +41,12 @@ type Query {
   Board(id:ID!): Board
 }
 
+type BoardMutation {
+  Post(parent: ID, body: String!): Thread
+}
+
 type Mutation {
-  Post(Board:ID!, parent: ID, body: String!): Thread
+  Board(id:ID!): BoardMutation
   Session(email_token: String): String
 }
 `
