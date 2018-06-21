@@ -5,10 +5,15 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   Date: GraphQLDate,
   Query: {
-    BoardThreads: Resolvers.boardThreads,
-    Thread: Resolvers.thread,
+    Board: Resolvers.board,
   },
-  Mutation: {},
+  Mutation: {
+    Session: Resolvers.session,
+  },
+  Board: {
+    threads: Resolvers.boardThreads,
+    thread: Resolvers.thread,
+  },
   Thread: {
     posts: Resolvers.threadPosts,
   },

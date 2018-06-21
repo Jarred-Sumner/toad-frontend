@@ -9,11 +9,20 @@ export const db = new Sequelize(config('pg_url'), {
 
 export const Boards = {}
 export const Board = db.import('./Board')
+export const Session = db.import('./Session')
+export const Identity = db.import('./Identity')
+
+Session.hasMany(Identity, { foreignKey: 'session_id' })
+Identity.belongsTo(Session, { foreignKey: 'session_id' })
+Board.hasMany(Identity, { foreignKey: 'board' })
+
 const init = async () => {
   const initboards = await boardBootstrap()
   initboards.forEach(({ board, model }) => {
     Boards[board.id] = model
   })
+  await Session.sync()
+  await Identity.sync()
 }
 
 init()
