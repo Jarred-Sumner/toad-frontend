@@ -48,6 +48,7 @@ type BoardMutation {
 type Mutation {
   Board(id:ID!): BoardMutation
   Session(email_token: String): String
+  Login(email: String!): Boolean
 }
 `
 

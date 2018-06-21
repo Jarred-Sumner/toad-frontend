@@ -9,6 +9,7 @@ const resolvers = {
   },
   Mutation: {
     Session: Resolvers.session,
+    Login: Resolvers.login,
   },
   Board: {
     threads: Resolvers.boardThreads,

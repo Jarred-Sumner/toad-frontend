@@ -1,29 +1,35 @@
 import { Op } from 'sequelize'
-import { isObject } from 'lodash'
+import { isObject, isNumber } from 'lodash'
 import moment from 'moment'
 import * as Models from '../models'
 import * as Utils from '../utils'
 
-const findIdentity = ({ boardId, sessionId }) =>
-  Models.Identity.findOne({
-    where: {
-      session_id: sessionId,
-      board: boardId,
-      expires_at: {
-        [Op.gt]: moment().toISOString(),
-      },
+const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
+  const existingSearch = {
+    session_id: sessionId,
+    board: boardId,
+    account_id: accountId,
+    expires_at: {
+      [Op.gt]: moment().toISOString(),
     },
-  })
-
-const createIdentity = ({ boardId, sessionId }) =>
-  Models.Identity.create({
+  }
+  if (isNumber(existingSearch.account_id)) {
+    delete existingSearch.session_id
+  }
+  const existing = await Models.Identity.findOne({ where: existingSearch })
+  if (isObject(existing)) {
+    return existing
+  }
+  return Models.Identity.create({
     name: Utils.namegen(),
     board: boardId,
     session_id: sessionId,
+    account_id: accountId,
     expires_at: moment()
       .add(24, 'hours')
       .toISOString(), // update with correct date calc
   })
+}
 
 export default async (_, { id }, { session }) => {
   if (Models.Boards[id] === undefined) {
@@ -34,15 +40,12 @@ export default async (_, { id }, { session }) => {
     return null
   }
 
-  const foundIdentity = await findIdentity({
+  const identity = await findOrCreateIdentity({
     boardId: id,
     sessionId: session.id,
+    accountId: session.account_id,
   })
-  if (isObject(foundIdentity)) {
-    return { id, identity: foundIdentity }
-  }
 
-  const identity = await createIdentity({ boardId: id, sessionId: session.id })
   return {
     id,
     identity,

@@ -1,6 +1,9 @@
 import Email from 'email-templates'
 import nodemailer from 'nodemailer'
 import aws from 'aws-sdk'
+import config from '../config'
+
+const emailUrl = `${config('hostname')}/login?token=`
 
 const transporter = nodemailer.createTransport({
   SES: new aws.SES({
@@ -17,14 +20,13 @@ const email = new Email({
   transport: transporter,
 })
 
-export default url => {
+export default ({ token, destination }) =>
   email.send({
     template: 'login',
     message: {
-      to: 'luke@lukemil.es',
+      to: destination,
     },
     locals: {
-      url,
+      url: emailUrl + token,
     },
   })
-}

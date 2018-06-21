@@ -15,11 +15,9 @@ export default (sequelize, DataTypes) =>
         type: DataTypes.STRING,
         allowNull: false,
       },
-
-      authentication: {
-        type: DataTypes.ENUM('anonymous', 'account'),
-        defaultValue: 'anonymous',
-        allowNull: false,
+      account_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       session_id: {
         type: DataTypes.INTEGER,

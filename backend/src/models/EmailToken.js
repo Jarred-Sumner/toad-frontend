@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) =>
   sequelize.define(
-    'session',
+    'email_token',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,24 +11,23 @@ export default (sequelize, DataTypes) =>
         type: DataTypes.STRING,
         allowNull: false,
       },
-      created_at: {
-        type: DataTypes.DATE,
-        defaultValue: sequelize.fn('now'),
+      account_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      session_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       is_valid: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: true,
-      },
-      authentication: {
-        type: DataTypes.ENUM('anonymous', 'account'),
-        defaultValue: 'anonymous',
         allowNull: false,
       },
-      account_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
+      created_at: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.fn('now'),
+        allowNull: false,
       },
     },
     {
