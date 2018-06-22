@@ -36,7 +36,7 @@ class EditablePhoto extends React.PureComponent {
 
     return (
       <div className="container">
-        <img src={blob} />
+        <img src={blob || "/static/UploadPhoto/Placeholder@2x.png"} />
 
         <style jsx>{`
           .container {

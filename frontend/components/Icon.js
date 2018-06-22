@@ -3,13 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCamera,
   faPlus,
-  faTimesCircle
+  faTimesCircle,
+  faChevronRight,
+  faFlag,
+  faLink
 } from "@fortawesome/free-solid-svg-icons";
 
 export const ICONS = {
   camera: faCamera,
   plus: faPlus,
-  close: faTimesCircle
+  close: faTimesCircle,
+  flag: faFlag,
+  link: faLink,
+  chevronRight: faChevronRight
 };
 
 export const Icon = FontAwesomeIcon;

@@ -96,14 +96,10 @@ class _CreatePostForm extends React.PureComponent {
             width: min-content;
             position: absolute;
             top: 100%;
+            z-index: 999;
             margin-top: -6px;
             border-radius: 4px;
             filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, 0.2));
-          }
-
-          .Container--hidden {
-            opacity: 0;
-            pointer-events: none;
           }
 
           .Photo {

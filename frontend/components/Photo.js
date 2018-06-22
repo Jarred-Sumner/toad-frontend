@@ -5,25 +5,24 @@ const DEFAULT_SIZE = "126px";
 
 export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
   const MAX_COLUMN_COUNT = 1;
-  const spacing = 0;
 
   let width,
     height = 0;
   if (photo.width > photo.height) {
-    const MAX_SIZE = maxWidth / MAX_COLUMN_COUNT - spacing * MAX_COLUMN_COUNT;
-    width = Math.min(photo.width, MAX_SIZE) - spacing;
+    const MAX_SIZE = (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
+    width = Math.min(photo.width, MAX_SIZE);
     height = photo.height * (width / photo.width);
   } else if (photo.height > photo.width) {
-    const MAX_SIZE = maxHeight / MAX_COLUMN_COUNT - spacing * MAX_COLUMN_COUNT;
+    const MAX_SIZE = (maxHeight / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
     height = Math.min(photo.height, MAX_SIZE);
     width = photo.width * (height / photo.height);
   } else {
-    const MAX_SIZE = maxWidth / MAX_COLUMN_COUNT - spacing * MAX_COLUMN_COUNT;
-    width = Math.min(photo.height, MAX_SIZE) - spacing;
-    height = Math.min(photo.height, MAX_SIZE) - spacing;
+    const MAX_SIZE = (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
+    width = Math.min(photo.height, MAX_SIZE);
+    height = Math.min(photo.height, MAX_SIZE);
   }
 
-  return { width, height, spacing };
+  return { width, height };
 };
 
 export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {

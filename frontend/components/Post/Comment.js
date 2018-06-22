@@ -6,15 +6,17 @@ import { Body } from "./Body";
 import { Author } from "./Author";
 import { Text } from "../Text";
 import moment from "moment";
-import { MAX_POST_CONTENT_WIDTH } from "../Post";
+import { MAX_POST_CONTENT_WIDTH, PostHeader } from "../Post";
 import Photo, { calculateDimensions } from "../Photo";
+import { buildCommentDOMID } from "../../lib/routeHelpers";
 
 export const MAX_PHOTO_WIDTH = 175;
 export const MAX_PHOTO_HEIGHT = 300;
 
 export class Comment extends React.PureComponent {
+  handleShowReply = () => this.props.createReply(this.props.comment.id);
   render() {
-    const { comment, backgroundColor = COLORS.offwhite } = this.props;
+    const { comment, backgroundColor = COLORS.offwhite, url } = this.props;
     const dimensions = comment.photo
       ? calculateDimensions({
           photo: comment.photo,
@@ -24,7 +26,7 @@ export class Comment extends React.PureComponent {
       : null;
 
     return (
-      <div className="CommentContainer">
+      <div id={buildCommentDOMID(comment.id)} className="CommentContainer">
         {comment.photo && (
           <React.Fragment>
             <Photo
@@ -37,14 +39,12 @@ export class Comment extends React.PureComponent {
           </React.Fragment>
         )}
         <div className="Comment">
-          <div className="Header">
-            <Author author={comment.author} />
-            <Spacer width={SPACING.small} />
-
-            <Text>{moment(comment.timestamp).fromNow()}</Text>
-            <Spacer width={SPACING.small} />
-            <Text>#{comment.id}</Text>
-          </div>
+          <PostHeader
+            onClick={this.handleShowReply}
+            post={comment}
+            muted
+            url={url}
+          />
 
           <Spacer height={SPACING.normal} />
           <div className="BodyContainer">
@@ -57,11 +57,6 @@ export class Comment extends React.PureComponent {
             background-color: ${backgroundColor};
             border-radius: 2px;
             overflow: hidden;
-          }
-          .Header {
-            display: inline-flex;
-            align-self: flex-start;
-            align-items: center;
           }
 
           .BodyContainer {

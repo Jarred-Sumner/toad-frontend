@@ -502,7 +502,7 @@ class ViewBoardPage extends React.Component {
         {POSTS.map(post => (
           <div className="PageWrapper PostWrapper" key={post.id}>
             <Spacer height={SPACING.large} />
-            <Post board={board} comments={COMMENTS[post.id]} post={post} />
+            <Post comments={COMMENTS[post.id]} post={post} />
             <Spacer height={SPACING.large} />
           </div>
         ))}
