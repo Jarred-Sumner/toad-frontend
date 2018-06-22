@@ -28,8 +28,6 @@ EmailToken.belongsTo(Session, { foreignKey: 'session_id' })
 Session.hasMany(EmailToken, { foreignKey: 'session_id' })
 Identity.hasMany(Attachment, { foreignKey: 'identity_id' })
 Attachment.belongsTo(Identity, { foreignKey: 'identity_id' })
-Board.hasMany(Attachment, { foreignKey: 'board' })
-Attachment.hasMany(Board, { foreignKey: 'board' })
 
 const init = async () => {
   await db.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')

@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize'
-import { Board, Identity, db } from './index'
+import { Board, db } from './index'
 
 export default async () => {
   await Board.sync()
