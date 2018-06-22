@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { isObject, isNumber } from 'lodash'
+import { isObject, isNumber, isNull, get } from 'lodash'
 import moment from 'moment'
 import * as Models from '../models'
 import * as Utils from '../utils'
@@ -32,7 +32,8 @@ const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
 }
 
 export default async (_, { id }, { session }) => {
-  if (Models.Boards[id] === undefined) {
+  const board = get(Models, `Boards[${id}].board`, null)
+  if (isNull(board)) {
     return null
   }
 
@@ -47,7 +48,7 @@ export default async (_, { id }, { session }) => {
   })
 
   return {
-    id,
     identity,
+    ...board.dataValues,
   }
 }

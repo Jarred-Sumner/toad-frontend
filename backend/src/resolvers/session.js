@@ -28,6 +28,8 @@ export default async (_, { email_token }) => {
       // Include account id in response
       sessionOptions.authentication = 'account'
       sessionOptions.account_id = emailToken.account_id
+    } else {
+      return null
     }
   }
 

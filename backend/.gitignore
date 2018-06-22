@@ -6,6 +6,8 @@
 # testing
 /coverage
 
+src/google_credentials.json
+
 # production
 /build
 /dist

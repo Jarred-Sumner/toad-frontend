@@ -10,11 +10,31 @@ enum auth_type {
   account
 }
 
-type Identity {
+interface IdentityBase {
+  id: ID!
+  name: String
+}
+
+type Identity implements IdentityBase {
+  id: ID!
+  name: String
+}
+
+type PersonalIdentity implements IdentityBase {
+  id: ID!
   name: String
   expires_at: DateTime
-  authentication: auth_type
   email: String
+}
+
+# Copied from https://github.com/Jarred-Sumner/toads/blob/ce2e651625d56fafd415f5ebe466cb40eb3b20de/frontend/components/Gradient.js#L1
+enum BoardColorScheme {
+  blue
+  purple_red
+  pink
+  slate
+  red
+  green
 }
 
 type Board {
@@ -22,14 +42,17 @@ type Board {
   label: String
   threads(page: Int): [Thread]
   thread(id: ID!): Thread
-  identity: Identity
+  identity: PersonalIdentity
+  color_scheme: BoardColorScheme
 }
 
 type Post {
   id: ID!
+  parent: ID
   created_at: DateTime
   body: String
-  attachment: String
+  identity: Identity
+  attachment: Attachment
 }
 
 type Thread {
@@ -41,8 +64,34 @@ type Query {
   Board(id:ID!): Board
 }
 
+enum AttachmentType {
+  file
+}
+
+type NewAttachment {
+  id: ID!
+  signed_url: String!
+}
+
+type Attachment {
+  id: ID!
+  type: AttachmentType
+  mimetype: String
+  filename: String
+  url: String
+}
+
+enum MimeType {
+  imagegif
+  imagejpeg
+  imagepng
+  videomp4
+  videowebm
+}
+
 type BoardMutation {
-  Post(parent: ID, body: String!): Thread
+  Post(parent_id: ID, body: String!, attachment_id: ID): Post
+  Attachment(mimetype: MimeType!, filename: String!): NewAttachment
 }
 
 type Mutation {

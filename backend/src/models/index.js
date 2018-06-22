@@ -13,6 +13,7 @@ export const Session = db.import('./Session')
 export const Identity = db.import('./Identity')
 export const Account = db.import('./Account')
 export const EmailToken = db.import('./EmailToken')
+export const Attachment = db.import('./Attachment')
 
 Session.hasMany(Identity, { foreignKey: 'session_id' })
 Identity.belongsTo(Session, { foreignKey: 'session_id' })
@@ -25,16 +26,29 @@ EmailToken.belongsTo(Account, { foreignKey: 'account_id' })
 Account.hasMany(EmailToken, { foreignKey: 'account_id' })
 EmailToken.belongsTo(Session, { foreignKey: 'session_id' })
 Session.hasMany(EmailToken, { foreignKey: 'session_id' })
+Identity.hasMany(Attachment, { foreignKey: 'identity_id' })
+Attachment.belongsTo(Identity, { foreignKey: 'identity_id' })
+Board.hasMany(Attachment, { foreignKey: 'board' })
+Attachment.hasMany(Board, { foreignKey: 'board' })
 
 const init = async () => {
+  await db.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
   const initboards = await boardBootstrap()
-  initboards.forEach(({ board, model }) => {
-    Boards[board.id] = model
-  })
   await Account.sync()
-  await EmailToken.sync()
   await Session.sync()
+  await EmailToken.sync()
   await Identity.sync()
+  await Attachment.sync()
+
+  initboards.forEach(b => {
+    const { board, model } = b
+    Boards[board.id] = b
+    Identity.hasMany(model, { foreignKey: 'identity_id' })
+    model.belongsTo(Identity, { foreignKey: 'identity_id' })
+    Attachment.hasMany(model, { foreignKey: 'attachment_id' })
+    model.belongsTo(Attachment, { foreignKey: 'attachment_id' })
+    model.sync()
+  })
 }
 
 init()
