@@ -1,20 +1,22 @@
 import Models from '../models'
 import * as Utils from '../utils'
 
-const mimes = {
-  imagegif: 'image/gif',
-  imagejpeg: 'image/jpeg',
-  imagepng: 'image/png',
-  videomp4: 'video/mp4',
-  videowebm: 'video/webm',
-}
+const mimes = [
+  'image/gif',
+  'image/jpeg',
+  'image/png',
+  'video/mp4',
+  'video/webm',
+]
 
 export default async ({ id, identity }, { mimetype, filename }) => {
-  const contentType = mimes[mimetype]
-  const signed = await Utils.uploadurl({ contentType })
+  if (mimes.indexOf(mimetype) === -1) {
+    return null
+  }
+  const signed = await Utils.uploadurl({ contentType: mimetype })
   const attachment = await Models.attachment.create({
     type: 'file',
-    mimetype: contentType,
+    mimetype,
     board: id,
     filename,
     url: signed.canonicalUrl,

@@ -23,7 +23,6 @@ module.exports = withGraphql(
         }, {});
 
         config.plugins.push(new webpack.DefinePlugin(env));
-
         return config;
       }
     })
