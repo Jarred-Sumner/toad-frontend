@@ -1,5 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import NoIntrospection from 'graphql-disable-introspection'
 import { graphqlExpress } from 'apollo-server-express'
@@ -14,6 +15,7 @@ console.log(`toad-backend ${GIT_COMMIT}`)
 console.log(`Listening on :${PORT}`)
 
 app.use(logger('dev'))
+app.use(cookieParser())
 
 app.use('*', auth)
 app.use('/healthz', (req, res) => res.json({ error: false }))
