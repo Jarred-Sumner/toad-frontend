@@ -23,7 +23,7 @@ const production = process.env.NODE_ENV === 'PRODUCTION'
 const Introspection = production ? NoIntrospection : () => true
 const isPretty = !production
 app.post(
-  '/',
+  '/graphql',
   bodyParser.json(),
   graphqlExpress(req => {
     const { session } = req

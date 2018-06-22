@@ -23,8 +23,6 @@ const resolvers = {
   Thread: {
     posts: Resolvers.threadPosts,
   },
-  Identity: { name: Resolvers.demoji },
-  PersonalIdentity: { name: Resolvers.demoji },
 }
 
 export default resolvers

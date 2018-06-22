@@ -2,8 +2,6 @@ import { isString, isObject } from 'lodash'
 import * as Models from '../models'
 
 export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
-  console.log('hey')
-
   // verify that we can reply to the parent
   if (isString(parent_id)) {
     const foundParent = await Models.db.models[id].findOne({

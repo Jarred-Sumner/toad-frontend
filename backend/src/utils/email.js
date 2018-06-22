@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 })
 const email = new Email({
   message: {
-    from: '"Toads" <noreply@toads.app>',
+    from: '"Toads" <toads@toads.app>',
   },
   // uncomment below to send emails in development/test env:
   // send: false,
