@@ -8,16 +8,21 @@ export default {
         type: Sequelize.INTEGER,
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('file'),
+        defaultValue: 'file',
+        allowNull: false,
       },
       mimetype: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       board: {
         type: Sequelize.STRING,
-      },
-      filename: {
-        type: Sequelize.STRING,
+        allowNull: false,
+        references: {
+          model: 'boards',
+          key: 'id',
+        },
       },
       filename: {
         type: Sequelize.STRING,
@@ -27,6 +32,10 @@ export default {
       },
       identity_id: {
         type: Sequelize.UUID,
+        references: {
+          model: 'identities',
+          key: 'id',
+        },
       },
       created_at: {
         allowNull: false,

@@ -1,15 +1,17 @@
 import nanoid from 'nanoid'
 import { isObject } from 'lodash'
-import * as Models from '../models'
+import Models from '../models'
 import * as Utils from '../utils'
 
 export default async (_, { email }, { session }) => {
   if (!isObject(session)) {
     return null
   }
-  const account = await Models.Account.findOrCreate({ where: { email } })
+  const account = await Models.account.findOrCreate({
+    where: { email },
+  })
   // generate login token
-  const emailToken = await Models.EmailToken.create({
+  const emailToken = await Models.email_token.create({
     token: nanoid(64),
     account_id: account[0].id,
     session_id: session.id,

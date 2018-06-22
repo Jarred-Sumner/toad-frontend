@@ -1,4 +1,4 @@
-import * as Models from '../models'
+import Models from '../models'
 
 export default async (context, { id }) => {
   const board = context.id
@@ -6,11 +6,11 @@ export default async (context, { id }) => {
     where: { id, parent: null },
     include: [
       {
-        model: Models.Identity,
+        model: Models.identity,
         attributes: ['id', 'name'],
       },
       {
-        model: Models.Attachment,
+        model: Models.attachment,
         attributes: ['id', 'type', 'mimetype', 'filename', 'url'],
       },
     ],

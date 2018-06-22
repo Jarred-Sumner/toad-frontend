@@ -1,4 +1,4 @@
-import * as Models from '../models'
+import Models from '../models'
 import * as Utils from '../utils'
 
 const mimes = {
@@ -12,7 +12,7 @@ const mimes = {
 export default async ({ id, identity }, { mimetype, filename }) => {
   const contentType = mimes[mimetype]
   const signed = await Utils.uploadurl({ contentType })
-  const attachment = await Models.Attachment.create({
+  const attachment = await Models.attachment.create({
     type: 'file',
     mimetype: contentType,
     board: id,

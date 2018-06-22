@@ -1,4 +1,4 @@
-import * as Models from '../models'
+import Models from '../models'
 
 export default async ({ id }, { page = 1 }) => {
   if (page < 1) {
@@ -11,11 +11,11 @@ export default async ({ id }, { page = 1 }) => {
     },
     include: [
       {
-        model: Models.Identity,
+        model: Models.identity,
         attributes: ['id', 'name'],
       },
       {
-        model: Models.Attachment,
+        model: Models.attachment,
         attributes: ['id', 'type', 'mimetype', 'filename', 'url'],
       },
     ],

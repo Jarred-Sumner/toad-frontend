@@ -1,4 +1,4 @@
-import * as Models from '../models'
+import Models from '../models'
 
 export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
   // verify that we can reply to the parent
@@ -15,7 +15,7 @@ export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
   }
 
   if (attachment_id !== undefined) {
-    const attachment = await Models.Attachment.findOne({
+    const attachment = await Models.attachment.findOne({
       where: {
         id: attachment_id,
         identity_id: identity.id,

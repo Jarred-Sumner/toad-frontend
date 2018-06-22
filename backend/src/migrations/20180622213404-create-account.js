@@ -35,5 +35,8 @@ export default {
       fields: ['email'],
     })
   },
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('accounts'),
+  down: (queryInterface, Sequelize) =>
+    queryInterface.dropTable('accounts', {
+      cascade: true,
+    }),
 }

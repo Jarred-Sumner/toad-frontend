@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const attachment = sequelize.define(
+  const Attachment = sequelize.define(
     'attachment',
     {
       type: {
@@ -10,7 +10,6 @@ export default (sequelize, DataTypes) => {
       mimetype: DataTypes.STRING,
       board: DataTypes.STRING,
       filename: DataTypes.STRING,
-      filename: DataTypes.STRING,
       url: DataTypes.TEXT,
       identity_id: DataTypes.UUID,
     },
@@ -18,8 +17,9 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   )
-  attachment.associate = function(models) {
-    // associations can be defined here
+  Attachment.associate = models => {
+    models.identity.hasMany(Attachment, { foreignKey: 'identity_id' })
+    Attachment.belongsTo(models.identity, { foreignKey: 'identity_id' })
   }
-  return attachment
+  return Attachment
 }

@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import * as Models from '../models'
+import Models from '../models'
 
 export default async thread => {
   // fix this soon by a stronger board reference
@@ -13,11 +13,11 @@ export default async thread => {
     limit,
     include: [
       {
-        model: Models.Identity,
+        model: Models.identity,
         attributes: ['id', 'name'],
       },
       {
-        model: Models.Attachment,
+        model: Models.attachment,
         attributes: ['id', 'type', 'mimetype', 'filename', 'url'],
       },
     ],

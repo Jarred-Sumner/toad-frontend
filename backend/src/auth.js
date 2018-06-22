@@ -1,7 +1,7 @@
 import nanoid from 'nanoid'
 import { get, isString, isObject } from 'lodash'
 import config from './config'
-import * as Models from './models'
+import Models from './models'
 
 export default async (req, res, next) => {
   let token = get(req, 'cookies.session', null)
@@ -9,13 +9,13 @@ export default async (req, res, next) => {
 
   if (!isString(token)) {
     token = nanoid(64)
-    session = await Models.Session.create({ token })
+    session = await Models.session.create({ token })
     res.cookie('session', token, {
       domain: config('origin'),
       httpOnly: true,
     })
   } else {
-    session = await Models.Session.findOne({ where: { token } })
+    session = await Models.session.findOne({ where: { token } })
   }
 
   if (!isObject(session)) {

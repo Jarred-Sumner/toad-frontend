@@ -31,5 +31,6 @@ export default {
         defaultValue: Sequelize.fn('now'),
       },
     }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('boards'),
+  down: (queryInterface, Sequelize) =>
+    queryInterface.dropTable('boards', { cascade: true }),
 }
