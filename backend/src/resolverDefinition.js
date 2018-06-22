@@ -25,6 +25,7 @@ const resolvers = {
   },
   Thread: {
     replies: Resolvers.threadReplies,
+    reply_count: Resolvers.replyCount,
   },
 }
 

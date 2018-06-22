@@ -70,6 +70,7 @@ type Thread implements Post {
   identity: Identity
   attachment: Attachment
   replies: [Reply]
+  reply_count: Int
 }
 
 type Query {
