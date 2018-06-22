@@ -13,6 +13,7 @@ import Alert from "./Alert";
 import { ApolloProvider as RAApolloProvider } from "react-apollo";
 import { defaultProps } from "recompose";
 import { DEFAULT_DEPRECATION_REASON } from "graphql";
+import { withData } from "next-apollo";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -40,74 +41,74 @@ const httpLink = new BatchHttpLink({
 //   introspectionQueryResultData
 // });
 
-const cache = new InMemoryCache({
-  // fragmentMatcher,
-  dataIdFromObject: o => {
-    return `${o.__typename}-${o.id}`;
+const createCache = () => {
+  const cache = new InMemoryCache({
+    // fragmentMatcher,
+    dataIdFromObject: o => {
+      return `${o.__typename}-${o.id}`;
+    }
+    // cacheRedirects: {
+    //   Post: {
+    //     author: (_, args) => {
+    //       console.log("GET PROFILE AUTHOR", args);
+    //       return toIdValue(
+    //         dataIdFromObject({ __typename: "Profile", id: args["id"] })
+    //       );
+    //     }
+    //   },
+    //   Query: {
+    //     ViewMenu: (_, args) => {
+    //       return toIdValue(
+    //         cache.config.dataIdFromObject({
+    //           __typename: "RestaurantsMenu",
+    //           id: args.id
+    //         })
+    //       );
+    //     },
+    //     Member: (_, args) => {
+    //       return toIdValue(
+    //         cache.config.dataIdFromObject({
+    //           __typename: "Member",
+    //           id: args.id
+    //         })
+    //       );
+    //     },
+    //     Profile: (_, args) =>
+    //       toIdValue(
+    //         cache.config.dataIdFromObject({
+    //           __typename: "Profile",
+    //           id: args.id
+    //         })
+    //       ),
+
+    //     Group: (_, args) =>
+    //       toIdValue(
+    //         cache.config.dataIdFromObject({
+    //           __typename: "Group",
+    //           id: args.id
+    //         })
+    //       ),
+    //     Post: (_, args) => {
+    //       return toIdValue(
+    //         cache.config.dataIdFromObject({
+    //           __typename: "Post",
+    //           id: args.id
+    //         })
+    //       );
+    //     }
+    //   }
+    // }
+  });
+
+  if (typeof window !== "undefined") {
+    const persistor = new CachePersistor({
+      cache,
+      storage: localForage
+    });
   }
-  // cacheRedirects: {
-  //   Post: {
-  //     author: (_, args) => {
-  //       console.log("GET PROFILE AUTHOR", args);
-  //       return toIdValue(
-  //         dataIdFromObject({ __typename: "Profile", id: args["id"] })
-  //       );
-  //     }
-  //   },
-  //   Query: {
-  //     ViewMenu: (_, args) => {
-  //       return toIdValue(
-  //         cache.config.dataIdFromObject({
-  //           __typename: "RestaurantsMenu",
-  //           id: args.id
-  //         })
-  //       );
-  //     },
-  //     Member: (_, args) => {
-  //       return toIdValue(
-  //         cache.config.dataIdFromObject({
-  //           __typename: "Member",
-  //           id: args.id
-  //         })
-  //       );
-  //     },
-  //     Profile: (_, args) =>
-  //       toIdValue(
-  //         cache.config.dataIdFromObject({
-  //           __typename: "Profile",
-  //           id: args.id
-  //         })
-  //       ),
 
-  //     Group: (_, args) =>
-  //       toIdValue(
-  //         cache.config.dataIdFromObject({
-  //           __typename: "Group",
-  //           id: args.id
-  //         })
-  //       ),
-  //     Post: (_, args) => {
-  //       return toIdValue(
-  //         cache.config.dataIdFromObject({
-  //           __typename: "Post",
-  //           id: args.id
-  //         })
-  //       );
-  //     }
-  //   }
-  // }
-});
-
-const persistor = new CachePersistor({
-  cache,
-  storage: localForage
-});
-
-const client = new ApolloClient({
-  link: httpLink,
-  cache,
-  fetchPolicy: "cache-and-network"
-});
+  return cache;
+};
 
 // persistor.purge().then(() => {
 //   console.log("Reset Apollo Cache");
@@ -118,24 +119,14 @@ export const isActivelyRefetching = networkStatus => networkStatus === 4;
 export const isPassivelyRefetching = networkStatus =>
   networkStatus === 2 || networkStatus === 6;
 export const isFetchingMore = networkStatus => networkStatus === 3;
-
+export const isReady = networkStatus => networkStatus === 7;
 // Error States
 export const isError = networkStatus => networkStatus === 8;
 
-export const ApolloProvider = defaultProps({ client })(RAApolloProvider);
-export const withApollo = Component => {
-  class ApolloProviderContainer extends React.Component {
-    render() {
-      return (
-        <ApolloProvider>
-          <Component {...this.props} />
-        </ApolloProvider>
-      );
-    }
-  }
+export const withApollo = withData({
+  link: httpLink,
+  createCache,
+  fetchPolicy: "cache-and-network"
+});
 
-  ApolloProviderContainer.getInitialProps = Component.getInitialProps;
-
-  return ApolloProviderContainer;
-};
 export default withApollo;

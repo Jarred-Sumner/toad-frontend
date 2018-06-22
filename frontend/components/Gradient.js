@@ -2,12 +2,12 @@ import React from "react";
 import classNames from "classnames";
 
 export const GRADIENT_COLORS = {
-  blue: `linear-gradient(45deg, #1BCEDF 0%, #5B247A 100%)`,
-  purple_red: `linear-gradient(-135deg, #622774 0%, #C53364 100%)`,
-  pink: `linear-gradient(45deg, #FF7676 0%, #F54EA2 100%)`,
-  slate: `linear-gradient(45deg, #656060 0%, #333333 100%)`,
-  red: `linear-gradient(-123deg, #DB0B73 0%, #FF4A0A 100%)`,
-  green: `linear-gradient(44deg, #57CA84 0%, #194F68 100%)`
+  blue: `gradient-blue`,
+  purple_red: `gradient-purple_red`,
+  pink: `gradient-pink`,
+  slate: `gradient-slate`,
+  red: `gradient-red`,
+  green: `gradient-green`
 };
 ``;
 export class Gradient extends React.Component {

@@ -1,4 +1,15 @@
 {
   "presets": ["next/babel"],
-  "plugins": ["git-version"]
+  "plugins": [
+    "git-version",
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "Toads": "./"
+        }
+      }
+    ]
+  ]
 }

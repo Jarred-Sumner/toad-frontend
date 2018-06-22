@@ -165,12 +165,7 @@ export class Post extends React.PureComponent {
   setCommentFormRef = commentFormRef => (this.commentFormRef = commentFormRef);
 
   render() {
-    const {
-      post,
-      comments,
-      board,
-      colorScheme = GRADIENT_COLORS.blue
-    } = this.props;
+    const { post, comments, board, colorScheme } = this.props;
     const color = COLORS[colorScheme];
     const commentsCount = 10;
     const dimensions = post.photo
@@ -197,7 +192,7 @@ export class Post extends React.PureComponent {
         )}
 
         <div className="Post">
-          {post.photo && (
+          {post.attachment && (
             <React.Fragment>
               <div className="PhotoWrapper">
                 <div className="PhotoContainer">
@@ -205,7 +200,7 @@ export class Post extends React.PureComponent {
                     width={dimensions.width}
                     maxWidth="100%"
                     height={dimensions.height}
-                    photo={post.photo}
+                    photo={post.attachment}
                   />
                 </div>
               </div>
@@ -217,6 +212,7 @@ export class Post extends React.PureComponent {
               onClick={this.handleReplyToPost}
               board={board}
               url={url}
+              colorScheme={colorScheme}
               post={post}
             />
             <Spacer height={SPACING.small} />
@@ -230,7 +226,7 @@ export class Post extends React.PureComponent {
               <Link route="thread" params={{ board: board.id, id: post.id }}>
                 <a>
                   <Text weight="semiBold" color={color}>
-                    {commentsCount} comments
+                    {post.reply_count} comments
                   </Text>
                 </a>
               </Link>
@@ -243,6 +239,7 @@ export class Post extends React.PureComponent {
                 <Comment
                   createReply={this.handleReplyToComment}
                   comment={comment}
+                  colorScheme={colorScheme}
                   url={buildCommentPath({
                     boardId: board.id,
                     postId: post.id,
