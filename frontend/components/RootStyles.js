@@ -7,9 +7,9 @@ if (typeof window !== "undefined") {
   global.Promise = require("bluebird");
 }
 
-if (typeof window !== "undefined") {
-  initReactFastclick();
-}
+// if (typeof window !== "undefined") {
+//   initReactFastclick();
+// }
 
 export const RootStyles = ({ noScroll = false }) => (
   <style jsx global>{`
@@ -140,7 +140,9 @@ export const RootStyles = ({ noScroll = false }) => (
       border-spacing: 0;
     }
 
-    body {
+    body,
+    textarea,
+    input {
       font-family: "Open Sans", sans-serif;
     }
 

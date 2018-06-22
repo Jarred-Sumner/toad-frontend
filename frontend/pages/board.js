@@ -9,6 +9,8 @@ import { Text } from "../components/Text";
 import GreenDot from "../components/GreenDot";
 import { Button } from "../components/Button";
 import { BOARD_LIST } from "../components/NavHeader";
+import { CreatePostForm } from "../components/Post/CreatePost";
+import { Icon, ICONS } from "../components/Icon";
 
 const POSTS = [
   {
@@ -397,7 +399,28 @@ This shit triggers me so much as a Latino. STOP CHANGING MY LANGUAGE REEEEEEEEEE
   ]
 };
 
+const NewPostButton = ({ classes, onPress }) => (
+  <Button
+    onClick={onPress}
+    color={COLORS.white}
+    icon={<Icon icon={ICONS.camera} color={COLORS.black} />}
+  >
+    New thread
+  </Button>
+);
+
 class ViewBoardPage extends React.Component {
+  state = {
+    showCreatePost: false
+  };
+
+  handleHideCreatePost = () => this.setState({ showCreatePost: false });
+  handleShowCreatePost = () => {
+    this.setState({ showCreatePost: true }, () => {
+      this.dropZoneRef.open();
+    });
+  };
+
   renderHeader = () => {
     const onlineCount = 12;
     const color = GRADIENT_COLORS.blue;
@@ -406,50 +429,62 @@ class ViewBoardPage extends React.Component {
     );
 
     return (
-      <Gradient color={color}>
-        <div className="Header">
-          <Text
-            size="24px"
-            letterSpacing="0.33px"
-            weight="bold"
-            color={COLORS.white}
-          >
-            /{board.id}/ - {board.label}
-          </Text>
-          <Spacer height={SPACING.normal} />
-          <div className="OnlineNowBar">
-            <Button color={COLORS.white}>New post</Button>
-            <Spacer width={SPACING.normal} />
-            <GreenDot />
-            <Spacer width={SPACING.small} />
+      <form>
+        <Gradient color={color}>
+          <div className="Header">
             <Text
-              size="14px"
+              size="24px"
+              letterSpacing="0.33px"
               weight="bold"
-              letterSpacing="0.22px"
               color={COLORS.white}
             >
-              <Text underline weight="inherit" color="inherit" size="inherit">
-                {onlineCount} toads
-              </Text>
-              &nbsp;online now
+              /{board.id}/ - {board.label}
             </Text>
+            <Spacer height={SPACING.normal} />
+            <div className="OnlineNowBar">
+              <NewPostButton
+                pressed={this.state.showCreatePost}
+                onPress={this.handleShowCreatePost}
+              />
+              {this.state.showCreatePost && (
+                <CreatePostForm
+                  dropZoneRef={dropZoneRef => (this.dropZoneRef = dropZoneRef)}
+                  onDismiss={this.handleHideCreatePost}
+                />
+              )}
+              <Spacer width={SPACING.normal} />
+              <GreenDot />
+              <Spacer width={SPACING.small} />
+              <Text
+                size="14px"
+                weight="bold"
+                letterSpacing="0.22px"
+                color={COLORS.white}
+              >
+                <Text underline weight="inherit" color="inherit" size="inherit">
+                  {onlineCount} toads
+                </Text>
+                &nbsp;online now
+              </Text>
+            </div>
           </div>
-        </div>
 
-        <style jsx>{`
-          .Header {
-            padding-left: ${SPACING.huge}px;
-            padding-right: ${SPACING.huge}px;
-            padding-top: ${SPACING.normal}px;
-            padding-bottom: ${SPACING.normal}px;
-          }
+          <style jsx>{`
+            .Header {
+              padding-left: ${SPACING.huge}px;
+              padding-right: ${SPACING.huge}px;
+              padding-top: ${SPACING.normal}px;
+              padding-bottom: ${SPACING.normal}px;
+              position: relative;
+            }
 
-          .OnlineNowBar {
-            display: flex;
-            align-items: center;
-          }
-        `}</style>
-      </Gradient>
+            .OnlineNowBar {
+              display: flex;
+              align-items: center;
+            }
+          `}</style>
+        </Gradient>
+      </form>
     );
   };
   render() {
@@ -458,13 +493,14 @@ class ViewBoardPage extends React.Component {
     const board = BOARD_LIST.find(
       ({ id }) => id === this.props.url.query.board
     );
+    const { showCreatePost } = this.state;
 
     return (
       <Page renderSubheader={this.renderHeader}>
         <Spacer height={SPACING.large} />
 
         {POSTS.map(post => (
-          <div className="PostWrapper" key={post.id}>
+          <div className="PageWrapper PostWrapper" key={post.id}>
             <Spacer height={SPACING.large} />
             <Post comments={COMMENTS[post.id]} post={post} />
             <Spacer height={SPACING.large} />
@@ -473,10 +509,13 @@ class ViewBoardPage extends React.Component {
 
         <style jsx>{`
           .PostWrapper {
-            display: block;
-            padding-left: ${SPACING.huge}px;
             width: 100%;
             border-bottom: 1px solid ${COLORS.offwhite};
+          }
+
+          .PageWrapper {
+            display: block;
+            padding-left: ${SPACING.huge}px;
           }
         `}</style>
       </Page>

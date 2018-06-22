@@ -10,6 +10,8 @@ const Head = props => (
   <NextHead>
     <meta charset="UTF-8" />
     <title>{props.title || ""}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <meta
       name="description"
       content={props.description || defaultDescription}
@@ -32,10 +34,11 @@ const Head = props => (
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700"
       rel="stylesheet"
     />
     <RootStyles />
+    <link rel="stylesheet" href="/_next/static/style.css" />
   </NextHead>
 );
 

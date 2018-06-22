@@ -27,7 +27,7 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
 };
 
 export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
-  const { url } = photo;
+  const { url } = photo || {};
 
   return (
     <div
@@ -37,13 +37,17 @@ export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
       })}
       onClick={onClick}
     >
-      <img
-        src={size ? buildImgSrc(url, size) : buildImgSrc(url, width, height)}
-        key={photo.id}
-        srcSet={
-          size ? buildImgSrcSet(url, size) : buildImgSrcSet(url, width, height)
-        }
-      />
+      {url && (
+        <img
+          src={size ? buildImgSrc(url, size) : buildImgSrc(url, width, height)}
+          key={photo.id}
+          srcSet={
+            size
+              ? buildImgSrcSet(url, size)
+              : buildImgSrcSet(url, width, height)
+          }
+        />
+      )}
 
       <style jsx>{`
         .photo {

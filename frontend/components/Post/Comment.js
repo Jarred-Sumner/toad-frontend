@@ -9,8 +9,8 @@ import moment from "moment";
 import { MAX_POST_CONTENT_WIDTH } from "../Post";
 import Photo, { calculateDimensions } from "../Photo";
 
-const MAX_PHOTO_WIDTH = 175;
-const MAX_PHOTO_HEIGHT = 300;
+export const MAX_PHOTO_WIDTH = 175;
+export const MAX_PHOTO_HEIGHT = 300;
 
 export class Comment extends React.PureComponent {
   render() {

@@ -63,7 +63,6 @@ export class Post extends React.PureComponent {
           )}
 
           <div className="ContentContainer">
-            <Spacer width={SPACING.normal} />
             <PostHeader post={post} />
             <Spacer height={SPACING.small} />
             <div className="BodyContainer">

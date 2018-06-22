@@ -3,6 +3,8 @@ import { NavHeader } from "./NavHeader";
 import Head from "./head";
 import { SPACING } from "../lib/spacing";
 import { COLORS } from "../lib/colors";
+import { AlertHost } from "./Alert";
+
 // import Headroom from "react-headroom";
 
 export class Page extends React.Component {
@@ -12,6 +14,7 @@ export class Page extends React.Component {
     return (
       <article className="Page">
         <Head />
+        <AlertHost />
         <React.Fragment>
           <NavHeader />
           {renderSubheader && renderSubheader()}
