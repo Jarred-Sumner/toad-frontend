@@ -94,17 +94,9 @@ type Attachment {
   url: String
 }
 
-enum MimeType {
-  imagegif
-  imagejpeg
-  imagepng
-  videomp4
-  videowebm
-}
-
 type BoardMutation {
   Post(parent_id: ID, body: String!, attachment_id: ID): Post
-  Attachment(mimetype: MimeType!, filename: String!): NewAttachment
+  Attachment(mimetype: String!, filename: String!): NewAttachment
 }
 
 type Mutation {
