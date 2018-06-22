@@ -1,52 +1,36 @@
-import Sequelize from 'sequelize'
-import boardBootstrap from './_bootstrapboards'
-import config from '../config'
+'use strict';
 
-export const db = new Sequelize(config('pg_url'), {
-  operatorsAliases: false,
-  logging: process.env.NODE_ENV !== 'PRODUCTION',
-})
+var fs        = require('fs');
+var path      = require('path');
+var Sequelize = require('sequelize');
+var basename  = path.basename(__filename);
+var env       = process.env.NODE_ENV || 'development';
+var config    = require(__dirname + '/../config/config.json')[env];
+var db        = {};
 
-export const Boards = {}
-export const Board = db.import('./Board')
-export const Session = db.import('./Session')
-export const Identity = db.import('./Identity')
-export const Account = db.import('./Account')
-export const EmailToken = db.import('./EmailToken')
-export const Attachment = db.import('./Attachment')
-
-Session.hasMany(Identity, { foreignKey: 'session_id' })
-Identity.belongsTo(Session, { foreignKey: 'session_id' })
-Account.hasMany(Identity, { foreignKey: 'account_id' })
-Identity.belongsTo(Account, { foreignKey: 'account_id' })
-Account.hasMany(Session, { foreignKey: 'account_id' })
-Session.belongsTo(Account, { foreignKey: 'account_id' })
-Board.hasMany(Identity, { foreignKey: 'board' })
-EmailToken.belongsTo(Account, { foreignKey: 'account_id' })
-Account.hasMany(EmailToken, { foreignKey: 'account_id' })
-EmailToken.belongsTo(Session, { foreignKey: 'session_id' })
-Session.hasMany(EmailToken, { foreignKey: 'session_id' })
-Identity.hasMany(Attachment, { foreignKey: 'identity_id' })
-Attachment.belongsTo(Identity, { foreignKey: 'identity_id' })
-
-const init = async () => {
-  await db.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
-  const initboards = await boardBootstrap()
-  await Account.sync()
-  await Session.sync()
-  await EmailToken.sync()
-  await Identity.sync()
-  await Attachment.sync()
-
-  initboards.forEach(b => {
-    const { board, model } = b
-    Boards[board.id] = b
-    Identity.hasMany(model, { foreignKey: 'identity_id' })
-    model.belongsTo(Identity, { foreignKey: 'identity_id' })
-    Attachment.hasMany(model, { foreignKey: 'attachment_id' })
-    model.belongsTo(Attachment, { foreignKey: 'attachment_id' })
-    model.sync()
-  })
+if (config.use_env_variable) {
+  var sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-init()
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+  })
+  .forEach(file => {
+    var model = sequelize['import'](path.join(__dirname, file));
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;

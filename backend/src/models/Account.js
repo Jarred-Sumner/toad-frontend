@@ -1,20 +1,11 @@
-export default (sequelize, DataTypes) =>
-  sequelize.define(
+export default (sequelize, DataTypes) => {
+  const account = sequelize.define(
     'account',
     {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      email: {
-        type: DataTypes.STRING,
-      },
-      created_at: { type: DataTypes.DATE, defaultValue: sequelize.fn('now') },
+      email: DataTypes.STRING,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: false,
+      underscored: true,
       indexes: [
         {
           unique: true,
@@ -23,3 +14,8 @@ export default (sequelize, DataTypes) =>
       ],
     }
   )
+  account.associate = function(models) {
+    // associations can be defined here
+  }
+  return account
+}

@@ -1,9 +1,14 @@
-export default (sequelize, DataTypes) => {
-  const Board = sequelize.define(
+export default (sequelize, DataTypes) =>
+  sequelize.define(
     'board',
     {
-      id: { type: DataTypes.STRING, primaryKey: true },
-      label: { type: DataTypes.STRING },
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
+      label: {
+        type: DataTypes.STRING,
+      },
       color_scheme: {
         type: DataTypes.ENUM(
           'blue',
@@ -18,10 +23,8 @@ export default (sequelize, DataTypes) => {
       },
       created_at: { type: DataTypes.DATE, defaultValue: sequelize.fn('now') },
     },
-    { underscored: true }
+    {
+      createdAt: 'created_at',
+      updatedAt: false,
+    }
   )
-  Board.associate = models => {
-    // associations can be defined here
-  }
-  return Board
-}
