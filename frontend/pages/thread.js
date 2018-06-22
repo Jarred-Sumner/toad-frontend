@@ -11,6 +11,7 @@ import { Button } from "../components/Button";
 import { BOARD_LIST } from "../components/NavHeader";
 import { CreatePostForm } from "../components/Post/CreatePost";
 import { Icon, ICONS } from "../components/Icon";
+import { withApollo } from "../components/ApolloProvider";
 
 const POSTS = [
   {
@@ -523,4 +524,4 @@ class ViewBoardPage extends React.Component {
   }
 }
 
-export default ViewBoardPage;
+export default withApollo(ViewBoardPage);

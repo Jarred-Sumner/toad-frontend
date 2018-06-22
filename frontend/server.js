@@ -10,3 +10,7 @@ app.prepare().then(() => {
     .use(handler)
     .listen(3000);
 });
+
+process.on("uncaughtException", function(error) {
+  console.error(error);
+});
