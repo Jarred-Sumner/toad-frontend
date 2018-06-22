@@ -1,21 +1,20 @@
-import { isString, isObject } from 'lodash'
 import * as Models from '../models'
 
 export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
   // verify that we can reply to the parent
-  if (isString(parent_id)) {
+  if (parent_id !== undefined) {
     const foundParent = await Models.db.models[id].findOne({
       where: {
         id: parent_id,
         parent: null,
       },
     })
-    if (!isObject(foundParent)) {
+    if (!foundParent) {
       return null
     }
   }
 
-  if (isString(attachment_id)) {
+  if (attachment_id !== undefined) {
     const attachment = await Models.Attachment.findOne({
       where: {
         id: attachment_id,
@@ -23,15 +22,15 @@ export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
         board: id,
       },
     })
-    if (!isObject(attachment)) {
+    if (!attachment) {
       return null
     }
-  } else if (isString(parent_id)) {
+  } else if (parent_id === undefined) {
     return null // Don't allow OPs without attachment
   }
 
   return Models.db.models[id].create({
-    parent_id,
+    parent: parent_id,
     attachment_id,
     body,
     identity_id: identity.id,

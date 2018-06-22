@@ -1,5 +1,6 @@
 export { default as boardThreads } from './boardThreads'
-export { default as threadPosts } from './threadPosts'
+export { default as threadReplies } from './threadReplies'
+export { default as replyCount } from './replyCount'
 export { default as createPost } from './createPost'
 export { default as thread } from './thread'
 export { default as board } from './board'
