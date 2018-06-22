@@ -11,7 +11,6 @@ const mimes = {
 
 export default async ({ id, identity }, { mimetype, filename }) => {
   const contentType = mimes[mimetype]
-
   const signed = await Utils.uploadurl({ contentType })
   const attachment = await Models.Attachment.create({
     type: 'file',

@@ -7,6 +7,9 @@ const resolvers = {
   Query: {
     Board: Resolvers.board,
   },
+  Post: {
+    __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
+  },
   Mutation: {
     Board: Resolvers.board,
     Session: Resolvers.session,
@@ -21,7 +24,7 @@ const resolvers = {
     thread: Resolvers.thread,
   },
   Thread: {
-    posts: Resolvers.threadPosts,
+    replies: Resolvers.threadReplies,
   },
 }
 

@@ -8,7 +8,7 @@ export default async thread => {
   const limit = thread.showall ? null : 3
   return Models.db.models[board].findAll({
     where: {
-      [Op.or]: [{ id: threadId, parent: null }, { parent: thread.id }],
+      parent: thread.id,
     },
     order: [['id', 'ASC']],
     limit,

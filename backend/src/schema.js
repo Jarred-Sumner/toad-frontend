@@ -46,18 +46,30 @@ type Board {
   color_scheme: BoardColorScheme
 }
 
-type Post {
+interface Post {
   id: ID!
-  parent: ID
   created_at: DateTime
   body: String
   identity: Identity
   attachment: Attachment
 }
 
-type Thread {
+type Reply implements Post {
   id: ID!
-  posts: [Post]
+  created_at: DateTime
+  body: String
+  identity: Identity
+  attachment: Attachment
+  parent: ID
+}
+
+type Thread implements Post {
+  id: ID!
+  created_at: DateTime
+  body: String
+  identity: Identity
+  attachment: Attachment
+  replies: [Reply]
 }
 
 type Query {
