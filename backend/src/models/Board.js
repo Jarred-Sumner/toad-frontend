@@ -9,6 +9,18 @@ export default (sequelize, DataTypes) =>
       label: {
         type: DataTypes.STRING,
       },
+      color_scheme: {
+        type: DataTypes.ENUM(
+          'blue',
+          'purple_red',
+          'pink',
+          'slate',
+          'red',
+          'green'
+        ),
+        defaultValue: 'blue',
+        allowNull: false,
+      },
       created_at: { type: DataTypes.DATE, defaultValue: sequelize.fn('now') },
     },
     {

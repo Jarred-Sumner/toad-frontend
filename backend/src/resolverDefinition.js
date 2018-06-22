@@ -8,8 +8,13 @@ const resolvers = {
     Board: Resolvers.board,
   },
   Mutation: {
+    Board: Resolvers.board,
     Session: Resolvers.session,
     Login: Resolvers.login,
+  },
+  BoardMutation: {
+    Post: Resolvers.createPost,
+    Attachment: Resolvers.createAttachment,
   },
   Board: {
     threads: Resolvers.boardThreads,
@@ -18,6 +23,8 @@ const resolvers = {
   Thread: {
     posts: Resolvers.threadPosts,
   },
+  Identity: { name: Resolvers.demoji },
+  PersonalIdentity: { name: Resolvers.demoji },
 }
 
 export default resolvers

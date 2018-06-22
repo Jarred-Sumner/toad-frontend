@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize'
-import { Board, db } from './index'
+import { Board, Identity, db } from './index'
 
 export default async () => {
   await Board.sync()
@@ -9,10 +9,28 @@ export default async () => {
     const model = db.define(
       board.id,
       {
-        id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-        parent: { type: Sequelize.INTEGER, allowNull: true },
+        id: {
+          type: Sequelize.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        parent: {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+        },
         body: { type: Sequelize.TEXT },
-        created_at: { type: Sequelize.DATE, defaultValue: Sequelize.fn('now') },
+        identity_id: {
+          type: Sequelize.UUID,
+          allowNull: false,
+        },
+        attachment_id: {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          defaultValue: Sequelize.fn('now'),
+        },
       },
       {
         createdAt: 'created_at',
@@ -21,7 +39,6 @@ export default async () => {
         schema: 'board',
       }
     )
-    model.sync()
     return { board, model }
   })
 }

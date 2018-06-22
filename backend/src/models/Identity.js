@@ -3,8 +3,8 @@ export default (sequelize, DataTypes) =>
     'identity',
     {
       id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: sequelize.fn('gen_random_uuid'),
         primaryKey: true,
       },
       name: {
