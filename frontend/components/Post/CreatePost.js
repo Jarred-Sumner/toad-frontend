@@ -50,12 +50,9 @@ class _CreatePostForm extends React.PureComponent {
 
       const postId = _.get(thread, "data.Post.id");
       this.props.onDismiss();
-      Router.push({
-        route: "thread",
-        params: {
-          board: boardId,
-          id: postId
-        }
+      Router.pushRoute("thread", {
+        board: boardId,
+        id: postId
       });
     } catch (exception) {
       console.error(exception);

@@ -18,6 +18,7 @@ import { Icon, ICONS } from "../Icon";
 import { Queries } from "Toads/Queries";
 import { graphql } from "react-apollo";
 import Alert from "../Alert";
+import { Router } from "Toads/routes";
 
 class _CreateCommentForm extends React.PureComponent {
   constructor(props) {
@@ -72,12 +73,9 @@ class _CreateCommentForm extends React.PureComponent {
         }
       });
 
-      Router.push({
-        route: "thread",
-        params: {
-          board: boardId,
-          id: postId
-        }
+      Router.pushRoute("thread", {
+        board: boardId,
+        id: postId
       });
     } catch (exception) {
       console.error(exception);
