@@ -23,7 +23,6 @@ export default async (
       where: {
         id: attachment_id,
         session_id: session.id,
-        board: id,
       },
     })
     if (!attachment) {
