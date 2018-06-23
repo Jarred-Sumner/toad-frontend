@@ -64,8 +64,6 @@ class _CreateCommentForm extends React.PureComponent {
         attachmentId = await this.editPhotoRef.uploadFile(this.props.boardId);
       }
 
-      debugger;
-
       const thread = await createComment({
         variables: {
           boardID: boardId,
@@ -74,6 +72,8 @@ class _CreateCommentForm extends React.PureComponent {
           threadID: postId
         }
       });
+
+      Alert.success("Replied successfully.");
 
       Router.pushRoute("thread", {
         board: boardId,

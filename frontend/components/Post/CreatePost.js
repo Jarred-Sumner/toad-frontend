@@ -50,6 +50,7 @@ class _CreatePostForm extends React.PureComponent {
 
       const postId = _.get(thread, "data.Post.id");
       this.props.onDismiss();
+      Alert.success("Posted successfully.");
       Router.pushRoute("thread", {
         board: boardId,
         id: postId
@@ -188,6 +189,7 @@ class _CreatePostForm extends React.PureComponent {
             display: flex;
             padding: ${SPACING.normal}px;
             background: ${COLORS.white};
+            color: ${COLORS.black};
           }
 
           .Content,
