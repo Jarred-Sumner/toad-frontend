@@ -18,6 +18,6 @@ export default async ({ contentType }) => {
   })
   return {
     url: url[0],
-    canonicalUrl: `https://storage.cloud.google.com/toad-uploads/${filename}`,
+    canonicalUrl: `https://storage.googleapis.com/toad-uploads/${filename}`,
   }
 }
