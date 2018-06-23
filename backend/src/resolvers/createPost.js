@@ -1,6 +1,10 @@
 import Models from '../models'
 
-export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
+export default async (
+  { id, identity },
+  { parent_id, body, attachment_id },
+  { session }
+) => {
   // verify that we can reply to the parent
   if (parent_id !== undefined) {
     const foundParent = await Models[id].findOne({
@@ -18,7 +22,7 @@ export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
     const attachment = await Models.attachment.findOne({
       where: {
         id: attachment_id,
-        identity_id: identity.id,
+        session_id: session.id,
         board: id,
       },
     })
