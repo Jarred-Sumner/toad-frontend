@@ -22,6 +22,7 @@ const corsOptions = {
     'http://127.0.0.1.xip.io',
     'https://toads.app',
   ],
+  credentials: true,
 }
 
 app.options('*', cors(corsOptions))
