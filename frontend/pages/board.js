@@ -14,7 +14,8 @@ import { Icon, ICONS } from "../components/Icon";
 import {
   withApollo,
   isInitialLoading,
-  isReady
+  isReady,
+  isError
 } from "../components/ApolloProvider";
 import { Query, compose } from "react-apollo";
 import { LoadingPage, ErrorPage } from "components/LoadingPage";
@@ -41,6 +42,7 @@ class ViewBoardPage extends React.Component {
   renderHeader = () => (
     <BoardHeader
       board={this.props.board}
+      identity={this.props.identity}
       hideCreatePost={this.handleHideCreatePost}
       showCreatePost={this.handleShowCreatePost}
       isCreatePostVisible={this.state.showCreatePost}
@@ -55,7 +57,11 @@ class ViewBoardPage extends React.Component {
     return (
       <Page renderSubheader={this.renderHeader}>
         <Spacer height={SPACING.large} />
-        <ListThreadsContainer board={board} colorScheme={colorScheme} />
+        <ListThreadsContainer
+          identity={board.identity}
+          board={board}
+          colorScheme={colorScheme}
+        />
       </Page>
     );
   }
@@ -82,11 +88,12 @@ export const ViewBoardPageContainer = compose(
             <ViewBoardPage
               {...otherProps}
               board={board}
+              identity={board.identity}
               networkStatus={networkStatus}
             />
           );
         } else {
-          return <ErrorPage>I CANT FIND {url.query.board}!</ErrorPage>;
+          return <ErrorPage>Four Oh Four.</ErrorPage>;
         }
       }}
     </Query>

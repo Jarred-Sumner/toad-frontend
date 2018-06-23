@@ -43,9 +43,17 @@ class ViewThread extends React.PureComponent {
   }
 }
 
-export const ViewThreadContainer = ({ board, colorScheme, ...otherProps }) => {
+export const ViewThreadContainer = ({
+  board,
+  colorScheme,
+  threadID,
+  ...otherProps
+}) => {
   return (
-    <Query query={Queries.ViewThread} variables={{ id: board.id }}>
+    <Query
+      query={Queries.ViewThread}
+      variables={{ boardID: board.id, threadID: threadID }}
+    >
       {({ data, networkStatus }) => {
         const thread = _.get(data, "Board.thread");
         if (thread) {

@@ -32,26 +32,46 @@ export const Queries = {
         id
         label
         color_scheme
-      }
-    }
-  `,
-  CreateAttachment: gql`
-    mutation CreateAttachment(
-      $mimetype: String!
-      $filename: String!
-      $boardId: ID!
-    ) {
-      Board(id: $boardId) {
-        Attachment(mimetype: $mimetype, filename: $filename) {
-          id
-          signed_url
+
+        identity {
+          ${fragments.identity}
         }
       }
     }
   `,
+  CreateAttachment: gql`
+    mutation CreateAttachment($mimetype: String!, $filename: String!) {
+      Attachment(mimetype: $mimetype, filename: $filename) {
+        id
+        signed_url
+      }
+    }
+  `,
+  CreateThread: gql`
+    mutation CreateThread($body: String!, $attachment_id: ID, $boardID: ID!) {
+      Board(id: $boardID) {
+
+        Post(body: $body, attachment_id: $attachment_id) {
+          id
+          ${fragments.post}
+        }
+      }
+    }
+  `,
+  CreateReplyToThread: gql`
+  mutation CreateReplyToThread($body: String!, $attachment_id: ID, $boardID: ID!, $threadID: ID!) {
+    Board(id: $boardID) {
+
+      Post(body: $body, parent_id: $threadID, attachment_id: $attachment_id) {
+        id
+        ${fragments.post}
+      }
+    }
+  }
+  `,
   ViewThread: gql`
     query ViewThread($boardID: ID!, $threadID: ID!) {
-      Board(id: $id) {
+      Board(id: $boardID) {
         id
 
         thread(id: $threadID) {

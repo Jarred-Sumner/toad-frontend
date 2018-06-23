@@ -2,6 +2,6 @@ import { random as randomEmoji } from 'node-emoji'
 import { random } from 'lodash'
 
 export default () => {
-  const name = `:${randomEmoji().key}: ${random(99, 999)}`
+  const name = `${random(99, 999)}:${randomEmoji().key}:`
   return name
 }

@@ -180,10 +180,14 @@ export const withApollo = Component => {
       );
 
       ctx.res.cookie("toads_session", sessionCookie, {
-        expires_at: new Date(
-          new Date().setFullYear(new Date().getFullYear() + 1)
-        ),
-        domain: `.${process.env.BASE_DOMAIN}`
+        expires: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        // TODO: check this is correct in prod
+        domain:
+          process.env.NODE_ENV === "production"
+            ? `.${process.env.BASE_DOMAIN}`
+            : undefined
       });
     }
 

@@ -32,6 +32,10 @@ const normalizeSize = (size, rawHeight, _pixelRatio = null) => {
 };
 
 export const buildImgSrc = (source, rawSize, rawHeight, pixelRatio) => {
+  if (!rawSize) {
+    return source;
+  }
+
   return `${IMAGE_HOST}/${normalizeSize(
     rawSize,
     rawHeight,

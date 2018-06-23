@@ -143,10 +143,10 @@ class EditPhotoContainer extends React.Component {
 
     return this.props
       .createAttachment({
-        variables: { mimetype: file.type, filename: file.name, boardId }
+        variables: { mimetype: file.type, filename: file.name }
       })
       .then(({ data }) => {
-        const attachment = _.get(data, "Board.Attachment");
+        const attachment = _.get(data, "Attachment");
         if (attachment) {
           const { id, signed_url } = attachment;
           return window
@@ -172,7 +172,6 @@ class EditPhotoContainer extends React.Component {
             });
         } else {
           this.setState({ status: Status.error });
-          console.error(response);
           return Promise.reject({
             message: "File upload failed. Please try again."
           });

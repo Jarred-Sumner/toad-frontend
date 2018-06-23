@@ -24,7 +24,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import Alert from "./Alert";
 
 export const MAX_POST_PHOTO_WIDTH = 375;
-export const MAX_POST_PHOTO_HEIGHT = 375;
+export const MAX_POST_PHOTO_HEIGHT = 175;
 export const MAX_POST_CONTENT_WIDTH = 576;
 
 const copiedToClipboard = () => Alert.info("Copied link to clipboard");
@@ -44,18 +44,18 @@ export const PostHeader = ({
         "Header--muted": muted
       })}
     >
-      <Author author={post.author} />
+      <Author identity={post.identity} />
       <Spacer width={SPACING.small} />
 
       <Link href={url}>
         <a>
-          <Text>{moment(post.timestamp).fromNow()}</Text>
+          <Text>{moment(post.created_at).fromNow()}</Text>
         </a>
       </Link>
       <Spacer width={SPACING.small} />
       <Link href={url}>
         <a>
-          <Text underline>#{post.id}</Text>
+          <Text color="inherit">#{post.id}</Text>
         </a>
       </Link>
       <Spacer width={SPACING.small} />
@@ -165,7 +165,7 @@ export class Post extends React.PureComponent {
   setCommentFormRef = commentFormRef => (this.commentFormRef = commentFormRef);
 
   render() {
-    const { post, comments, board, colorScheme } = this.props;
+    const { post, comments, board, colorScheme, identity } = this.props;
     const color = COLORS[colorScheme];
     const commentsCount = 10;
     const dimensions = post.photo
@@ -184,7 +184,9 @@ export class Post extends React.PureComponent {
           <CreateCommentForm
             stickyTo={postDomID}
             postId={post.id}
+            boardId={board.id}
             colorScheme={colorScheme}
+            identity={identity}
             ref={this.setCommentFormRef}
             onDismiss={this.handleDismissCommentForm}
             initialText={this.state.defautReplyText}
@@ -197,9 +199,8 @@ export class Post extends React.PureComponent {
               <div className="PhotoWrapper">
                 <div className="PhotoContainer">
                   <Photo
-                    width={dimensions.width}
-                    maxWidth="100%"
-                    height={dimensions.height}
+                    maxWidth={MAX_POST_PHOTO_WIDTH + "px"}
+                    maxHeight={MAX_POST_PHOTO_HEIGHT + "px"}
                     photo={post.attachment}
                   />
                 </div>

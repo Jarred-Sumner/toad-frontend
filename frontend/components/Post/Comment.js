@@ -17,9 +17,9 @@ export class Comment extends React.PureComponent {
   handleShowReply = () => this.props.createReply(this.props.comment.id);
   render() {
     const { comment, backgroundColor = COLORS.offwhite, url } = this.props;
-    const dimensions = comment.photo
+    const dimensions = comment.attachment
       ? calculateDimensions({
-          photo: comment.photo,
+          photo: comment.attachment,
           maxWidth: MAX_PHOTO_WIDTH,
           maxHeight: MAX_PHOTO_HEIGHT
         })
@@ -27,13 +27,14 @@ export class Comment extends React.PureComponent {
 
     return (
       <div id={buildCommentDOMID(comment.id)} className="CommentContainer">
-        {comment.photo && (
+        {comment.attachment && (
           <React.Fragment>
             <Photo
               width={dimensions.width}
               height={dimensions.height}
-              maxWidth="100%"
-              photo={comment.photo}
+              maxWidth={MAX_PHOTO_WIDTH + "px"}
+              maxHeight={MAX_PHOTO_HEIGHT + "px"}
+              photo={comment.attachment}
             />
             <Spacer width={SPACING.small} />
           </React.Fragment>
