@@ -48,7 +48,7 @@ export const PostHeader = ({
       <Spacer width={SPACING.small} />
 
       <Link href={url}>
-        <a>
+        <a data-tip={moment(post.created_at).format("lll")}>
           <Text>{moment(post.created_at).fromNow()}</Text>
         </a>
       </Link>
@@ -62,10 +62,20 @@ export const PostHeader = ({
       <Text color={COLORS.medium_white}>|</Text>
       <Spacer width={SPACING.small} />
       <div className="Group">
-        <Icon icon={ICONS.flag} size="xs" color={COLORS.gray} />
+        <Icon
+          data-tip="Report"
+          icon={ICONS.flag}
+          size="xs"
+          color={COLORS.gray}
+        />
         <Spacer width={SPACING.small} />
         <CopyToClipboard onCopy={copiedToClipboard} text={url}>
-          <Icon icon={ICONS.link} size="xs" color={COLORS.gray} />
+          <Icon
+            data-tip="Copy link"
+            icon={ICONS.link}
+            size="xs"
+            color={COLORS.gray}
+          />
         </CopyToClipboard>
       </div>
       <Spacer width={SPACING.small} />
@@ -167,7 +177,6 @@ export class Post extends React.PureComponent {
   render() {
     const { post, comments, board, colorScheme, identity } = this.props;
     const color = COLORS[colorScheme];
-    const commentsCount = 10;
     const dimensions = post.photo
       ? calculateDimensions({
           photo: post.photo,
@@ -221,17 +230,24 @@ export class Post extends React.PureComponent {
               <Body>{post.body}</Body>
             </div>
 
-            <Spacer height={SPACING.small} />
+            {post.reply_count > 0 && (
+              <React.Fragment>
+                <Spacer height={SPACING.small} />
 
-            <div className="Actions">
-              <Link route="thread" params={{ board: board.id, id: post.id }}>
-                <a>
-                  <Text weight="semiBold" color={color}>
-                    {post.reply_count} comments
-                  </Text>
-                </a>
-              </Link>
-            </div>
+                <div className="Actions">
+                  <Link
+                    route="thread"
+                    params={{ board: board.id, id: post.id }}
+                  >
+                    <a>
+                      <Text weight="semiBold" color={color}>
+                        {post.reply_count} replies
+                      </Text>
+                    </a>
+                  </Link>
+                </div>
+              </React.Fragment>
+            )}
 
             <Spacer height={SPACING.normal} />
 

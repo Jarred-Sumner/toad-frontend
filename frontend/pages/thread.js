@@ -1,29 +1,16 @@
+import { ErrorPage, LoadingPage } from "components/LoadingPage";
+import { BoardTitle } from "components/Post/BoardHeader";
+import { ViewThreadContainer } from "components/Post/ViewThread";
+import _ from "lodash";
+import { withRouter } from "next/router";
 import React from "react";
+import { compose, Query } from "react-apollo";
+import { isInitialLoading, withApollo } from "../components/ApolloProvider";
+import { Gradient, GRADIENT_COLORS } from "../components/Gradient";
 import { Page } from "../components/Page";
-import { Post } from "../components/Post";
 import { Spacer } from "../components/Spacer";
 import { SPACING } from "../lib/spacing";
-import { COLORS } from "../lib/colors";
-import { Gradient, GRADIENT_COLORS } from "../components/Gradient";
-import { Text } from "../components/Text";
-import GreenDot from "../components/GreenDot";
-import { Button } from "../components/Button";
-import { BOARD_LIST } from "../components/NavHeader";
-import { CreatePostForm } from "../components/Post/CreatePost";
-import { Icon, ICONS } from "../components/Icon";
-import {
-  withApollo,
-  isInitialLoading,
-  isReady
-} from "../components/ApolloProvider";
-import { Query, compose } from "react-apollo";
-import { LoadingPage, ErrorPage } from "components/LoadingPage";
-import _ from "lodash";
-import { ListThreadsContainer } from "components/Post/ListThreads";
 import { Queries } from "../Queries";
-import { withRouter } from "next/router";
-import { BoardHeader, BoardTitle } from "components/Post/BoardHeader";
-import { ViewThreadContainer } from "components/Post/ViewThread";
 
 class ViewThreadPage extends React.Component {
   state = {
@@ -88,7 +75,7 @@ export const ViewThreadPageContainer = compose(
       {({ data = null, networkStatus }) => {
         const board = _.get(data, "Board");
         if (!board && isInitialLoading(networkStatus)) {
-          return <LoadingPage>Toading /{url.params.board}/...</LoadingPage>;
+          return <LoadingPage>Toading /{url.query.board}/...</LoadingPage>;
         } else if (!board && isError(networkStatus)) {
           return <ErrorPage />;
         } else if (board) {
@@ -101,7 +88,7 @@ export const ViewThreadPageContainer = compose(
             />
           );
         } else {
-          return <ErrorPage>I CANT FIND {url.params.board}!</ErrorPage>;
+          return <ErrorPage>I CANT FIND {url.query.board}!</ErrorPage>;
         }
       }}
     </Query>

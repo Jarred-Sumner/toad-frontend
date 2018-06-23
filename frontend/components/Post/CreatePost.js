@@ -21,6 +21,7 @@ class _CreatePostForm extends React.PureComponent {
     photo: null,
     text: "",
     hasDismissedPicker: false,
+    isPosting: false,
     file: null
   };
 
@@ -29,11 +30,15 @@ class _CreatePostForm extends React.PureComponent {
   handleSubmit = async evt => {
     evt.preventDefault();
     const { createPost, boardId } = this.props;
-    const { text: body } = this.state;
+    const { text: body, isPosting } = this.state;
 
-    if (!this.editPhotoRef) {
+    if (!this.editPhotoRef || isPosting) {
       return;
     }
+
+    this.setState({ isPosting: true });
+
+    Router.prefetch({ route: "thread" });
 
     try {
       const attachmentId = await this.editPhotoRef.uploadFile(
@@ -48,18 +53,25 @@ class _CreatePostForm extends React.PureComponent {
         }
       });
 
-      const postId = _.get(thread, "data.Post.id");
-      this.props.onDismiss();
-      Alert.success("Posted successfully.");
-      Router.pushRoute("thread", {
-        board: boardId,
-        id: postId
-      });
+      const postId = _.get(thread, "data.Board.Post.id");
+      if (postId) {
+        this.props.onDismiss();
+        Alert.success("Posted successfully.");
+        this.setState({ isPosting: false });
+        Router.pushRoute("thread", {
+          board: boardId,
+          id: String(postId)
+        });
+      } else {
+        Alert.error("Something went wrong! Please try again");
+        this.setState({ isPosting: false });
+      }
     } catch (exception) {
       console.error(exception);
       if (exception.message) {
         Alert.error(exception.message);
       }
+      this.setState({ isPosting: false });
     }
   };
 

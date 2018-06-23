@@ -1,19 +1,12 @@
-import Text from "./Text";
+import { Mutation } from "react-apollo";
 import Dropzone from "react-dropzone";
-// import S3Upload from "react-s3-uploader/s3upload";
-import Button from "./Button";
-import Alert from "./Alert";
-// import { BASE_HOSTNAME } from "../../api";
-import Photo from "./Photo";
+import { Queries } from "Toads/Queries";
 import { COLORS } from "../lib/colors";
 import { SPACING } from "../lib/spacing";
+import Alert from "./Alert";
+import { MAX_PHOTO_WIDTH } from "./Post/Comment";
 // import { logEvent } from "../../lib/analytics";
 import { Spinner } from "./Spinner";
-import classNames from "classnames";
-import { Icon, ICONS } from "./Icon";
-import { MAX_PHOTO_WIDTH, MAX_PHOTO_HEIGHT } from "./Post/Comment";
-import { Mutation } from "react-apollo";
-import { Queries } from "Toads/Queries";
 
 export const materialStyles = theme => ({
   icon: {
@@ -49,7 +42,7 @@ class EditablePhoto extends React.PureComponent {
         <style jsx>{`
           .container {
             display: flex;
-            max-width: ${width}px;
+            max-width: ${MAX_PHOTO_WIDTH}px;
             height: ${height}px;
             position: relative;
 
@@ -72,6 +65,7 @@ class EditablePhoto extends React.PureComponent {
 
           img {
             height: auto;
+            max-width: ${MAX_PHOTO_WIDTH}px;
             max-height: 100%;
             border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 4px;

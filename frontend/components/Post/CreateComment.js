@@ -1,24 +1,21 @@
+import classNames from "classnames";
 import React from "react";
+import { graphql } from "react-apollo";
+import Draggable from "react-draggable";
+import { Queries } from "Toads/Queries";
+import { Router } from "Toads/routes";
+import { COLORS } from "../../lib/colors";
+import { MOBILE_BEAKPOINT } from "../../lib/mobile";
+import { buildPostDOMID } from "../../lib/routeHelpers";
+import { SPACING } from "../../lib/spacing";
+import Alert from "../Alert";
+import { Button } from "../Button";
+import { GRADIENT_COLORS } from "../Gradient";
+import { Icon, ICONS } from "../Icon";
+import { Spacer } from "../Spacer";
+import { Text } from "../Text";
 import EditPhotoContainer from "../UploadPhoto";
 import { Author } from "./Author";
-import { Button } from "../Button";
-import { COLORS } from "../../lib/colors";
-import { Spacer } from "../Spacer";
-import { SPACING } from "../../lib/spacing";
-import { GRADIENT_COLORS } from "../Gradient";
-import { Text } from "../Text";
-import Caret from "../Icons/Caret";
-import classNames from "classnames";
-import onClickOutside from "react-onclickoutside";
-import { MOBILE_BEAKPOINT } from "../../lib/mobile";
-import Sticky from "react-stickynode";
-import Draggable from "react-draggable";
-import { buildPostDOMID } from "../../lib/routeHelpers";
-import { Icon, ICONS } from "../Icon";
-import { Queries } from "Toads/Queries";
-import { graphql } from "react-apollo";
-import Alert from "../Alert";
-import { Router } from "Toads/routes";
 
 class _CreateCommentForm extends React.PureComponent {
   constructor(props) {
@@ -28,7 +25,8 @@ class _CreateCommentForm extends React.PureComponent {
       text: props.initialText || "",
       focused: true,
       dragging: false,
-      file: null
+      file: null,
+      isPosting: false
     };
   }
 
@@ -51,14 +49,15 @@ class _CreateCommentForm extends React.PureComponent {
   handleSubmit = async evt => {
     evt.preventDefault();
     const { createComment, boardId, postId } = this.props;
-    const { text: body, file } = this.state;
+    const { text: body, file, isPosting } = this.state;
 
-    if (!this.editPhotoRef) {
+    if (!this.editPhotoRef || isPosting) {
       return;
     }
 
     try {
       let attachmentId;
+      this.setState({ isPosting: true });
 
       if (file) {
         attachmentId = await this.editPhotoRef.uploadFile(this.props.boardId);
@@ -77,10 +76,12 @@ class _CreateCommentForm extends React.PureComponent {
 
       Router.pushRoute("thread", {
         board: boardId,
-        id: postId
+        id: String(postId)
       });
+      this.props.onDismiss();
     } catch (exception) {
       console.error(exception);
+      this.setState({ isPosting: false });
       if (exception.message) {
         Alert.error(exception.message);
       }
@@ -306,7 +307,8 @@ class _CreateCommentForm extends React.PureComponent {
 }
 
 export const CreateCommentForm = graphql(Queries.CreateReplyToThread, {
-  name: "createComment"
+  name: "createComment",
+  options: props => ({})
 })(_CreateCommentForm);
 
 export default CreateCommentForm;

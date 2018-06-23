@@ -18,12 +18,14 @@ class ViewThread extends React.PureComponent {
       <div className="Container">
         <div className="PageWrapper PostWrapper" key={thread.id}>
           <Spacer height={SPACING.large} />
-          <Post
-            colorScheme={colorScheme}
-            board={board}
-            post={thread}
-            comments={thread.replies}
-          />
+          <div className="ClearFix">
+            <Post
+              colorScheme={colorScheme}
+              board={board}
+              post={thread}
+              comments={thread.replies}
+            />
+          </div>
           <Spacer height={SPACING.large} />
         </div>
 
@@ -31,6 +33,14 @@ class ViewThread extends React.PureComponent {
           .PostWrapper {
             width: 100%;
             border-bottom: 1px solid ${COLORS.offwhite};
+          }
+
+          .ClearFix:after {
+            content: " "; /* Older browser do not support empty content */
+            visibility: hidden;
+            display: block;
+            height: 0;
+            clear: both;
           }
 
           .PageWrapper {
@@ -61,6 +71,7 @@ export const ViewThreadContainer = ({
             <ViewThread
               colorScheme={colorScheme}
               board={board}
+              thread={thread}
               {...otherProps}
             />
           );

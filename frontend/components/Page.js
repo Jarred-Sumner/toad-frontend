@@ -1,12 +1,13 @@
 import React from "react";
-import { NavHeader } from "./NavHeader";
-import Head from "./head";
-import { SPACING } from "../lib/spacing";
+import ReactTooltip from "react-tooltip";
 import { COLORS } from "../lib/colors";
-import { AlertHost } from "./Alert";
-import { Text } from "./Text";
-import { Spacer } from "./Spacer";
 import { MOBILE_BEAKPOINT } from "../lib/mobile";
+import { SPACING } from "../lib/spacing";
+import { AlertHost } from "./Alert";
+import Head from "./head";
+import { NavHeader } from "./NavHeader";
+import { Spacer } from "./Spacer";
+import { Text } from "./Text";
 
 // import Headroom from "react-headroom";
 
@@ -47,6 +48,8 @@ export class Page extends React.Component {
             </a>
           </div>
         </footer>
+
+        <ReactTooltip />
 
         <style jsx>{`
           .Page {
