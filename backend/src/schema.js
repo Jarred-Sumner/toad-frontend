@@ -81,6 +81,14 @@ enum AttachmentType {
   file
 }
 
+type AttachmentMetadata {
+  width: Int
+  height: Int
+  wUnits: String
+  hUnits: String
+  size: Int
+}
+
 type NewAttachment {
   id: ID!
   signed_url: String!
@@ -92,6 +100,8 @@ type Attachment {
   mimetype: String
   filename: String
   url: String
+  thumbnail_url: String
+  metadata: AttachmentMetadata
 }
 
 type BoardMutation {

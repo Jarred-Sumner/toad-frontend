@@ -1,4 +1,5 @@
 import Models from '../models'
+import * as Utils from '../utils'
 
 export default async (
   { id, identity },
@@ -29,6 +30,17 @@ export default async (
     if (!attachment) {
       return null
     }
+
+    // generate metadata
+    const dim = await Utils.imageDimensions(attachment.url)
+    if (!dim) {
+      return null
+    }
+
+    attachment.metadata = dim
+    attachment.metadata.size = dim.length
+    delete attachment.metadata.length
+    await attachment.save()
   } else if (parent_id === undefined) {
     return null // Don't allow OPs without attachment
   }
