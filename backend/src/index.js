@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
@@ -14,6 +15,12 @@ const app = express()
 console.log(`toad-backend ${GIT_COMMIT}`)
 console.log(`Listening on :${PORT}`)
 
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://toads.app'],
+}
+
+app.options('*', cors(corsOptions))
+app.use(cors(corsOptions))
 app.use(logger('dev'))
 app.use(cookieParser())
 
