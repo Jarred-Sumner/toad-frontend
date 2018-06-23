@@ -9,7 +9,7 @@ const mimes = [
   'video/webm',
 ]
 
-export default async ({ id, identity }, { mimetype, filename }) => {
+export default async (_, { mimetype, filename }, { session }) => {
   if (mimes.indexOf(mimetype) === -1) {
     return null
   }
@@ -17,10 +17,9 @@ export default async ({ id, identity }, { mimetype, filename }) => {
   const attachment = await Models.attachment.create({
     type: 'file',
     mimetype,
-    board: id,
     filename,
     url: signed.canonicalUrl,
-    identity_id: identity.id,
+    session_id: session.id,
   })
 
   return { signed_url: signed.url, id: attachment.id }

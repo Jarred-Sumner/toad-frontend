@@ -8,18 +8,17 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
       mimetype: DataTypes.STRING,
-      board: DataTypes.STRING,
       filename: DataTypes.STRING,
       url: DataTypes.TEXT,
-      identity_id: DataTypes.UUID,
+      session_id: DataTypes.INTEGER,
     },
     {
       underscored: true,
     }
   )
   Attachment.associate = models => {
-    models.identity.hasMany(Attachment, { foreignKey: 'identity_id' })
-    Attachment.belongsTo(models.identity, { foreignKey: 'identity_id' })
+    models.session.hasMany(Attachment, { foreignKey: 'session_id' })
+    Attachment.belongsTo(models.session, { foreignKey: 'session_id' })
   }
   return Attachment
 }
