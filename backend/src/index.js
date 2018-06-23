@@ -6,7 +6,7 @@ import logger from 'morgan'
 import NoIntrospection from 'graphql-disable-introspection'
 import { graphqlExpress } from 'apollo-server-express'
 import depthLimit from 'graphql-depth-limit'
-import session from './session'
+import sessionMiddleware from './session'
 import auth from './auth'
 import schema from './schema'
 
@@ -25,7 +25,7 @@ app.use(cors(corsOptions))
 app.use(logger('dev'))
 app.use(cookieParser())
 
-app.post('/session', session)
+app.post('/session', sessionMiddleware)
 app.use('/graphql', auth)
 app.use('/healthz', (req, res) => res.json({ error: false }))
 
