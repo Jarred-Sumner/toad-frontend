@@ -17,7 +17,11 @@ console.log(`toad-backend ${GIT_COMMIT}`)
 console.log(`Listening on :${PORT}`)
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://toads.app'],
+  origin: [
+    'http://localhost:3000',
+    'http://127.0.0.1.xip.io',
+    'https://toads.app',
+  ],
 }
 
 app.options('*', cors(corsOptions))
