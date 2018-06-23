@@ -86,7 +86,7 @@ export const ViewBoardPageContainer = compose(
             />
           );
         } else {
-          return <ErrorPage>I CANT FIND {url.params.board}!</ErrorPage>;
+          return <ErrorPage>I CANT FIND {url.query.board}!</ErrorPage>;
         }
       }}
     </Query>

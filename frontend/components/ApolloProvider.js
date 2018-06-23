@@ -140,7 +140,8 @@ export const isReady = networkStatus => networkStatus === 7;
 export const isError = networkStatus => networkStatus === 8;
 
 const fetchSessionCookie = async ctx => {
-  const { toads_session: sessionCookie } = cookies(ctx);
+  const allCookies = cookies(ctx);
+  const sessionCookie = allCookies.toads_session;
 
   if (sessionCookie) {
     return sessionCookie;
@@ -174,12 +175,15 @@ export const withApollo = Component => {
 
     if (sessionCookie && ctx.req) {
       cookieJar.setCookieSync(
-        "toads_session=" + sessionCookie,
+        `toads_session=${sessionCookie}`,
         process.env.BASE_HOSTNAME
       );
+
       ctx.res.cookie("toads_session", sessionCookie, {
-        maxAge: 31536000, // ONE YEAR
-        domain: `.${process.env.DOMAIN}`
+        expires_at: new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        ),
+        domain: `.${process.env.BASE_DOMAIN}`
       });
     }
 
