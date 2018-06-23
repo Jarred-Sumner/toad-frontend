@@ -5,7 +5,7 @@ export default async ({ id }, { page = 1 }) => {
     return null
   }
 
-  return Models.db.models[id].findAll({
+  return Models[id].findAll({
     where: {
       parent: null,
     },

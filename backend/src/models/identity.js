@@ -2,7 +2,11 @@ export default (sequelize, DataTypes) => {
   const Identity = sequelize.define(
     'identity',
     {
-      id: { type: DataTypes.UUID, primaryKey: true },
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: sequelize.fn('gen_random_uuid'),
+      },
       name: DataTypes.STRING,
       board: DataTypes.STRING,
       account_id: DataTypes.INTEGER,

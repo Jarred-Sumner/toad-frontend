@@ -3,7 +3,7 @@ import Models from '../models'
 export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
   // verify that we can reply to the parent
   if (parent_id !== undefined) {
-    const foundParent = await Models.db.models[id].findOne({
+    const foundParent = await Models[id].findOne({
       where: {
         id: parent_id,
         parent: null,
@@ -29,7 +29,7 @@ export default async ({ id, identity }, { parent_id, body, attachment_id }) => {
     return null // Don't allow OPs without attachment
   }
 
-  return Models.db.models[id].create({
+  return Models[id].create({
     parent: parent_id,
     attachment_id,
     body,

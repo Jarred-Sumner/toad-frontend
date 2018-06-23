@@ -34,7 +34,7 @@ const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
 }
 
 export default async (_, { id }, { session }) => {
-  const board = get(Models, `Boards[${id}].board`, null)
+  const board = get(Models, `Boards[${id}]`, null)
   if (isNull(board)) {
     return null
   }

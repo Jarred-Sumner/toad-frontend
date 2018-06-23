@@ -36,6 +36,17 @@ Object.keys(db).forEach(modelName => {
   }
 })
 
+db.Boards = {}
+
+const main = async () => {
+  const boards = await db.board.findAll()
+  boards.forEach(model => {
+    db.Boards[model.id] = model
+  })
+}
+
+main()
+
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 

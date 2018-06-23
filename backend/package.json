@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon ./dist/index.js",
     "dev": "NODE_ENV=development PORT=3420 nodemon src/index.js --exec babel-node",
+    "migrations": "sequelize db:migrate",
     "build": "rm -rf dist; babel src -d dist",
     "precommit": "lint-staged"
   },
