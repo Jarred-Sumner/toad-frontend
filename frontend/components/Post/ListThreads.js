@@ -54,6 +54,7 @@ export const ListThreadsContainer = ({ board, ...otherProps }) => {
     <Query query={Queries.ViewThreads} variables={{ id: board.id }}>
       {({ data, networkStatus }) => {
         const threads = _.get(data, "Board.threads");
+
         if (_.isArray(threads)) {
           return <ListThreads board={board} {...otherProps} />;
         } else if (

@@ -66,6 +66,7 @@ export class BoardHeader extends React.PureComponent {
             />
             {isCreatePostVisible && (
               <CreatePostForm
+                boardId={id}
                 dropZoneRef={dropZoneRef}
                 onDismiss={hideCreatePost}
               />

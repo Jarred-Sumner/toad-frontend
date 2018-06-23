@@ -12,6 +12,8 @@ import { Spinner } from "./Spinner";
 import classNames from "classnames";
 import { Icon, ICONS } from "./Icon";
 import { MAX_PHOTO_WIDTH, MAX_PHOTO_HEIGHT } from "./Post/Comment";
+import { Mutation } from "react-apollo";
+import { Queries } from "Toads/Queries";
 
 export const materialStyles = theme => ({
   icon: {
@@ -31,12 +33,18 @@ class EditablePhoto extends React.PureComponent {
       remoteSize,
       onRemove,
       classes,
-      onLoad
+      onLoad,
+      isUploading
     } = this.props;
 
     return (
       <div className="container">
         <img src={blob || "/static/UploadPhoto/Placeholder@2x.png"} />
+        {isUploading && (
+          <div className="Loading">
+            <Spinner color={COLORS.white} size={18} />
+          </div>
+        )}
 
         <style jsx>{`
           .container {
@@ -48,6 +56,20 @@ class EditablePhoto extends React.PureComponent {
             cursor: pointer;
           }
 
+          .Loading {
+            padding: ${SPACING.normal}px;
+            background-color: ${COLORS.black};
+            opacity: 0.95;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+          }
+
           img {
             height: auto;
             max-height: 100%;
@@ -55,22 +77,6 @@ class EditablePhoto extends React.PureComponent {
             border-radius: 4px;
             object-fit: contain;
             display: block;
-          }
-
-          .container:hover .Button {
-            opacity: 1;
-          }
-
-          .Button {
-            position: absolute;
-            top: -${SPACING.normal}px;
-            right: -${SPACING.normal}px;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.1s linear;
-            background-color: ${COLORS.black};
-            width: ${SPACING.normal}px;
-            height: ${SPACING.normal}px;
           }
         `}</style>
       </div>
@@ -85,7 +91,7 @@ const Status = {
   error: "error"
 };
 
-export default class EditPhotoContainer extends React.Component {
+class EditPhotoContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -122,12 +128,56 @@ export default class EditPhotoContainer extends React.Component {
     this.setState(
       {
         file,
-        status: Status.uploading
+        status: Status.preview
       },
       () => {
         this.props.onChange(file);
       }
     );
+  };
+
+  uploadFile = boardId => {
+    const { file, status } = this.state;
+
+    this.setState({ status: Status.uploading });
+
+    return this.props
+      .createAttachment({
+        variables: { mimetype: file.type, filename: file.name, boardId }
+      })
+      .then(({ data }) => {
+        const attachment = _.get(data, "Board.Attachment");
+        if (attachment) {
+          const { id, signed_url } = attachment;
+          return window
+            .fetch(signed_url, {
+              mode: "cors",
+              method: "PUT",
+              headers: {
+                "Content-Type": file.type
+              },
+              body: file
+            })
+            .then(response => {
+              if (response.ok) {
+                this.setState({ status: Status.preview });
+                return id;
+              } else {
+                console.error(response);
+                this.setState({ status: Status.error });
+                return Promise.reject({
+                  message: "File upload failed. Please try again."
+                });
+              }
+            });
+        } else {
+          this.setState({ status: Status.error });
+          console.error(response);
+          return Promise.reject({
+            message: "File upload failed. Please try again."
+          });
+        }
+      });
   };
 
   handleUploadError = error => {
@@ -197,10 +247,29 @@ export default class EditPhotoContainer extends React.Component {
           // setDimensions={this.handleSetDimensions}
           blob={this.state.file ? this.state.file.preview : null}
           remoteSize={remoteSize}
+          isUploading={status === Status.uploading}
           width={width}
           height={height}
         />
       </Dropzone>
+    );
+  }
+}
+
+export default class EditPhotoMutation extends React.PureComponent {
+  render() {
+    const { editPhotoRef, ...otherProps } = this.props;
+
+    return (
+      <Mutation mutation={Queries.CreateAttachment}>
+        {createAttachment => (
+          <EditPhotoContainer
+            ref={editPhotoRef}
+            {...otherProps}
+            createAttachment={createAttachment}
+          />
+        )}
+      </Mutation>
     );
   }
 }

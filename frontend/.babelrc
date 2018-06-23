@@ -1,7 +1,14 @@
 {
   "presets": ["next/babel"],
   "plugins": [
-    "git-version",
+    [
+      "git-version",
+      {
+        "showDirty": true,
+        "commitLength": 7,
+        "tagCommitLength": 7
+      }
+    ],
     [
       "module-resolver",
       {

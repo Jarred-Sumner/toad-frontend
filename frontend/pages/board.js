@@ -72,7 +72,7 @@ export const ViewBoardPageContainer = compose(
       variables={{ id: url.query.board }}
     >
       {({ data = null, networkStatus }) => {
-        const board = _.get(data, "Board");
+        const board = data ? _.get(data, "Board") : null;
         if (!board && isInitialLoading(networkStatus)) {
           return <LoadingPage>Toading /{url.params.board}/...</LoadingPage>;
         } else if (!board && isError(networkStatus)) {
