@@ -23,6 +23,7 @@ import { ListThreadsContainer } from "components/Post/ListThreads";
 import { Queries } from "../Queries";
 import { withRouter } from "next/router";
 import { BoardHeader, BoardTitle } from "components/Post/BoardHeader";
+import { ViewThreadContainer } from "components/Post/ViewThread";
 
 class ViewThreadPage extends React.Component {
   state = {
@@ -58,13 +59,17 @@ class ViewThreadPage extends React.Component {
   };
 
   render() {
-    const { board } = this.props;
+    const { board, threadID } = this.props;
     const { colorScheme } = board;
 
     return (
       <Page renderSubheader={this.renderHeader}>
         <Spacer height={SPACING.large} />
-        <ListThreadsContainer board={board} colorScheme={colorScheme} />
+        <ViewThreadContainer
+          board={board}
+          threadID={threadID}
+          colorScheme={colorScheme}
+        />
       </Page>
     );
   }
@@ -91,6 +96,7 @@ export const ViewThreadPageContainer = compose(
             <ViewThreadPage
               {...otherProps}
               board={data.Board || null}
+              threadID={url.query.id}
               networkStatus={networkStatus}
             />
           );

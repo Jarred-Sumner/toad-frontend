@@ -42,6 +42,7 @@ class ViewBoardPage extends React.Component {
   renderHeader = () => (
     <BoardHeader
       board={this.props.board}
+      identity={this.props.identity}
       hideCreatePost={this.handleHideCreatePost}
       showCreatePost={this.handleShowCreatePost}
       isCreatePostVisible={this.state.showCreatePost}
@@ -56,7 +57,11 @@ class ViewBoardPage extends React.Component {
     return (
       <Page renderSubheader={this.renderHeader}>
         <Spacer height={SPACING.large} />
-        <ListThreadsContainer board={board} colorScheme={colorScheme} />
+        <ListThreadsContainer
+          identity={board.identity}
+          board={board}
+          colorScheme={colorScheme}
+        />
       </Page>
     );
   }
@@ -83,6 +88,7 @@ export const ViewBoardPageContainer = compose(
             <ViewBoardPage
               {...otherProps}
               board={board}
+              identity={board.identity}
               networkStatus={networkStatus}
             />
           );

@@ -13,7 +13,8 @@ import onClickOutside from "react-onclickoutside";
 import { MOBILE_BEAKPOINT } from "../../lib/mobile";
 import Alert from "../Alert";
 import { graphql } from "react-apollo";
-import { Queries } from "Queries";
+import { Queries } from "Toads/Queries";
+import { Router } from "Toads/routes";
 
 class _CreatePostForm extends React.PureComponent {
   state = {
@@ -28,7 +29,7 @@ class _CreatePostForm extends React.PureComponent {
   handleSubmit = async evt => {
     evt.preventDefault();
     const { createPost, boardId } = this.props;
-    const { body } = this.state;
+    const { text: body } = this.state;
 
     if (!this.editPhotoRef) {
       return;
@@ -39,12 +40,25 @@ class _CreatePostForm extends React.PureComponent {
         this.props.boardId
       );
 
-      const thread = createPost({
+      const thread = await createPost({
         variables: {
-          board
+          boardID: boardId,
+          body,
+          attachment_id: attachmentId
+        }
+      });
+
+      const postId = _.get(thread, "data.Post.id");
+      this.props.onDismiss();
+      Router.push({
+        route: "thread",
+        params: {
+          board: boardId,
+          id: postId
         }
       });
     } catch (exception) {
+      console.error(exception);
       if (exception.message) {
         Alert.error(exception.message);
       }
@@ -67,6 +81,8 @@ class _CreatePostForm extends React.PureComponent {
   };
 
   render() {
+    const { identity, dropZoneRef, boardId } = this.props;
+
     return (
       <div
         className={classNames("Container", {
@@ -89,10 +105,10 @@ class _CreatePostForm extends React.PureComponent {
           <div className="InputRow">
             <div className="Photo">
               <EditPhotoContainer
-                dropZoneRef={this.props.dropZoneRef}
+                dropZoneRef={dropZoneRef}
                 photo={this.state.photo}
                 onChange={this.handleChangeFile}
-                boardId={this.props.boardId}
+                boardId={boardId}
                 onFileDialogCancel={this.handleDialogCancel}
                 editPhotoRef={this.setEditPhotoRef}
                 setPhoto={this.handleSetPhoto}
@@ -103,7 +119,7 @@ class _CreatePostForm extends React.PureComponent {
 
             <div className="Content">
               <div className="Author">
-                <Author author={{ name: "Anonymous" }} />
+                <Author identity={identity} />
               </div>
 
               <textarea

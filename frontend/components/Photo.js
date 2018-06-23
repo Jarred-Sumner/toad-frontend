@@ -25,7 +25,16 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
   return { width, height };
 };
 
-export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
+export default ({
+  onClick,
+  width,
+  height,
+  maxHeight,
+  size,
+  photo,
+  circle,
+  maxWidth
+}) => {
   const { url } = photo || {};
 
   return (
@@ -53,6 +62,8 @@ export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
           display: inline-block;
           height: ${height}px;
           max-width: ${maxWidth || "unset"};
+          max-height: ${maxHeight || "unset"};
+
           width: ${width}px;
           min-height: 0;
           min-width: 0;
@@ -62,6 +73,7 @@ export default ({ onClick, width, height, size, photo, circle, maxWidth }) => {
           height: ${height}px;
           width: ${width}px;
           max-width: ${maxWidth || "unset"};
+          max-height: ${maxHeight || "unset"};
           display: inline-block;
           border-radius: 2px;
           object-fit: cover;

@@ -32,6 +32,10 @@ export const Queries = {
         id
         label
         color_scheme
+
+        identity {
+          ${fragments.identity}
+        }
       }
     }
   `,
@@ -46,7 +50,6 @@ export const Queries = {
   CreateThread: gql`
     mutation CreateThread($body: String!, $attachment_id: ID, $boardID: ID!) {
       Board(id: $boardID) {
-        id
 
         Post(body: $body, attachment_id: $attachment_id) {
           id
@@ -58,7 +61,6 @@ export const Queries = {
   CreateReplyToThread: gql`
   mutation CreateReplyToThread($body: String!, $attachment_id: ID, $boardID: ID!, $threadID: ID!) {
     Board(id: $boardID) {
-      id
 
       Post(body: $body, parent_id: $threadID, attachment_id: $attachment_id) {
         id
@@ -69,7 +71,7 @@ export const Queries = {
   `,
   ViewThread: gql`
     query ViewThread($boardID: ID!, $threadID: ID!) {
-      Board(id: $id) {
+      Board(id: $boardID) {
         id
 
         thread(id: $threadID) {

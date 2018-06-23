@@ -15,8 +15,11 @@ import Sticky from "react-stickynode";
 import Draggable from "react-draggable";
 import { buildPostDOMID } from "../../lib/routeHelpers";
 import { Icon, ICONS } from "../Icon";
+import { Queries } from "Toads/Queries";
+import { graphql } from "react-apollo";
+import Alert from "../Alert";
 
-export class CreateCommentForm extends React.PureComponent {
+class _CreateCommentForm extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -36,18 +39,52 @@ export class CreateCommentForm extends React.PureComponent {
     this.textAreaRef.focus();
   };
 
-  handleSubmit = evt => {
-    evt.preventDefault();
-  };
-
   handleFocus = () => this.setState({ focused: true });
   handleBlur = () => this.setState({ focused: false });
 
   handleSetPhoto = photo => this.setState({ photo });
   handleSetText = evt => this.setState({ text: evt.target.value });
 
-  handleClickOutside = () => {
-    this.props.onDismiss();
+  setEditPhotoRef = editPhotoRef => (this.editPhotoRef = editPhotoRef);
+
+  handleSubmit = async evt => {
+    evt.preventDefault();
+    const { createComment, boardId, postId } = this.props;
+    const { text: body, file } = this.state;
+
+    if (!this.editPhotoRef) {
+      return;
+    }
+
+    try {
+      let attachmentId;
+
+      if (file) {
+        attachmentId = await this.editPhotoRef.uploadFile(this.props.boardId);
+      }
+
+      const thread = await createComment({
+        variables: {
+          boardID: boardId,
+          body,
+          attachment_id: attachmentId,
+          threadID: postId
+        }
+      });
+
+      Router.push({
+        route: "thread",
+        params: {
+          board: boardId,
+          id: postId
+        }
+      });
+    } catch (exception) {
+      console.error(exception);
+      if (exception.message) {
+        Alert.error(exception.message);
+      }
+    }
   };
 
   handleChangeFile = file => {
@@ -59,7 +96,7 @@ export class CreateCommentForm extends React.PureComponent {
   handleStopDragging = () => this.setState({ dragging: false });
 
   render() {
-    const { stickyTo, postId, colorScheme, onDismiss } = this.props;
+    const { stickyTo, postId, colorScheme, onDismiss, identity } = this.props;
     const { focused, dragging } = this.state;
     const color = COLORS[colorScheme];
 
@@ -95,6 +132,7 @@ export class CreateCommentForm extends React.PureComponent {
               <div className="Photo">
                 <EditPhotoContainer
                   dropZoneRef={this.props.dropZoneRef}
+                  editPhotoRef={this.setEditPhotoRef}
                   photo={this.state.photo}
                   onChange={this.handleChangeFile}
                   setPhoto={this.handleSetPhoto}
@@ -105,7 +143,7 @@ export class CreateCommentForm extends React.PureComponent {
 
               <div className="Content">
                 <div className="Author">
-                  <Author author={{ name: "Anonymous" }} />
+                  <Author identity={identity} />
                 </div>
 
                 <textarea
@@ -258,5 +296,9 @@ export class CreateCommentForm extends React.PureComponent {
     );
   }
 }
+
+export const CreateCommentForm = graphql(Queries.CreateReplyToThread, {
+  name: "createComment"
+})(_CreateCommentForm);
 
 export default CreateCommentForm;

@@ -16,32 +16,45 @@ class ListThreads extends React.PureComponent {
   };
 
   render() {
-    const { threads, board, colorScheme } = this.props;
+    const { threads, board, colorScheme, identity } = this.props;
 
     return (
       <div className="Container">
         {threads.map(thread => (
-          <div className="PageWrapper PostWrapper" key={thread.id}>
+          <React.Fragment>
+            <div className="PageWrapper PostWrapper" key={thread.id}>
+              <Spacer height={SPACING.large} />
+              <div className="ClearFix">
+                <Post
+                  colorScheme={colorScheme}
+                  board={board}
+                  identity={identity}
+                  post={thread}
+                  comments={thread.replies}
+                />
+              </div>
+            </div>
+            <Spacer divider width="100%" height={1} />
             <Spacer height={SPACING.large} />
-            <Post
-              colorScheme={colorScheme}
-              board={board}
-              post={thread}
-              comments={thread.replies}
-            />
-            <Spacer height={SPACING.large} />
-          </div>
+          </React.Fragment>
         ))}
 
         <style jsx>{`
           .PostWrapper {
             width: 100%;
-            border-bottom: 1px solid ${COLORS.offwhite};
           }
 
           .PageWrapper {
             display: block;
             padding-left: ${SPACING.huge}px;
+          }
+
+          .ClearFix:after {
+            content: " "; /* Older browser do not support empty content */
+            visibility: hidden;
+            display: block;
+            height: 0;
+            clear: both;
           }
         `}</style>
       </div>
@@ -56,7 +69,9 @@ export const ListThreadsContainer = ({ board, ...otherProps }) => {
         const threads = _.get(data, "Board.threads");
 
         if (_.isArray(threads)) {
-          return <ListThreads board={board} {...otherProps} />;
+          return (
+            <ListThreads threads={threads} board={board} {...otherProps} />
+          );
         } else if (
           !threads &&
           networkStatus === isInitialLoading(networkStatus)
