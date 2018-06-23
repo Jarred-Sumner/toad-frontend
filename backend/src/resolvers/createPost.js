@@ -5,9 +5,10 @@ export default async (
   { parent_id, body, attachment_id },
   { session }
 ) => {
+  let foundParent
   // verify that we can reply to the parent
   if (parent_id !== undefined) {
-    const foundParent = await Models[id].findOne({
+    foundParent = await Models[id].findOne({
       where: {
         id: parent_id,
         parent: null,
@@ -23,7 +24,6 @@ export default async (
       where: {
         id: attachment_id,
         session_id: session.id,
-        board: id,
       },
     })
     if (!attachment) {
@@ -33,10 +33,21 @@ export default async (
     return null // Don't allow OPs without attachment
   }
 
-  return Models[id].create({
+  const bumped_at = parent_id === undefined ? new Date() : null
+
+  const newPost = await Models[id].create({
+    bumped_at,
     parent: parent_id,
     attachment_id,
     body,
     identity_id: identity.id,
   })
+
+  // bump op if we're replying
+  if (foundParent) {
+    foundParent.bumped_at = new Date()
+    foundParent.save()
+  }
+
+  return newPost
 }

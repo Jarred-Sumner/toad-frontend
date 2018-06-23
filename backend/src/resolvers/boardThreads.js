@@ -19,7 +19,7 @@ export default async ({ id }, { page = 1 }) => {
         attributes: ['id', 'type', 'mimetype', 'filename', 'url'],
       },
     ],
-    order: [['id', 'DESC']],
+    order: [['bumped_at', 'DESC']],
     limit: 10,
     offset: (page - 1) * 10,
   })

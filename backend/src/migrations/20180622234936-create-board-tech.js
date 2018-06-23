@@ -29,6 +29,10 @@ module.exports = {
             key: 'id',
           },
         },
+        bumped_at: {
+          allowNull: true,
+          type: Sequelize.DATE,
+        },
         created_at: {
           allowNull: false,
           type: Sequelize.DATE,

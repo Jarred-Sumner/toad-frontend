@@ -5,11 +5,12 @@ export default async thread => {
   // fix this soon by a stronger board reference
   const board = thread.board || thread._modelOptions.name.singular
   const limit = thread.showall ? null : 3
-  return Models[board].findAll({
+  const order = thread.showall ? 'ASC' : 'DESC'
+  const results = await Models[board].findAll({
     where: {
       parent: thread.id,
     },
-    order: [['id', 'ASC']],
+    order: [['id', order]],
     limit,
     include: [
       {
@@ -22,4 +23,9 @@ export default async thread => {
       },
     ],
   })
+
+  if (!thread.showall) {
+    results.reverse()
+  }
+  return results
 }
