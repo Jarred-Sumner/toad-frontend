@@ -55,9 +55,7 @@ export const PostHeader = ({
       <Spacer width={SPACING.small} />
       <Link href={url}>
         <a>
-          <Text color="inherit" underline>
-            #{post.id}
-          </Text>
+          <Text color="inherit">#{post.id}</Text>
         </a>
       </Link>
       <Spacer width={SPACING.small} />

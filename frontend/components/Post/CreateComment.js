@@ -64,6 +64,8 @@ class _CreateCommentForm extends React.PureComponent {
         attachmentId = await this.editPhotoRef.uploadFile(this.props.boardId);
       }
 
+      debugger;
+
       const thread = await createComment({
         variables: {
           boardID: boardId,
@@ -94,7 +96,14 @@ class _CreateCommentForm extends React.PureComponent {
   handleStopDragging = () => this.setState({ dragging: false });
 
   render() {
-    const { stickyTo, postId, colorScheme, onDismiss, identity } = this.props;
+    const {
+      stickyTo,
+      postId,
+      boardId,
+      colorScheme,
+      onDismiss,
+      identity
+    } = this.props;
     const { focused, dragging } = this.state;
     const color = COLORS[colorScheme];
 
@@ -132,6 +141,7 @@ class _CreateCommentForm extends React.PureComponent {
                   dropZoneRef={this.props.dropZoneRef}
                   editPhotoRef={this.setEditPhotoRef}
                   photo={this.state.photo}
+                  boardId={boardId}
                   onChange={this.handleChangeFile}
                   setPhoto={this.handleSetPhoto}
                 />
