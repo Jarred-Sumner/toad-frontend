@@ -16,7 +16,7 @@ export default async ({ id }, { page = 1 }) => {
       },
       {
         model: Models.attachment,
-        attributes: ['id', 'type', 'mimetype', 'filename', 'url'],
+        attributes: ['id', 'type', 'mimetype', 'filename', 'url', 'metadata'],
       },
     ],
     order: [['bumped_at', 'DESC']],

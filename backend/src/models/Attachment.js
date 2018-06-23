@@ -11,6 +11,11 @@ export default (sequelize, DataTypes) => {
       filename: DataTypes.STRING,
       url: DataTypes.TEXT,
       session_id: DataTypes.INTEGER,
+      metadata: {
+        type: DataTypes.JSONB,
+        defaultValue: {},
+        allowNull: true,
+      },
     },
     {
       underscored: true,

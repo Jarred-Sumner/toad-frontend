@@ -10,6 +10,9 @@ const resolvers = {
   Post: {
     __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
   },
+  Attachment: {
+    thumbnail_url: _ => _.url,
+  },
   Mutation: {
     Board: Resolvers.board,
     Session: Resolvers.session,

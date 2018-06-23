@@ -19,7 +19,7 @@ export default async thread => {
       },
       {
         model: Models.attachment,
-        attributes: ['id', 'type', 'mimetype', 'filename', 'url'],
+        attributes: ['id', 'type', 'mimetype', 'filename', 'url', 'metadata'],
       },
     ],
   })
