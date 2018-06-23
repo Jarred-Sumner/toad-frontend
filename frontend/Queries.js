@@ -36,18 +36,36 @@ export const Queries = {
     }
   `,
   CreateAttachment: gql`
-    mutation CreateAttachment(
-      $mimetype: String!
-      $filename: String!
-      $boardId: ID!
-    ) {
-      Board(id: $boardId) {
-        Attachment(mimetype: $mimetype, filename: $filename) {
+    mutation CreateAttachment($mimetype: String!, $filename: String!) {
+      Attachment(mimetype: $mimetype, filename: $filename) {
+        id
+        signed_url
+      }
+    }
+  `,
+  CreateThread: gql`
+    mutation CreateThread($body: String!, $attachment_id: ID, $boardID: ID!) {
+      Board(id: $boardID) {
+        id
+
+        Post(body: $body, attachment_id: $attachment_id) {
           id
-          signed_url
+          ${fragments.post}
         }
       }
     }
+  `,
+  CreateReplyToThread: gql`
+  mutation CreateReplyToThread($body: String!, $attachment_id: ID, $boardID: ID!, $threadID: ID!) {
+    Board(id: $boardID) {
+      id
+
+      Post(body: $body, parent_id: $threadID, attachment_id: $attachment_id) {
+        id
+        ${fragments.post}
+      }
+    }
+  }
   `,
   ViewThread: gql`
     query ViewThread($boardID: ID!, $threadID: ID!) {

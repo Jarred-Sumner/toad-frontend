@@ -143,7 +143,7 @@ class EditPhotoContainer extends React.Component {
 
     return this.props
       .createAttachment({
-        variables: { mimetype: file.type, filename: file.name, boardId }
+        variables: { mimetype: file.type, filename: file.name }
       })
       .then(({ data }) => {
         const attachment = _.get(data, "Board.Attachment");

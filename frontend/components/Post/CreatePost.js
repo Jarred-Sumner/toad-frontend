@@ -12,11 +12,14 @@ import classNames from "classnames";
 import onClickOutside from "react-onclickoutside";
 import { MOBILE_BEAKPOINT } from "../../lib/mobile";
 import Alert from "../Alert";
+import { graphql } from "react-apollo";
+import { Queries } from "Queries";
 
 class _CreatePostForm extends React.PureComponent {
   state = {
     photo: null,
     text: "",
+    hasDismissedPicker: false,
     file: null
   };
 
@@ -24,6 +27,8 @@ class _CreatePostForm extends React.PureComponent {
 
   handleSubmit = async evt => {
     evt.preventDefault();
+    const { createPost, boardId } = this.props;
+    const { body } = this.state;
 
     if (!this.editPhotoRef) {
       return;
@@ -33,7 +38,12 @@ class _CreatePostForm extends React.PureComponent {
       const attachmentId = await this.editPhotoRef.uploadFile(
         this.props.boardId
       );
-      alert(attachmentId);
+
+      const thread = createPost({
+        variables: {
+          board
+        }
+      });
     } catch (exception) {
       if (exception.message) {
         Alert.error(exception.message);
@@ -49,14 +59,18 @@ class _CreatePostForm extends React.PureComponent {
   };
 
   handleChangeFile = file => {
-    this.setState({ file });
+    this.setState({ file, hasDismissedPicker: true });
+  };
+
+  handleDialogCancel = () => {
+    this.setState({ hasDismissedPicker: true });
   };
 
   render() {
     return (
       <div
         className={classNames("Container", {
-          "Container--hidden": !this.state.file
+          "Container--hidden": !this.state.hasDismissedPicker
         })}
       >
         <div className="CaretContainer">
@@ -79,6 +93,7 @@ class _CreatePostForm extends React.PureComponent {
                 photo={this.state.photo}
                 onChange={this.handleChangeFile}
                 boardId={this.props.boardId}
+                onFileDialogCancel={this.handleDialogCancel}
                 editPhotoRef={this.setEditPhotoRef}
                 setPhoto={this.handleSetPhoto}
               />
@@ -120,6 +135,11 @@ class _CreatePostForm extends React.PureComponent {
             margin-top: -6px;
             border-radius: 4px;
             filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, 0.2));
+          }
+
+          .Container--hidden {
+            opacity: 0;
+            pointer-events: none;
           }
 
           .Photo {
@@ -233,6 +253,10 @@ class _CreatePostForm extends React.PureComponent {
   }
 }
 
-export const CreatePostForm = onClickOutside(_CreatePostForm);
+const CreatePostFormWithClickOutside = onClickOutside(_CreatePostForm);
+
+export const CreatePostForm = graphql(Queries.CreateThread, {
+  name: "createPost"
+})(CreatePostFormWithClickOutside);
 
 export default CreatePostForm;

@@ -14,7 +14,8 @@ import { Icon, ICONS } from "../components/Icon";
 import {
   withApollo,
   isInitialLoading,
-  isReady
+  isReady,
+  isError
 } from "../components/ApolloProvider";
 import { Query, compose } from "react-apollo";
 import { LoadingPage, ErrorPage } from "components/LoadingPage";
@@ -86,7 +87,7 @@ export const ViewBoardPageContainer = compose(
             />
           );
         } else {
-          return <ErrorPage>I CANT FIND {url.query.board}!</ErrorPage>;
+          return <ErrorPage>Four Oh Four.</ErrorPage>;
         }
       }}
     </Query>
