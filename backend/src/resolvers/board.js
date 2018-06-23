@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { isObject, isNumber, isNull, get } from 'lodash'
 import moment from 'moment'
-import * as Models from '../models'
+import Models from '../models'
 import * as Utils from '../utils'
 
 const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
@@ -16,11 +16,13 @@ const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
   if (isNumber(existingSearch.account_id)) {
     delete existingSearch.session_id
   }
-  const existing = await Models.Identity.findOne({ where: existingSearch })
+  const existing = await Models.identity.findOne({
+    where: existingSearch,
+  })
   if (isObject(existing)) {
     return existing
   }
-  return Models.Identity.create({
+  return Models.identity.create({
     name: Utils.namegen(),
     board: boardId,
     session_id: sessionId,
@@ -32,7 +34,7 @@ const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
 }
 
 export default async (_, { id }, { session }) => {
-  const board = get(Models, `Boards[${id}].board`, null)
+  const board = get(Models, `Boards[${id}]`, null)
   if (isNull(board)) {
     return null
   }

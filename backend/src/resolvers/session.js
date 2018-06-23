@@ -1,11 +1,11 @@
 import nanoid from 'nanoid'
 import { isString, isObject } from 'lodash'
-import * as Models from '../models'
+import Models from '../models'
 
 export default async (_, { email_token }) => {
   const sessionOptions = { token: nanoid(64) }
   if (isString(email_token)) {
-    const emailToken = await Models.EmailToken.findOne({
+    const emailToken = await Models.email_token.findOne({
       where: {
         token: email_token,
         is_valid: true,
@@ -16,7 +16,7 @@ export default async (_, { email_token }) => {
       emailToken.is_valid = false
       await emailToken.save()
       // Update any previous sessions to this account
-      await Models.Identity.update(
+      await Models.identity.update(
         { account_id: emailToken.account_id },
         {
           where: {
@@ -32,8 +32,7 @@ export default async (_, { email_token }) => {
       return null
     }
   }
-
-  const session = await Models.Session.create(sessionOptions)
+  const session = await Models.session.create(sessionOptions)
 
   return session.token
 }

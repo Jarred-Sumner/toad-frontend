@@ -1,4 +1,4 @@
-import * as Models from '../models'
+import Models from '../models'
 
 export default thread => {
   const board = thread.board || thread._modelOptions.name.singular

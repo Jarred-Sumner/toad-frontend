@@ -1,52 +1,53 @@
+import fs from 'fs'
+import path from 'path'
 import Sequelize from 'sequelize'
-import boardBootstrap from './_bootstrapboards'
-import config from '../config'
 
-export const db = new Sequelize(config('pg_url'), {
-  operatorsAliases: false,
-  logging: process.env.NODE_ENV !== 'PRODUCTION',
+const basename = path.basename(__filename)
+const env = process.env.NODE_ENV || 'development'
+const config = require(`${__dirname}/../config/config.json`)[env]
+const db = {}
+
+let sequelize
+
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config)
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  )
+}
+
+fs.readdirSync(__dirname)
+  .filter(
+    file =>
+      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+  )
+  .forEach(file => {
+    const model = sequelize.import(path.join(__dirname, file))
+    db[model.name] = model
+  })
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
+  }
 })
 
-export const Boards = {}
-export const Board = db.import('./Board')
-export const Session = db.import('./Session')
-export const Identity = db.import('./Identity')
-export const Account = db.import('./Account')
-export const EmailToken = db.import('./EmailToken')
-export const Attachment = db.import('./Attachment')
+db.Boards = {}
 
-Session.hasMany(Identity, { foreignKey: 'session_id' })
-Identity.belongsTo(Session, { foreignKey: 'session_id' })
-Account.hasMany(Identity, { foreignKey: 'account_id' })
-Identity.belongsTo(Account, { foreignKey: 'account_id' })
-Account.hasMany(Session, { foreignKey: 'account_id' })
-Session.belongsTo(Account, { foreignKey: 'account_id' })
-Board.hasMany(Identity, { foreignKey: 'board' })
-EmailToken.belongsTo(Account, { foreignKey: 'account_id' })
-Account.hasMany(EmailToken, { foreignKey: 'account_id' })
-EmailToken.belongsTo(Session, { foreignKey: 'session_id' })
-Session.hasMany(EmailToken, { foreignKey: 'session_id' })
-Identity.hasMany(Attachment, { foreignKey: 'identity_id' })
-Attachment.belongsTo(Identity, { foreignKey: 'identity_id' })
-
-const init = async () => {
-  await db.query('CREATE EXTENSION IF NOT EXISTS pgcrypto;')
-  const initboards = await boardBootstrap()
-  await Account.sync()
-  await Session.sync()
-  await EmailToken.sync()
-  await Identity.sync()
-  await Attachment.sync()
-
-  initboards.forEach(b => {
-    const { board, model } = b
-    Boards[board.id] = b
-    Identity.hasMany(model, { foreignKey: 'identity_id' })
-    model.belongsTo(Identity, { foreignKey: 'identity_id' })
-    Attachment.hasMany(model, { foreignKey: 'attachment_id' })
-    model.belongsTo(Attachment, { foreignKey: 'attachment_id' })
-    model.sync()
+const main = async () => {
+  const boards = await db.board.findAll()
+  boards.forEach(model => {
+    db.Boards[model.id] = model
   })
 }
 
-init()
+main()
+
+db.sequelize = sequelize
+db.Sequelize = Sequelize
+
+export default db
