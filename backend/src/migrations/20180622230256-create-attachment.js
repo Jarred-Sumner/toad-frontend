@@ -16,24 +16,16 @@ export default {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      board: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        references: {
-          model: 'boards',
-          key: 'id',
-        },
-      },
       filename: {
         type: Sequelize.STRING,
       },
       url: {
         type: Sequelize.TEXT,
       },
-      identity_id: {
-        type: Sequelize.UUID,
+      session_id: {
+        type: Sequelize.INTEGER,
         references: {
-          model: 'identities',
+          model: 'sessions',
           key: 'id',
         },
       },

@@ -14,10 +14,10 @@ const resolvers = {
     Board: Resolvers.board,
     Session: Resolvers.session,
     Login: Resolvers.login,
+    Attachment: Resolvers.createAttachment,
   },
   BoardMutation: {
     Post: Resolvers.createPost,
-    Attachment: Resolvers.createAttachment,
   },
   Board: {
     threads: Resolvers.boardThreads,

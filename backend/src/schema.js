@@ -96,10 +96,10 @@ type Attachment {
 
 type BoardMutation {
   Post(parent_id: ID, body: String!, attachment_id: ID): Post
-  Attachment(mimetype: String!, filename: String!): NewAttachment
 }
 
 type Mutation {
+  Attachment(mimetype: String!, filename: String!): NewAttachment
   Board(id:ID!): BoardMutation
   Session(email_token: String!): String
   Login(email: String!): Boolean
