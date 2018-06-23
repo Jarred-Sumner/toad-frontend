@@ -35,6 +35,20 @@ export const Queries = {
       }
     }
   `,
+  CreateAttachment: gql`
+    mutation CreateAttachment(
+      $mimetype: String!
+      $filename: String!
+      $boardId: ID!
+    ) {
+      Board(id: $boardId) {
+        Attachment(mimetype: $mimetype, filename: $filename) {
+          id
+          signed_url
+        }
+      }
+    }
+  `,
   ViewThread: gql`
     query ViewThread($boardID: ID!, $threadID: ID!) {
       Board(id: $id) {

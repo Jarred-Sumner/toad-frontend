@@ -5,6 +5,10 @@
     "build": "REACT_SPINKIT_NO_STYLES=true next build",
     "start": "REACT_SPINKIT_NO_STYLES=true NODE_ENV=production node server.js"
   },
+  "browser": {
+    "tough-cookie": false,
+    "fetch-cookie": false
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
@@ -22,6 +26,7 @@
     "classnames": "^2.2.6",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "fetch-cookie": "^0.7.0",
     "fetch-ponyfill": "^6.0.2",
     "gql": "^1.1.2",
     "graphql": "^0.13.2",
@@ -29,8 +34,10 @@
     "localforage": "^1.7.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
+    "net": "^1.0.2",
     "next": "^6.0.3",
     "next-apollo": "^2.0.0",
+    "next-cookies": "^1.0.2",
     "next-plugin-graphql": "^0.0.1",
     "next-progressbar": "^1.0.0",
     "next-routes": "^1.4.2",

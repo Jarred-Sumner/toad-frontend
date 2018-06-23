@@ -14,6 +14,21 @@ import { ApolloProvider as RAApolloProvider } from "react-apollo";
 import { defaultProps } from "recompose";
 import { DEFAULT_DEPRECATION_REASON } from "graphql";
 import { withData } from "next-apollo";
+import cookies from "next-cookies";
+
+let cookieJar;
+
+const { fetch: rawFetch } = fetchPonyfill();
+
+let fetch;
+if (typeof window === "undefined") {
+  const toughCookie = require("tough-cookie");
+  cookieJar = new toughCookie.CookieJar();
+
+  fetch = require("fetch-cookie")(rawFetch, cookieJar);
+} else {
+  fetch = rawFetch;
+}
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -34,7 +49,8 @@ const GRAPHQL_URL = `${process.env.BASE_HOSTNAME}/graphql`;
 console.log("Initializing Apollo –", GRAPHQL_URL);
 const httpLink = new BatchHttpLink({
   uri: GRAPHQL_URL,
-  fetch: fetchPonyfill().fetch
+  fetch,
+  credentials: "include"
 });
 
 // const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -123,10 +139,58 @@ export const isReady = networkStatus => networkStatus === 7;
 // Error States
 export const isError = networkStatus => networkStatus === 8;
 
-export const withApollo = withData({
-  link: httpLink,
-  createCache,
-  fetchPolicy: "cache-and-network"
-});
+const fetchSessionCookie = async ctx => {
+  const { toads_session: sessionCookie } = cookies(ctx);
+
+  if (sessionCookie) {
+    return sessionCookie;
+  } else {
+    const response = await fetch(process.env.BASE_HOSTNAME + "/session", {
+      method: "POST",
+      credentials: "include"
+    });
+
+    const json = await response.json();
+
+    if (json.toads_session) {
+      return json.toads_session;
+    } else {
+      return null;
+    }
+  }
+};
+
+export const withApollo = Component => {
+  const NewComponent = withData({
+    link: httpLink,
+    createCache,
+    fetchPolicy: "cache-and-network"
+  })(Component);
+
+  const oldInitialProps = NewComponent.getInitialProps;
+
+  NewComponent.getInitialProps = async ctx => {
+    const sessionCookie = await fetchSessionCookie(ctx);
+
+    if (sessionCookie && ctx.req) {
+      cookieJar.setCookieSync(
+        "toads_session=" + sessionCookie,
+        process.env.BASE_HOSTNAME
+      );
+      ctx.res.cookie("toads_session", sessionCookie, {
+        maxAge: 31536000, // ONE YEAR
+        domain: `.${process.env.DOMAIN}`
+      });
+    }
+
+    if (oldInitialProps) {
+      return oldInitialProps(ctx);
+    } else {
+      return {};
+    }
+  };
+
+  return NewComponent;
+};
 
 export default withApollo;

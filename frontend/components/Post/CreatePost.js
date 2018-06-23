@@ -11,6 +11,7 @@ import Caret from "../Icons/Caret";
 import classNames from "classnames";
 import onClickOutside from "react-onclickoutside";
 import { MOBILE_BEAKPOINT } from "../../lib/mobile";
+import Alert from "../Alert";
 
 class _CreatePostForm extends React.PureComponent {
   state = {
@@ -19,8 +20,25 @@ class _CreatePostForm extends React.PureComponent {
     file: null
   };
 
-  handleSubmit = evt => {
+  setEditPhotoRef = editPhotoRef => (this.editPhotoRef = editPhotoRef);
+
+  handleSubmit = async evt => {
     evt.preventDefault();
+
+    if (!this.editPhotoRef) {
+      return;
+    }
+
+    try {
+      const attachmentId = await this.editPhotoRef.uploadFile(
+        this.props.boardId
+      );
+      alert(attachmentId);
+    } catch (exception) {
+      if (exception.message) {
+        Alert.error(exception.message);
+      }
+    }
   };
 
   handleSetPhoto = photo => this.setState({ photo });
@@ -60,6 +78,8 @@ class _CreatePostForm extends React.PureComponent {
                 dropZoneRef={this.props.dropZoneRef}
                 photo={this.state.photo}
                 onChange={this.handleChangeFile}
+                boardId={this.props.boardId}
+                editPhotoRef={this.setEditPhotoRef}
                 setPhoto={this.handleSetPhoto}
               />
             </div>
