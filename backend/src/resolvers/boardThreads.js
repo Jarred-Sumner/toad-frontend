@@ -9,16 +9,6 @@ export default async ({ id }, { page = 1 }) => {
     where: {
       parent: null,
     },
-    include: [
-      {
-        model: Models.identity,
-        attributes: ['id', 'name'],
-      },
-      {
-        model: Models.attachment,
-        attributes: ['id', 'type', 'mimetype', 'filename', 'url', 'metadata'],
-      },
-    ],
     order: [['bumped_at', 'DESC']],
     limit: 10,
     offset: (page - 1) * 10,

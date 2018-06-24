@@ -12,16 +12,6 @@ export default async thread => {
     },
     order: [['id', order]],
     limit,
-    include: [
-      {
-        model: Models.identity,
-        attributes: ['id', 'name'],
-      },
-      {
-        model: Models.attachment,
-        attributes: ['id', 'type', 'mimetype', 'filename', 'url', 'metadata'],
-      },
-    ],
   })
 
   if (!thread.showall) {

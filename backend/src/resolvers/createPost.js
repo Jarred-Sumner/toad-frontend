@@ -55,11 +55,15 @@ export default async (
     identity_id: identity.id,
   })
 
+  const postWithData = await Models[id].findOne({
+    where: { id: newPost.id },
+  })
+
   // bump op if we're replying
   if (foundParent) {
     foundParent.bumped_at = new Date()
     foundParent.save()
   }
 
-  return newPost
+  return postWithData
 }

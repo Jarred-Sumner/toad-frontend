@@ -19,6 +19,30 @@ export default (sequelize, DataTypes) => {
     tech.belongsTo(models.identity, { foreignKey: 'identity_id' })
     models.attachment.hasMany(tech, { foreignKey: 'attachment_id' })
     tech.belongsTo(models.attachment, { foreignKey: 'attachment_id' })
+
+    tech.addScope(
+      'defaultScope',
+      {
+        include: [
+          {
+            model: models.identity,
+            attributes: ['id', 'name'],
+          },
+          {
+            model: models.attachment,
+            attributes: [
+              'id',
+              'type',
+              'mimetype',
+              'filename',
+              'url',
+              'metadata',
+            ],
+          },
+        ],
+      },
+      { override: true }
+    )
   }
   return tech
 }

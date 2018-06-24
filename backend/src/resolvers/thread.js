@@ -4,16 +4,6 @@ export default async (context, { id }) => {
   const board = context.id
   const post = await Models[board].findOne({
     where: { id, parent: null },
-    include: [
-      {
-        model: Models.identity,
-        attributes: ['id', 'name'],
-      },
-      {
-        model: Models.attachment,
-        attributes: ['id', 'type', 'mimetype', 'filename', 'url', 'metadata'],
-      },
-    ],
   })
   if (post) {
     return { ...post.dataValues, showall: true, board }
