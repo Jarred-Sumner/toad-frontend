@@ -16,7 +16,7 @@ class ListThreads extends React.PureComponent {
   };
 
   render() {
-    const { threads, board, colorScheme, identity } = this.props;
+    const { threads, board, colorScheme, identity, children } = this.props;
 
     return (
       <div className="Container">
@@ -39,6 +39,8 @@ class ListThreads extends React.PureComponent {
             <Spacer height={SPACING.medium} />
           </React.Fragment>
         ))}
+
+        {children && <div className="PageWrapper">{children}</div>}
 
         <style jsx>{`
           .PostWrapper {
@@ -63,12 +65,12 @@ class ListThreads extends React.PureComponent {
   }
 }
 
-export const ListThreadsContainer = ({ board, ...otherProps }) => {
+export const ListThreadsContainer = ({ board, page, ...otherProps }) => {
   return (
     <Query
       fetchPolicy="cache-and-network"
       query={Queries.ViewThreads}
-      variables={{ id: board.id }}
+      variables={{ id: board.id, page }}
     >
       {({ data, networkStatus }) => {
         const threads = _.get(data, "Board.threads");

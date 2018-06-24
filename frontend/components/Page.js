@@ -23,7 +23,6 @@ export class Page extends React.Component {
         </React.Fragment>
 
         <main className="PageContainer">{children}</main>
-        <Spacer divider width="100%" height={1} />
         <footer>
           <div className="FooterContent">
             <Text size="12px" color={COLORS.medium_white}>

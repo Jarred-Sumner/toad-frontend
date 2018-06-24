@@ -17,15 +17,12 @@ import { Queries } from "../Queries";
 import { Router } from "Toads/routes";
 import Head from "Toads/components/head";
 import { buildBoardURL } from "lib/routeHelpers";
+import { Paginator, MAX_PAGE, MIN_PAGE } from "components/Paginator";
 
 class ViewBoardPage extends React.Component {
   state = {
     showCreatePost: false
   };
-
-  componentDidMount() {
-    Router.prefetch(`/${this.props.board.id}/99999`);
-  }
 
   handleHideCreatePost = () => this.setState({ showCreatePost: false });
   handleShowCreatePost = () => {
@@ -48,7 +45,7 @@ class ViewBoardPage extends React.Component {
   );
 
   render() {
-    const { board } = this.props;
+    const { board, page } = this.props;
     const { color_scheme: colorScheme } = board;
 
     return (
@@ -64,8 +61,11 @@ class ViewBoardPage extends React.Component {
         <ListThreadsContainer
           identity={board.identity}
           board={board}
+          page={page}
           colorScheme={colorScheme}
-        />
+        >
+          <Paginator page={page} colorScheme={colorScheme} boardId={board.id} />
+        </ListThreadsContainer>
       </Page>
     );
   }
@@ -75,6 +75,11 @@ export const ViewBoardPageContainer = compose(
   withApollo,
   withRouter
 )(({ url, ...otherProps }) => {
+  // Ensure page is between MIN_PAGE and MAX_PAGE. If you try to go to page 9999, it'll just make it 10, and if you try to go < page 1, it'll just make it 1.
+  const page = Math.min(
+    Math.max(parseInt(url.query.p || MIN_PAGE, 10), MIN_PAGE),
+    MAX_PAGE
+  );
   return (
     <Query
       notifyOnNetworkStatusChange
@@ -94,6 +99,7 @@ export const ViewBoardPageContainer = compose(
               {...otherProps}
               board={board}
               identity={board.identity}
+              page={page}
               networkStatus={networkStatus}
             />
           );
