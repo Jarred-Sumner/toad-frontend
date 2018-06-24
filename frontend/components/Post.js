@@ -23,6 +23,9 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Alert from "./Alert";
 
+export const MIN_POST_PHOTO_MINIMIZED_HEIGHT = 78;
+export const MIN_POST_PHOTO_HEIGHT = 78;
+
 export const MAX_POST_PHOTO_MINIMIZED_WIDTH = 255;
 export const MAX_POST_PHOTO_MINIMIZED_HEIGHT = 192;
 export const MAX_POST_PHOTO_WIDTH = 300;
@@ -226,6 +229,11 @@ export class Post extends React.PureComponent {
                 <Photo
                   width={dimensions.width}
                   height={dimensions.height}
+                  minHeight={
+                    minimized
+                      ? MIN_POST_PHOTO_MINIMIZED_HEIGHT
+                      : MIN_POST_PHOTO_HEIGHT
+                  }
                   photo={post.attachment}
                 />
               </div>

@@ -38,6 +38,7 @@ export class Comment extends React.PureComponent {
               width={dimensions.width}
               height={dimensions.height}
               photo={comment.attachment}
+              minHeight={125}
             />
             <Spacer width={SPACING.small} />
           </React.Fragment>

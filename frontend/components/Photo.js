@@ -35,16 +35,7 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
   return { width, height };
 };
 
-export default ({
-  onClick,
-  width,
-  height,
-  maxHeight,
-  size,
-  photo,
-  circle,
-  maxWidth
-}) => {
+export default ({ onClick, width, height, minHeight, size, photo, circle }) => {
   const { url } = photo || {};
 
   return (
@@ -70,19 +61,18 @@ export default ({
       <style jsx>{`
         .photo {
           display: inline-block;
-          height: ${height}px;
-          width: ${width}px;
-          min-height: 0;
-          min-width: 0;
+          min-height: ${height}px;
+          min-width: ${width}px;
         }
 
         img {
           height: ${height}px;
+          min-height: ${minHeight}px;
           width: ${width}px;
 
           display: inline-block;
           border-radius: 2px;
-          object-fit: cover;
+          object-fit: contain;
           transition: transform 0.1s linear;
         }
 
