@@ -25,7 +25,6 @@ export class Page extends React.Component {
         </React.Fragment>
 
         <main className="PageContainer">{children}</main>
-        <Spacer height={SPACING.large} />
         <Spacer divider width="100%" height={1} />
         <footer>
           <div className="FooterContent">
@@ -52,13 +51,25 @@ export class Page extends React.Component {
         <ReactTooltip />
 
         <style jsx>{`
+          .PageContainer,
           .Page {
             width: 100%;
-            height: 100%;
+            height: auto;
+            min-height: 100%;
+          }
+
+          .Page {
+            display: flex;
+            align-self: flex-start;
+            flex-direction: column;
+          }
+
+          .Page {
             background-color: ${backgroundColor || COLORS.background};
           }
 
           footer {
+            margin-top: auto;
             width: 100%;
             padding: ${SPACING.large}px;
             display: flex;

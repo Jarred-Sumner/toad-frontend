@@ -23,7 +23,6 @@ class ListThreads extends React.PureComponent {
         {threads.map(thread => (
           <React.Fragment>
             <div className="PageWrapper PostWrapper" key={thread.id}>
-              <Spacer height={SPACING.large} />
               <div className="ClearFix">
                 <Post
                   colorScheme={colorScheme}
@@ -35,8 +34,9 @@ class ListThreads extends React.PureComponent {
                 />
               </div>
             </div>
+            <Spacer height={SPACING.medium} />
             <Spacer divider width="100%" height={1} />
-            <Spacer height={SPACING.large} />
+            <Spacer height={SPACING.medium} />
           </React.Fragment>
         ))}
 

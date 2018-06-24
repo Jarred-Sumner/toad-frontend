@@ -38,8 +38,6 @@ class _CreatePostForm extends React.PureComponent {
 
     this.setState({ isPosting: true });
 
-    Router.prefetch({ route: "thread" });
-
     try {
       const attachmentId = await this.editPhotoRef.uploadFile(
         this.props.boardId
@@ -56,12 +54,12 @@ class _CreatePostForm extends React.PureComponent {
       const postId = _.get(thread, "data.Board.Post.id");
       if (postId) {
         this.props.onDismiss();
-        Alert.success("Posted successfully.");
         this.setState({ isPosting: false });
         Router.pushRoute("thread", {
           board: boardId,
           id: String(postId)
         });
+        Alert.success("Posted successfully.");
       } else {
         Alert.error("Something went wrong! Please try again");
         this.setState({ isPosting: false });
@@ -92,6 +90,7 @@ class _CreatePostForm extends React.PureComponent {
 
   render() {
     const { identity, dropZoneRef, boardId } = this.props;
+    const { isPosting } = this.state;
 
     return (
       <div
@@ -144,8 +143,16 @@ class _CreatePostForm extends React.PureComponent {
           </div>
 
           <div className="Menu ActionsMenu">
+            {isPosting && (
+              <React.Fragment>
+                <Text>Posting...</Text>
+                <Spacer width={SPACING.normal} />
+              </React.Fragment>
+            )}
             <button>
-              <Button color={GRADIENT_COLORS.blue}>Create thread</Button>
+              <Button pending={isPosting} color={GRADIENT_COLORS.blue}>
+                Create thread
+              </Button>
             </button>
           </div>
         </form>
@@ -185,6 +192,10 @@ class _CreatePostForm extends React.PureComponent {
             width: 100%;
             align-self: flex-start;
             flex-direction: column;
+          }
+
+          button {
+            outline: 0;
           }
 
           .Author {
@@ -246,6 +257,7 @@ class _CreatePostForm extends React.PureComponent {
             justify-content: flex-end;
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 4px;
+            align-items: center;
           }
 
           @media (max-width: ${MOBILE_BEAKPOINT}px) {

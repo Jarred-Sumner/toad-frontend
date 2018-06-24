@@ -1,6 +1,6 @@
-const IMAGE_HOST = "https://i.applytodate.com";
+const IMAGE_HOST = process.env.IMAGE_PROXY_HOST;
 
-const DEFAULT_SIZES = [1.0, 1.5, 2, 3, 4.0];
+const DEFAULT_SIZES = [1, 1.5, 2, 3, 4];
 const DEFAULT_PIXEL_RATIO = 1.0;
 
 const getPixelRatio = () => {
@@ -15,7 +15,7 @@ const normalizeFormat = value => {
   if (typeof value === "string") {
     return parseInt(value.split("px")[0], 10);
   } else {
-    return value;
+    return Math.ceil(value);
   }
 };
 
@@ -27,12 +27,12 @@ const normalizeSize = (size, rawHeight, _pixelRatio = null) => {
     const height = normalizeFormat(rawHeight) * pixelRatio;
     return `${width}x${height}`;
   } else {
-    return normalizeFormat(size) * pixelRatio;
+    return Math.ceil(normalizeFormat(size) * pixelRatio);
   }
 };
 
 export const buildImgSrc = (source, rawSize, rawHeight, pixelRatio) => {
-  if (!rawSize) {
+  if (!rawSize || !IMAGE_HOST) {
     return source;
   }
 
@@ -54,6 +54,6 @@ export const buildImgSrcSet = (
   }
 
   return DEFAULT_SIZES.map(size =>
-    [buildImgSrc(source, rawDesiredSize, rawHeight, size)].join(" ")
+    [buildImgSrc(source, rawDesiredSize, rawHeight, size), size + "x"].join(" ")
   ).join(",\n");
 };

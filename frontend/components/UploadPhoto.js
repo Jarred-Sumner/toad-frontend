@@ -51,8 +51,6 @@ class EditablePhoto extends React.PureComponent {
 
           .Loading {
             padding: ${SPACING.normal}px;
-            background-color: ${COLORS.black};
-            opacity: 0.95;
             align-items: center;
             display: flex;
             justify-content: center;

@@ -155,6 +155,13 @@ export default class MyDocument extends Document {
               -webkit-tap-highlight-color: transparent;
             }
 
+            html,
+            body,
+            #__next {
+              min-height: 100%;
+              height: 100%;
+            }
+
             a {
               text-decoration: none;
             }

@@ -8,13 +8,14 @@ import { Spacer } from "./Spacer";
 
 export class Button extends React.PureComponent {
   render() {
-    const { children, color, onClick, icon, pressed } = this.props;
+    const { children, color, onClick, icon, pressed, pending } = this.props;
 
     return (
       <div
         onClick={onClick}
         className={classNames("Button", {
           "Button--pressed": pressed,
+          "Button--pending": pending,
           "Button--blue": color === GRADIENT_COLORS.blue,
           "Button--black": color === COLORS.black,
           "Button--white": color === COLORS.white,
@@ -100,6 +101,12 @@ export class Button extends React.PureComponent {
           .Button--green {
             background-color: ${COLORS[GRADIENT_COLORS.green]};
             color: white;
+          }
+
+          .Button--pending,
+          .Button--pending:hover {
+            opacity: 0.75;
+            cursor: busy;
           }
         `}</style>
       </div>

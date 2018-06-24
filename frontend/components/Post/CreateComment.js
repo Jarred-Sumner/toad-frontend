@@ -109,7 +109,7 @@ class _CreateCommentForm extends React.PureComponent {
       onDismiss,
       identity
     } = this.props;
-    const { focused, dragging } = this.state;
+    const { focused, dragging, isPosting } = this.state;
     const color = COLORS[colorScheme];
 
     return (
@@ -128,7 +128,7 @@ class _CreateCommentForm extends React.PureComponent {
           <form className="CreateCommentForm" onSubmit={this.handleSubmit}>
             <div className="Menu HeaderMenu">
               <Text size="14px" color={color} weight="bold">
-                Comment on thread{" "}
+                Reply to thread{" "}
                 <a href={`#${buildPostDOMID(postId)}`}>
                   <Text weight="inherit" color="inherit" underline>
                     #{postId}
@@ -175,8 +175,14 @@ class _CreateCommentForm extends React.PureComponent {
             </div>
 
             <div className="Menu ActionsMenu">
+              {isPosting && (
+                <React.Fragment>
+                  <Text>Sending...</Text>
+                  <Spacer width={SPACING.normal} />
+                </React.Fragment>
+              )}
               <button>
-                <Button color={GRADIENT_COLORS.blue}>Create comment</Button>
+                <Button color={GRADIENT_COLORS.blue}>Submit reply</Button>
               </button>
             </div>
           </form>
@@ -257,6 +263,7 @@ class _CreateCommentForm extends React.PureComponent {
               margin: 0;
               padding: 0;
               display: flex;
+              outline: 0;
             }
 
             .Menu {
@@ -277,6 +284,7 @@ class _CreateCommentForm extends React.PureComponent {
               justify-content: flex-end;
               border-bottom-left-radius: 4px;
               border-bottom-right-radius: 4px;
+              align-items: center;
             }
 
             @media (max-width: ${MOBILE_BEAKPOINT}px) {

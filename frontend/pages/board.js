@@ -14,11 +14,16 @@ import { Page } from "../components/Page";
 import { Spacer } from "../components/Spacer";
 import { SPACING } from "../lib/spacing";
 import { Queries } from "../Queries";
+import { Router } from "Toads/routes";
 
 class ViewBoardPage extends React.Component {
   state = {
     showCreatePost: false
   };
+
+  componentDidMount() {
+    Router.prefetch(`/${this.props.board.id}/99999`);
+  }
 
   handleHideCreatePost = () => this.setState({ showCreatePost: false });
   handleShowCreatePost = () => {
