@@ -1,10 +1,11 @@
 import moment from 'moment'
 import nanoid from 'nanoid'
 import Storage from '@google-cloud/storage'
+import config from '../config'
 
 const storage = new Storage({
   projectId: 'toads-208000',
-  keyFilename: 'src/google_credentials.json',
+  keyFilename: config('google_application_credentials'),
 })
 const bucket = storage.bucket('toad-uploads')
 

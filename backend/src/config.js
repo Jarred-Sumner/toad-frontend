@@ -4,4 +4,5 @@ import deo from 'deo'
 export default deo({
   origin: 'localhost:5000',
   hostname: 'http://localhost:5000',
+  google_application_credentials: 'src/google_credentials.json',
 })

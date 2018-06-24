@@ -14,15 +14,38 @@ spec:
         app: backend
         tier: backend
     spec:
+      volumes:
+      - name: gstorage-key
+        secret:
+          secretName: gstorage-key
       containers:
       - env:
         - name: NODE_ENV
           value: production
+        - name: ORIGIN
+          value: toads.app
+        - name: HOSTNAME
+          value: https://toads.app
         - name: DB_CONNECTION_STRING
           value: "postgres://postgres@pgbouncer/toads"
-        image: gcr.io/toads-208000/toads-backend:74711e30d73d459dedce73438b0c2afaba978004
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/google/key.json
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: aws-email
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: aws-email
+        image: gcr.io/toads-208000/toads-backend:07e9e3aa8565765413e0bcb1a9a1f085519c0dd7
         imagePullPolicy: Always
         name: backend
+        volumeMounts:
+        - name: gstorage-key
+          mountPath: /var/secrets/google
         ports:
         - containerPort: 3000
           protocol: TCP
