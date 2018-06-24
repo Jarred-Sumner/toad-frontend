@@ -1,7 +1,12 @@
+import PageHead from "../components/head";
 import Document, { Head, Main, NextScript } from "next/document";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
 if (typeof window !== "undefined") {
   window.Promise = require("bluebird");
+  window.FontAwesomeConfig = {
+    autoAddCss: false
+  };
 } else if (typeof global !== "undefined") {
   global.Promise = require("bluebird");
 }
@@ -167,6 +172,7 @@ export default class MyDocument extends Document {
             }
           `}</style>
           <link rel="stylesheet" href="/_next/static/style.css" />
+          <PageHead />
         </Head>
         <body>
           <Main />

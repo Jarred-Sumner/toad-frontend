@@ -4,7 +4,6 @@ import { COLORS } from "../lib/colors";
 import { MOBILE_BEAKPOINT } from "../lib/mobile";
 import { SPACING } from "../lib/spacing";
 import { AlertHost } from "./Alert";
-import Head from "./head";
 import { NavHeader } from "./NavHeader";
 import { Spacer } from "./Spacer";
 import { Text } from "./Text";
@@ -17,7 +16,6 @@ export class Page extends React.Component {
 
     return (
       <article className="Page">
-        <Head />
         <AlertHost />
         <React.Fragment>
           <NavHeader />
