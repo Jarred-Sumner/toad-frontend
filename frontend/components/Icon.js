@@ -6,7 +6,9 @@ import {
   faTimesCircle,
   faChevronRight,
   faFlag,
-  faLink
+  faLink,
+  faBackward,
+  faForward
 } from "@fortawesome/free-solid-svg-icons";
 
 export const ICONS = {
@@ -15,7 +17,9 @@ export const ICONS = {
   close: faTimesCircle,
   flag: faFlag,
   link: faLink,
-  chevronRight: faChevronRight
+  chevronRight: faChevronRight,
+  previous: faBackward,
+  next: faForward
 };
 
 export const Icon = FontAwesomeIcon;
