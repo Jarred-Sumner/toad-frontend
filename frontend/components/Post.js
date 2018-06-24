@@ -126,10 +126,14 @@ export const PostHeader = ({
 };
 
 export class Post extends React.PureComponent {
-  state = {
-    defautReplyText: "",
-    showCommentForm: false
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      defautReplyText: "",
+      showCommentForm: props.showCommentForm || false
+    };
+  }
 
   buildReplyText = url => {
     return `>> ${url}\n`;
@@ -262,7 +266,7 @@ export class Post extends React.PureComponent {
 
             <Spacer height={SPACING.normal} />
 
-            {comments.map(comment => (
+            {comments.map((comment, index) => (
               <React.Fragment key={comment.id}>
                 <Comment
                   createReply={this.handleReplyToComment}
@@ -275,7 +279,9 @@ export class Post extends React.PureComponent {
                     commentId: comment.id
                   })}
                 />
-                <Spacer height={SPACING.small} />
+                {comments.length - 1 > index && (
+                  <Spacer height={SPACING.small} />
+                )}
               </React.Fragment>
             ))}
           </div>
