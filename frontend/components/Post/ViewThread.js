@@ -9,6 +9,7 @@ import { isInitialLoading } from "../ApolloProvider";
 import { Spinner } from "../Spinner";
 import _ from "lodash";
 import { Text } from "../Text";
+import Head from "../head";
 
 class ViewThread extends React.PureComponent {
   render() {
@@ -16,6 +17,17 @@ class ViewThread extends React.PureComponent {
 
     return (
       <div className="Container">
+        <Head
+          title={`${_.truncate(thread.body || "Thread", {
+            length: 30
+          })} | /${board.id}/ on Toads`}
+          description={
+            thread.body ? _.truncate(thread.body, { length: 300 }) : null
+          }
+          ogImage={thread.attachment.url}
+          ogImageWidth={_.get(thread, "attachment.metadata.width")}
+          ogImageHeight={_.get(thread, "attachment.metadata.height")}
+        />
         <div className="PageWrapper PostWrapper" key={thread.id}>
           <Spacer height={SPACING.large} />
           <div className="ClearFix">

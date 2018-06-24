@@ -16,6 +16,8 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
+          <meta charSet="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <style jsx global>{`
             html,
             body,
@@ -171,6 +173,10 @@ export default class MyDocument extends Document {
               text-decoration: none;
             }
           `}</style>
+          <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700"
+            rel="stylesheet"
+          />
           <link rel="stylesheet" href="/_next/static/style.css" />
           <PageHead />
         </Head>

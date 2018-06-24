@@ -15,6 +15,8 @@ import { Spacer } from "../components/Spacer";
 import { SPACING } from "../lib/spacing";
 import { Queries } from "../Queries";
 import { Router } from "Toads/routes";
+import Head from "Toads/components/head";
+import { buildBoardURL } from "lib/routeHelpers";
 
 class ViewBoardPage extends React.Component {
   state = {
@@ -51,6 +53,13 @@ class ViewBoardPage extends React.Component {
 
     return (
       <Page renderSubheader={this.renderHeader}>
+        <Head
+          title={`${board.label} | Toads`}
+          description={`/${board.id}/ - ${
+            board.label
+          } is on Toads, a new kind of imageboard.`}
+          url={buildBoardURL(board.id)}
+        />
         <Spacer height={SPACING.large} />
         <ListThreadsContainer
           identity={board.identity}

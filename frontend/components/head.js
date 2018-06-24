@@ -7,15 +7,11 @@ const defaultOGImage = "";
 
 const Head = props => (
   <NextHead>
-    <meta charSet="UTF-8" />
     <title>{props.title || ""}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <meta
       name="description"
       content={props.description || defaultDescription}
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" sizes="192x192" href="/static/touch-icon.png" />
     <link rel="apple-touch-icon" href="/static/touch-icon.png" />
     <link rel="mask-icon" href="/static/favicon-mask.svg" color="#49B882" />
@@ -30,12 +26,8 @@ const Head = props => (
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={props.ogImage || defaultOGImage} />
     <meta property="og:image" content={props.ogImage || defaultOGImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700"
-      rel="stylesheet"
-    />
+    <meta property="og:image:width" content={props.ogImageWidth} />
+    <meta property="og:image:height" content={props.ogImageHeight} />
   </NextHead>
 );
 
