@@ -107,10 +107,12 @@ export const PostHeader = ({
 
         .Header--muted {
           color: ${COLORS.gray};
+          filter: grayscale(100%);
         }
 
         .Header:hover {
           color: ${color};
+          filter: grayscale(0%);
         }
 
         .Group {
