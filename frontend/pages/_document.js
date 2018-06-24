@@ -18,7 +18,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <style jsx global>{`
+          <style key="root-style" jsx global>{`
             html,
             body,
             div,
@@ -174,10 +174,15 @@ export default class MyDocument extends Document {
             }
           `}</style>
           <link
+            key="font"
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700"
             rel="stylesheet"
           />
-          <link rel="stylesheet" href="/_next/static/style.css" />
+          <link
+            key="static-stylesheet"
+            rel="stylesheet"
+            href="/_next/static/style.css"
+          />
 
           <link
             rel="apple-touch-icon"

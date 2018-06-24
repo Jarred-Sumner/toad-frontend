@@ -88,6 +88,8 @@ export const ViewThreadContainer = ({
               {...otherProps}
             />
           );
+        } else if (typeof window === "undefined") {
+          return null;
         } else if (
           !thread &&
           networkStatus === isInitialLoading(networkStatus)
