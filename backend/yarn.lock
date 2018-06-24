@@ -625,7 +625,7 @@ babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-preset-node8@^1.1.2:
+babel-preset-node8@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/babel-preset-node8/-/babel-preset-node8-1.2.0.tgz#1538a88e90728e19e166c0211398bc00b6e83a57"
   dependencies:
