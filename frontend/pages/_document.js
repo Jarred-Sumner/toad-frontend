@@ -178,6 +178,56 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           <link rel="stylesheet" href="/_next/static/style.css" />
+
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/static/apple-touch-icon.png"
+          />
+
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/static/favicon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/static/favicon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="64x64"
+            href="/static/favicon.png"
+          />
+
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="96x96"
+            href="/static/favicon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="128x128"
+            href="/static/favicon.png"
+          />
+
+          <link rel="manifest" href="/static/site.webmanifest" />
+          <link
+            rel="mask-icon"
+            href="/static/safari-pinned-tab.svg"
+            color="#5bbad5"
+          />
+          <meta name="apple-mobile-web-app-title" content="Toads" />
+          <meta name="application-name" content="Toads" />
+          <meta name="msapplication-TileColor" content="#da532c" />
+          <meta name="theme-color" content="#ffffff" />
+
           <PageHead />
         </Head>
         <body>
