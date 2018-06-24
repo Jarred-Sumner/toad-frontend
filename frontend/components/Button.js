@@ -8,13 +8,22 @@ import { Spacer } from "./Spacer";
 
 export class Button extends React.PureComponent {
   render() {
-    const { children, color, onClick, icon, pressed, pending } = this.props;
+    const {
+      children,
+      disabled,
+      color,
+      onClick,
+      icon,
+      pressed,
+      pending
+    } = this.props;
 
     return (
       <div
-        onClick={onClick}
+        onClick={disabled ? undefined : onClick}
         className={classNames("Button", {
           "Button--pressed": pressed,
+          "Button--disabled": disabled,
           "Button--pending": pending,
           "Button--blue": color === GRADIENT_COLORS.blue,
           "Button--black": color === COLORS.black,
@@ -29,18 +38,20 @@ export class Button extends React.PureComponent {
         {icon && (
           <React.Fragment>
             {icon}
-            <Spacer width={SPACING.small} />
+            {!!children && <Spacer width={SPACING.small} />}
           </React.Fragment>
         )}
-        <Text
-          letterSpacing="0px"
-          lineHeight="14px"
-          weight="semiBold"
-          size="14px"
-          color="inherit"
-        >
-          {children}
-        </Text>
+        {!!children && (
+          <Text
+            letterSpacing="0px"
+            lineHeight="14px"
+            weight="semiBold"
+            size="14px"
+            color="inherit"
+          >
+            {children}
+          </Text>
+        )}
 
         <style jsx>{`
           .Button {
@@ -103,10 +114,19 @@ export class Button extends React.PureComponent {
             color: white;
           }
 
+          .Button-disabled,
           .Button--pending,
           .Button--pending:hover {
             opacity: 0.75;
+          }
+
+          .Button--pending,
+          .Button--pending:hover {
             cursor: busy;
+          }
+
+          .Button--disabled {
+            cursor: disabled;
           }
         `}</style>
       </div>
