@@ -5,7 +5,7 @@ metadata:
     app: backend
   name: backend
 spec:
-  replicas: 1
+  replicas: 5
   strategy:
     type: RollingUpdate
   template:
@@ -40,7 +40,7 @@ spec:
             secretKeyRef:
               key: AWS_SECRET_ACCESS_KEY
               name: aws-email
-        image: gcr.io/toads-208000/toads-backend:07e9e3aa8565765413e0bcb1a9a1f085519c0dd7
+        image: gcr.io/toads-208000/toads-backend:9eb41a82808f17c4e45061525a3b840a570b1c0b
         imagePullPolicy: Always
         name: backend
         volumeMounts:

@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: imageproxy
+  labels:
+    app: imageproxy
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: imageproxy
+    spec:
+      volumes:
+      - name: gstorage-key
+        secret:
+          secretName: gstorage-key
+      containers:
+      - name: imageproxy
+        image: willnorris/imageproxy:latest
+        command: ["/go/bin/imageproxy"]
+        args: 
+          - "-addr"
+          - "0.0.0.0:8080"
+          - "-cache"
+          - "memory"
+          - "-cache"
+          - "gcs://toad-upload-cache"
+          - "-whitelist"
+          - "storage.googleapis.com"
+        volumeMounts:
+        - name: gstorage-key
+          mountPath: /var/secrets/google
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 8080
+        env:
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /var/secrets/google/key.json
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
