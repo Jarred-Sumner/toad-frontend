@@ -68,7 +68,7 @@ export class Page extends React.Component {
           footer {
             margin-top: auto;
             width: 100%;
-            padding: ${SPACING.large}px;
+            padding: ${SPACING.large}px ${SPACING.huge}px;
             display: flex;
             justify-content: space-between;
           }
