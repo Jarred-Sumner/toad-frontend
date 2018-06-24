@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: backend
+    spec:
+      containers:
+      - env:
+        - name: NODE_ENV
+          value: production
+        image: gcr.io/toads-208000/toads-frontend:6f869d6b584ab5e0fc7f520ee66966518819a4f5
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 3000
+          protocol: TCP

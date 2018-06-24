@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pgbouncer
+  labels:
+    app: pgbouncer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pgbouncer
+    spec:
+      containers:
+      - name: pgbouncer
+        image: brainsam/pgbouncer:1.7.2
+        ports:
+        - name: postgres
+          protocol: TCP
+          containerPort: 5432
+        env:
+          - name: LISTEN_PORT
+            value: "5432"
+          - name: SERVER_TLS_SSLMODE
+            value: prefer
+          - name: MAX_DB_CONNECTIONS
+            value: "70"
+          - name: MAX_CLIENT_CONN
+            value: "500"
+          - name: DEFAULT_POOL_SIZE
+            value: "150"
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                key: host
+                name: toad-postgres
+          - name: DB_USER
+            value: postgres
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: toad-postgres
+        # resources:
+        #   requests:
+        #     cpu: 300m
+        #     memory: 512Mi
