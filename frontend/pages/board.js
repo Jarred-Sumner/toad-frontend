@@ -64,6 +64,7 @@ export const ViewBoardPageContainer = compose(
   return (
     <Query
       notifyOnNetworkStatusChange
+      fetchPolicy="cache-and-network"
       query={Queries.ViewBoard}
       variables={{ id: url.query.board }}
     >

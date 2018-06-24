@@ -23,6 +23,7 @@ class ViewThread extends React.PureComponent {
               colorScheme={colorScheme}
               board={board}
               post={thread}
+              minimized={false}
               comments={thread.replies}
             />
           </div>

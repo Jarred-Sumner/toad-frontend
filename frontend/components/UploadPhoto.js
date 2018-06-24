@@ -216,13 +216,15 @@ class EditPhotoContainer extends React.Component {
       url,
       width = this.props.width,
       height = this.props.height,
-      photo
+      photo,
+      onFileDialogCancel
     } = this.state;
     const { remoteSize, dropZoneRef } = this.props;
 
     return (
       <Dropzone
         multiple={false}
+        onFileDialogCancel={onFileDialogCancel}
         // disabled={status === Status.uploading}
         accept="image/*"
         ref={dropZoneRef}

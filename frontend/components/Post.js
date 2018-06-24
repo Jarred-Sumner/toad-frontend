@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+import moment from "moment-shortformat";
 import { Author } from "./Post/Author";
 import { Text } from "./Text";
 import { SPACING } from "../lib/spacing";
@@ -23,8 +23,10 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Alert from "./Alert";
 
-export const MAX_POST_PHOTO_WIDTH = 375;
-export const MAX_POST_PHOTO_HEIGHT = 175;
+export const MAX_POST_PHOTO_MINIMIZED_WIDTH = 255;
+export const MAX_POST_PHOTO_MINIMIZED_HEIGHT = 192;
+export const MAX_POST_PHOTO_WIDTH = 300;
+export const MAX_POST_PHOTO_HEIGHT = 225;
 export const MAX_POST_CONTENT_WIDTH = 576;
 
 const copiedToClipboard = () => Alert.info("Copied link to clipboard");
@@ -49,7 +51,7 @@ export const PostHeader = ({
 
       <Link href={url}>
         <a data-tip={moment(post.created_at).format("lll")}>
-          <Text>{moment(post.created_at).fromNow()}</Text>
+          <Text color={COLORS.gray}>{moment(post.created_at).short()}</Text>
         </a>
       </Link>
       <Spacer width={SPACING.small} />
@@ -175,15 +177,24 @@ export class Post extends React.PureComponent {
   setCommentFormRef = commentFormRef => (this.commentFormRef = commentFormRef);
 
   render() {
-    const { post, comments, board, colorScheme, identity } = this.props;
+    const {
+      post,
+      comments,
+      board,
+      colorScheme,
+      identity,
+      minimized
+    } = this.props;
     const color = COLORS[colorScheme];
-    const dimensions = post.photo
-      ? calculateDimensions({
-          photo: post.photo,
-          maxWidth: MAX_POST_PHOTO_WIDTH,
-          maxHeight: MAX_POST_PHOTO_HEIGHT
-        })
-      : null;
+    const dimensions = calculateDimensions({
+      photo: post.attachment,
+      maxWidth: minimized
+        ? MAX_POST_PHOTO_MINIMIZED_WIDTH
+        : MAX_POST_PHOTO_WIDTH,
+      maxHeight: minimized
+        ? MAX_POST_PHOTO_MINIMIZED_HEIGHT
+        : MAX_POST_PHOTO_HEIGHT
+    });
 
     const url = buildPostPathSelectedPost({ boardId: board.id, id: post.id });
     const postDomID = buildPostDOMID(post.id);
@@ -204,17 +215,15 @@ export class Post extends React.PureComponent {
 
         <div className="Post">
           {post.attachment && (
-            <React.Fragment>
-              <div className="PhotoWrapper">
-                <div className="PhotoContainer">
-                  <Photo
-                    maxWidth={MAX_POST_PHOTO_WIDTH + "px"}
-                    maxHeight={MAX_POST_PHOTO_HEIGHT + "px"}
-                    photo={post.attachment}
-                  />
-                </div>
+            <div className="PhotoWrapper">
+              <div className="PhotoContainer">
+                <Photo
+                  width={dimensions.width}
+                  height={dimensions.height}
+                  photo={post.attachment}
+                />
               </div>
-            </React.Fragment>
+            </div>
           )}
 
           <div className="ContentContainer">
@@ -256,6 +265,7 @@ export class Post extends React.PureComponent {
                 <Comment
                   createReply={this.handleReplyToComment}
                   comment={comment}
+                  minimized={minimized}
                   colorScheme={colorScheme}
                   url={buildCommentPath({
                     boardId: board.id,
@@ -273,7 +283,6 @@ export class Post extends React.PureComponent {
           .PhotoContainer {
             float: left;
             margin-right: ${SPACING.large}px;
-            margin-bottom: ${SPACING.large}px;
           }
 
           .Post {

@@ -10,20 +10,25 @@ import { MAX_POST_CONTENT_WIDTH, PostHeader } from "../Post";
 import Photo, { calculateDimensions } from "../Photo";
 import { buildCommentDOMID } from "../../lib/routeHelpers";
 
+export const MAX_PHOTO_WIDTH_MINIMIZED = 125;
+export const MAX_PHOTO_HEIGHT_MINIMIZED = 125;
 export const MAX_PHOTO_WIDTH = 175;
 export const MAX_PHOTO_HEIGHT = 300;
 
 export class Comment extends React.PureComponent {
   handleShowReply = () => this.props.createReply(this.props.comment.id);
   render() {
-    const { comment, backgroundColor = COLORS.offwhite, url } = this.props;
-    const dimensions = comment.attachment
-      ? calculateDimensions({
-          photo: comment.attachment,
-          maxWidth: MAX_PHOTO_WIDTH,
-          maxHeight: MAX_PHOTO_HEIGHT
-        })
-      : null;
+    const {
+      comment,
+      backgroundColor = COLORS.offwhite,
+      url,
+      minimized
+    } = this.props;
+    const dimensions = calculateDimensions({
+      photo: comment.attachment,
+      maxWidth: minimized ? MAX_PHOTO_WIDTH_MINIMIZED : MAX_PHOTO_WIDTH,
+      maxHeight: minimized ? MAX_PHOTO_HEIGHT_MINIMIZED : MAX_PHOTO_HEIGHT
+    });
 
     return (
       <div id={buildCommentDOMID(comment.id)} className="CommentContainer">
@@ -32,8 +37,6 @@ export class Comment extends React.PureComponent {
             <Photo
               width={dimensions.width}
               height={dimensions.height}
-              maxWidth={MAX_PHOTO_WIDTH + "px"}
-              maxHeight={MAX_PHOTO_HEIGHT + "px"}
               photo={comment.attachment}
             />
             <Spacer width={SPACING.small} />
@@ -68,7 +71,7 @@ export class Comment extends React.PureComponent {
 
           .Comment {
             background-color: ${backgroundColor};
-            padding: ${SPACING.normal}px;
+            padding: ${SPACING.small}px ${SPACING.normal}px;
             border-radius: 2px;
             display: inline-flex;
             align-self: flex-start;

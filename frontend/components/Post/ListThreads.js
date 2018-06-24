@@ -30,6 +30,7 @@ class ListThreads extends React.PureComponent {
                   board={board}
                   identity={identity}
                   post={thread}
+                  minimized
                   comments={thread.replies}
                 />
               </div>
@@ -64,7 +65,11 @@ class ListThreads extends React.PureComponent {
 
 export const ListThreadsContainer = ({ board, ...otherProps }) => {
   return (
-    <Query query={Queries.ViewThreads} variables={{ id: board.id }}>
+    <Query
+      fetchPolicy="cache-and-network"
+      query={Queries.ViewThreads}
+      variables={{ id: board.id }}
+    >
       {({ data, networkStatus }) => {
         const threads = _.get(data, "Board.threads");
 

@@ -11,6 +11,11 @@ fragments.attachment = `
   mimetype
   filename
   url
+
+  metadata {
+    width
+    height
+  }
 `;
 fragments.post = `
     created_at

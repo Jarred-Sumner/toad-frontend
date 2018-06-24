@@ -5,21 +5,31 @@ const DEFAULT_SIZE = "126px";
 
 export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
   const MAX_COLUMN_COUNT = 1;
+  if (!photo || !photo.metadata) {
+    return { width: null, height: null };
+  }
+
+  const { width: rawWidth, height: rawHeight } = photo.metadata;
 
   let width,
     height = 0;
-  if (photo.width > photo.height) {
+
+  if (rawWidth > rawHeight) {
     const MAX_SIZE = (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
-    width = Math.min(photo.width, MAX_SIZE);
-    height = photo.height * (width / photo.width);
-  } else if (photo.height > photo.width) {
+    width = Math.min(rawWidth, MAX_SIZE);
+    height = rawHeight * (width / rawWidth);
+  } else if (rawHeight > rawWidth) {
     const MAX_SIZE = (maxHeight / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
-    height = Math.min(photo.height, MAX_SIZE);
-    width = photo.width * (height / photo.height);
+    height = Math.min(rawHeight, MAX_SIZE);
+    width = rawWidth * (height / rawWidth);
   } else {
-    const MAX_SIZE = (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
-    width = Math.min(photo.height, MAX_SIZE);
-    height = Math.min(photo.height, MAX_SIZE);
+    const MAX_SIZE = Math.min(
+      (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT,
+      (maxHeight / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT
+    );
+
+    width = Math.min(rawWidth, MAX_SIZE);
+    height = Math.min(rawHeight, MAX_SIZE);
   }
 
   return { width, height };
@@ -61,9 +71,6 @@ export default ({
         .photo {
           display: inline-block;
           height: ${height}px;
-          max-width: ${maxWidth || "unset"};
-          max-height: ${maxHeight || "unset"};
-
           width: ${width}px;
           min-height: 0;
           min-width: 0;
@@ -72,8 +79,7 @@ export default ({
         img {
           height: ${height}px;
           width: ${width}px;
-          max-width: ${maxWidth || "unset"};
-          max-height: ${maxHeight || "unset"};
+
           display: inline-block;
           border-radius: 2px;
           object-fit: cover;

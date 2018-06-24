@@ -46,7 +46,7 @@ class ViewThreadPage extends React.Component {
   };
 
   render() {
-    const { board, threadID } = this.props;
+    const { board, threadID, identity } = this.props;
     const { colorScheme } = board;
 
     return (
@@ -55,6 +55,7 @@ class ViewThreadPage extends React.Component {
         <ViewThreadContainer
           board={board}
           threadID={threadID}
+          identity={identity}
           colorScheme={colorScheme}
         />
       </Page>
@@ -69,6 +70,7 @@ export const ViewThreadPageContainer = compose(
   return (
     <Query
       notifyOnNetworkStatusChange
+      fetchPolicy="cache-and-network"
       query={Queries.ViewBoard}
       variables={{ id: url.query.board }}
     >
@@ -82,7 +84,8 @@ export const ViewThreadPageContainer = compose(
           return (
             <ViewThreadPage
               {...otherProps}
-              board={data.Board || null}
+              board={board}
+              identity={board.identity}
               threadID={url.query.id}
               networkStatus={networkStatus}
             />

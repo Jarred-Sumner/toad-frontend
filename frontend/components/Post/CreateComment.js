@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import Draggable from "react-draggable";
 import { Queries } from "Toads/Queries";
 import { Router } from "Toads/routes";
@@ -16,6 +16,7 @@ import { Spacer } from "../Spacer";
 import { Text } from "../Text";
 import EditPhotoContainer from "../UploadPhoto";
 import { Author } from "./Author";
+import { withRouter } from "next/router";
 
 class _CreateCommentForm extends React.PureComponent {
   constructor(props) {
@@ -74,10 +75,13 @@ class _CreateCommentForm extends React.PureComponent {
 
       Alert.success("Replied successfully.");
 
-      Router.pushRoute("thread", {
-        board: boardId,
-        id: String(postId)
-      });
+      if (this.props.router.route !== "thread") {
+        Router.pushRoute("thread", {
+          board: boardId,
+          id: String(postId)
+        });
+      }
+
       this.props.onDismiss();
     } catch (exception) {
       console.error(exception);
@@ -220,6 +224,7 @@ class _CreateCommentForm extends React.PureComponent {
             .Content {
               flex-direction: column;
               flex: 1;
+              cursor: default;
             }
 
             .InputRow {
@@ -265,6 +270,7 @@ class _CreateCommentForm extends React.PureComponent {
               border-top-left-radius: 4px;
               border-top-right-radius: 4px;
               justify-content: space-between;
+              cursor: move;
             }
 
             .ActionsMenu {
@@ -306,9 +312,48 @@ class _CreateCommentForm extends React.PureComponent {
   }
 }
 
-export const CreateCommentForm = graphql(Queries.CreateReplyToThread, {
-  name: "createComment",
-  options: props => ({})
-})(_CreateCommentForm);
+export const CreateCommentForm = compose(
+  graphql(Queries.CreateReplyToThread, {
+    name: "createComment",
+    options: props => ({
+      update: (cache, { data }) => {
+        const newReply = _.get(data, "Board.Post");
+        if (!newReply) {
+          return;
+        }
+
+        const boardID = props.boardId;
+        const threadID = props.postId;
+
+        const variables = {
+          boardID,
+          threadID
+        };
+        const cacheData = cache.readQuery({
+          query: Queries.ViewThread,
+          variables
+        });
+
+        cache.writeQuery({
+          query: Queries.ViewThread,
+          variables,
+          data: {
+            Board: {
+              ...cacheData.Board,
+              thread: {
+                ...cacheData.Board.thread,
+                replies: _.uniqBy(
+                  [...cacheData.Board.thread.replies, newReply],
+                  "id"
+                )
+              }
+            }
+          }
+        });
+      }
+    })
+  }),
+  withRouter
+)(_CreateCommentForm);
 
 export default CreateCommentForm;

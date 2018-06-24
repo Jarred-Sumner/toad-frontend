@@ -61,7 +61,11 @@ const createCache = () => {
   const cache = new InMemoryCache({
     // fragmentMatcher,
     dataIdFromObject: o => {
-      return `${o.__typename}-${o.id}`;
+      if (o.id) {
+        return `${o.__typename}-${o.id}`;
+      } else {
+        return null;
+      }
     }
     // cacheRedirects: {
     //   Post: {
@@ -96,7 +100,6 @@ const createCache = () => {
     //           id: args.id
     //         })
     //       ),
-
     //     Group: (_, args) =>
     //       toIdValue(
     //         cache.config.dataIdFromObject({
