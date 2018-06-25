@@ -25,6 +25,13 @@ module.exports = compose(
       return acc;
     }, {});
 
+    config.rules.push({
+      {
+        test: /\.pegjs$/,
+        loader: 'pegjs-loader'
+      }
+    })
+
     config.plugins.push(new webpack.DefinePlugin(env));
     return config;
   }
