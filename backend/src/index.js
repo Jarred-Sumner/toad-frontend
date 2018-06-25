@@ -4,17 +4,20 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import NoIntrospection from 'graphql-disable-introspection'
-import { graphqlExpress } from 'apollo-server-express'
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
 import depthLimit from 'graphql-depth-limit'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
-import auth from './auth'
+import auth, { wsAuth } from './auth'
 import schema from './schema'
+import config from './config'
 
-const PORT = process.env.PORT || 3000
+const PORT = config('port')
 
 const app = express()
 console.log(`toad-backend ${GIT_COMMIT}`)
-console.log(`Listening on :${PORT}`)
+console.log(`listening on :${PORT}`)
 
 const corsOptions = {
   origin: [
@@ -38,20 +41,50 @@ const production = process.env.NODE_ENV === 'production'
 
 const Introspection = production ? NoIntrospection : () => true
 const isPretty = !production
+
+if (!production) {
+  app.get(
+    '/graphiql',
+    bodyParser.json(),
+    graphiqlExpress(req => ({
+      endpointURL: '/graphql',
+      subscriptionsEndpoint: `ws://localhost:${PORT}/graphql`,
+    }))
+  )
+  app.get('/session', sessionMiddleware)
+}
+
+const graphqlOptions = {
+  schema,
+  pretty: isPretty,
+  validationRules: [depthLimit(10), Introspection],
+  tracing: production,
+  cacheControl: production,
+}
+
 app.post(
   '/graphql',
   bodyParser.json(),
   graphqlExpress(req => {
     const { session } = req
     return {
-      schema,
-      pretty: isPretty,
+      ...graphqlOptions,
       context: { session },
-      validationRules: [depthLimit(10), Introspection],
-      tracing: production,
-      cacheControl: production,
     }
   })
 )
 
-app.listen(PORT)
+const server = app.listen(PORT, () => {
+  SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
+      onConnect: wsAuth,
+    },
+    {
+      server,
+      path: '/graphql',
+    }
+  )
+})

@@ -20,6 +20,7 @@ export default (sequelize, DataTypes) => {
     chat_message.addScope(
       'defaultScope',
       {
+        returning: ['id'],
         include: [
           {
             model: models.identity,

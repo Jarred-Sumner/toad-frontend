@@ -1,7 +1,8 @@
+import { isObject } from 'lodash'
 import Models from '../models'
 import * as Utils from '../utils'
 
-export default async (
+export const validatePost = async (
   { id, identity },
   { parent_id, body, attachment_id },
   { session }
@@ -24,7 +25,6 @@ export default async (
     const attachment = await Models.attachment.findOne({
       where: {
         id: attachment_id,
-        session_id: session.id,
       },
     })
     if (!attachment) {
@@ -45,14 +45,31 @@ export default async (
     return null // Don't allow OPs without attachment
   }
 
-  const bumped_at = parent_id === undefined ? new Date() : null
-
-  const newPost = await Models[id].create({
-    bumped_at,
+  const post = {
     parent: parent_id,
     attachment_id,
     body,
     identity_id: identity.id,
+  }
+
+  return { post, foundParent }
+}
+
+export default async (_, args, ctx) => {
+  const { id } = _
+  const validation = await validatePost(_, args, ctx)
+
+  if (!isObject(validation)) {
+    return null
+  }
+
+  const { post, foundParent } = validation
+
+  const bumped_at = post.parent_id === undefined ? new Date() : null
+
+  const newPost = await Models[id].create({
+    bumped_at,
+    ...post,
   })
 
   const postWithData = await Models[id].findOne({
