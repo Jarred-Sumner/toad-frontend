@@ -38,7 +38,7 @@ QuoteLine = ( ">" (!'\r' !'\n' .)* Newline / ">"(.+) Eof ) { return { type: "quo
 Line =  BlankLine / QuoteLine / RawLine
 TitleLine
   = ((!'\r' !'\n' !'https://' !'http://' !'>' .)* Sp) Newline? {
-    if (text().length < 55) {
+    if (text().length < 55 && text().split(" ").length < 7) {
       return {type: "title_line", text: text() }
     } else {
       return { type: "raw_line", text: text() }
