@@ -254,24 +254,25 @@ export class Post extends React.PureComponent {
               <Body>{post.body}</Body>
             </div>
 
-            {post.reply_count > 0 && (
-              <React.Fragment>
-                <Spacer height={SPACING.small} />
+            {post.reply_count > 0 &&
+              minimized && (
+                <React.Fragment>
+                  <Spacer height={SPACING.small} />
 
-                <div className="Actions">
-                  <Link
-                    route="thread"
-                    params={{ board: board.id, id: post.id }}
-                  >
-                    <a>
-                      <Text weight="semiBold" color={color}>
-                        {post.reply_count} replies
-                      </Text>
-                    </a>
-                  </Link>
-                </div>
-              </React.Fragment>
-            )}
+                  <div className="Actions">
+                    <Link
+                      route="thread"
+                      params={{ board: board.id, id: post.id }}
+                    >
+                      <a>
+                        <Text weight="semiBold" color={color}>
+                          {post.reply_count} replies
+                        </Text>
+                      </a>
+                    </Link>
+                  </div>
+                </React.Fragment>
+              )}
 
             <Spacer height={SPACING.normal} />
 
@@ -315,6 +316,10 @@ export class Post extends React.PureComponent {
             width: 100%;
             word-wrap: break-word;
             max-width: 1024px;
+          }
+
+          .BodyContainer {
+            flex-direction: column;
           }
 
           @media (max-width: ${MEDIUM_BEAKPOINT}px) {

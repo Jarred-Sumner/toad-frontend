@@ -48,7 +48,6 @@ export const AlertHost = () => {
         .s-alert-box-inner {
           padding: 14px 22px;
           font-weight: 500;
-          font-family: "Open Sans", sans-serif;
           line-height: 19px;
         }
 

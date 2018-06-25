@@ -14,7 +14,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
     "@zeit/next-css": "^0.2.0",
-    "add": "^2.0.6",
     "apollo-cache-inmemory": "^1.2.5",
     "apollo-cache-persist": "^0.1.1",
     "apollo-client": "^2.3.5",
@@ -31,7 +30,7 @@
     "fetch-ponyfill": "^6.0.2",
     "gql": "^1.1.2",
     "graphql": "^0.13.2",
-    "highlight.js": "^9.12.0",
+    "justified-layout": "^2.1.1",
     "localforage": "^1.7.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
@@ -52,9 +51,7 @@
     "react-draggable": "^3.0.5",
     "react-dropzone": "^4.2.11",
     "react-fastclick": "^3.0.2",
-    "react-headroom": "^2.2.2",
-    "react-ideal-image": "^0.0.5",
-    "react-lowlight": "^2.0.0",
+    "react-linkify": "^0.2.2",
     "react-markdown": "^3.3.4",
     "react-onclickoutside": "^6.7.1",
     "react-responsive-modal": "^3.0.3",
@@ -64,12 +61,11 @@
     "react-tooltip": "^3.6.1",
     "react-waypoint": "^8.0.2",
     "recompose": "^0.27.1",
-    "remark-breaks": "^1.0.0",
-    "remark-highlight.js": "^5.0.0",
-    "remark-react-lowlight": "^0.7.0",
     "yarn": "^1.7.0"
   },
   "devDependencies": {
-    "babel-plugin-git-version": "^0.2.0"
+    "babel-plugin-git-version": "^0.2.0",
+    "pegjs": "^0.10.0",
+    "pegjs-loader": "^0.5.4"
   }
 }
