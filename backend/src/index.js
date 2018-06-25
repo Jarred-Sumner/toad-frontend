@@ -34,7 +34,7 @@ app.post('/session', sessionMiddleware)
 app.use('/graphql', auth)
 app.use('/healthz', (req, res) => res.json({ error: false }))
 
-const production = process.env.NODE_ENV === 'PRODUCTION'
+const production = process.env.NODE_ENV === 'production'
 
 const Introspection = production ? NoIntrospection : () => true
 const isPretty = !production
