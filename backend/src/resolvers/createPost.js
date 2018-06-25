@@ -41,8 +41,6 @@ export const validatePost = async (
     attachment.metadata.size = dim.length
     delete attachment.metadata.length
     await attachment.save()
-  } else if (parent_id === undefined) {
-    return null // Don't allow OPs without attachment
   }
 
   const post = {
@@ -61,6 +59,10 @@ export default async (_, args, ctx) => {
 
   if (!isObject(validation)) {
     return null
+  }
+
+  if (foundParent === undefined && post.attachment === undefined) {
+    return null // Don't allow OPs without attachment
   }
 
   const { post, foundParent } = validation

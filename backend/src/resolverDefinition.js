@@ -22,7 +22,6 @@ const resolvers = {
     Session: Resolvers.session,
     Login: Resolvers.login,
     Attachment: Resolvers.createAttachment,
-    Chat: Resolvers.chat,
   },
   BoardMutation: {
     Post: Resolvers.createPost,
@@ -31,6 +30,7 @@ const resolvers = {
   Board: {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
+    chat: Resolvers.chat,
   },
   Thread: {
     replies: Resolvers.threadReplies,

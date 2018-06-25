@@ -5,7 +5,7 @@ export default (sequelize, DataTypes) => {
       body: DataTypes.TEXT,
       identity_id: DataTypes.UUID,
       board: DataTypes.STRING,
-      attachment_id: DataTypes.STRING,
+      attachment_id: { type: DataTypes.STRING, allowNull: true },
     },
     {
       underscored: true,

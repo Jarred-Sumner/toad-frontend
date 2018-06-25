@@ -21,7 +21,7 @@ export default {
       },
       attachment_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'attachments',
           key: 'id',

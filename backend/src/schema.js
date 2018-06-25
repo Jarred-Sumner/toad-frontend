@@ -44,7 +44,7 @@ type Board {
   thread(id: ID!): Thread
   identity: PersonalIdentity
   color_scheme: BoardColorScheme
-  chat: BoardChat
+  chat(offset: Int, limit: Int): BoardChat
 }
 
 type BoardChat {
