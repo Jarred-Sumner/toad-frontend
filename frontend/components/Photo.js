@@ -35,7 +35,7 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
   return { width, height };
 };
 
-export default ({ onClick, width, height, minHeight, size, photo, circle }) => {
+export default ({ onClick, width, height, size, photo, circle }) => {
   const { url } = photo || {};
 
   return (
@@ -67,7 +67,6 @@ export default ({ onClick, width, height, minHeight, size, photo, circle }) => {
 
         img {
           height: ${height}px;
-          min-height: ${minHeight}px;
           width: ${width}px;
 
           display: inline-block;
