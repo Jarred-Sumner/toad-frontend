@@ -47,7 +47,7 @@ class ViewThreadPage extends React.Component {
 
   render() {
     const { board, threadID, identity } = this.props;
-    const { colorScheme } = board;
+    const { color_scheme: colorScheme } = board;
 
     return (
       <Page renderSubheader={this.renderHeader}>

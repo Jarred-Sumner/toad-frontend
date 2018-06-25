@@ -13,7 +13,7 @@ import Head from "../head";
 
 class ViewThread extends React.PureComponent {
   render() {
-    const { thread, board, colorScheme } = this.props;
+    const { thread, board, colorScheme, identity } = this.props;
 
     return (
       <div className="Container">
@@ -36,6 +36,7 @@ class ViewThread extends React.PureComponent {
               board={board}
               post={thread}
               minimized={false}
+              identity={identity}
               comments={thread.replies}
             />
           </div>

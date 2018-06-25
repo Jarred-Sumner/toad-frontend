@@ -225,6 +225,7 @@ class _CreateCommentForm extends React.PureComponent {
             .Author {
               flex: 0;
               margin-bottom: ${SPACING.small}px;
+              color: ${color};
             }
 
             .Content {

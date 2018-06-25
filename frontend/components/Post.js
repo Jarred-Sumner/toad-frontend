@@ -194,7 +194,7 @@ export class Post extends React.PureComponent {
       identity,
       minimized
     } = this.props;
-    const color = COLORS[colorScheme];
+    const color = COLORS[GRADIENT_COLORS[colorScheme]];
     const dimensions = calculateDimensions({
       photo: post.attachment,
       maxWidth: minimized
