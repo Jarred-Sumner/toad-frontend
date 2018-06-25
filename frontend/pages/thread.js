@@ -11,6 +11,9 @@ import { Page } from "../components/Page";
 import { Spacer } from "../components/Spacer";
 import { SPACING } from "../lib/spacing";
 import { Queries } from "../Queries";
+import { Text } from "components/Text";
+import { Author } from "components/Post/Author";
+import { COLORS } from "lib/colors";
 
 class ViewThreadPage extends React.Component {
   state = {
@@ -27,18 +30,36 @@ class ViewThreadPage extends React.Component {
   setDropzoneRef = dropZoneRef => (this.dropZoneRef = dropZoneRef);
 
   renderHeader = () => {
-    const { color_scheme: colorScheme, id, label } = this.props.board;
+    const { identity, board, colorScheme } = this.props;
+    const { id, label } = board;
     return (
       <Gradient color={GRADIENT_COLORS[colorScheme]}>
         <div className="Header">
-          <BoardTitle>
-            /{id}/ - {label}
-          </BoardTitle>
+          <div className="HeaderContent">
+            <BoardTitle>
+              /{id}/ - {label}
+            </BoardTitle>
+          </div>
+
+          <div className="HeaderContent HeaderContent--right">
+            <div className="HeaderContentRow">
+              <Text color="inherit">You:</Text>&nbsp;
+              <Author identity={identity} />
+            </div>
+          </div>
         </div>
 
         <style jsx>{`
           .Header {
             padding: ${SPACING.normal}px ${SPACING.huge}px;
+            display: flex;
+            justify-content: space-between;
+          }
+
+          .HeaderContentRow {
+            display: flex;
+            align-items: center;
+            color: ${COLORS.white};
           }
         `}</style>
       </Gradient>
@@ -46,12 +67,10 @@ class ViewThreadPage extends React.Component {
   };
 
   render() {
-    const { board, threadID, identity } = this.props;
-    const { color_scheme: colorScheme } = board;
+    const { board, threadID, identity, colorScheme } = this.props;
 
     return (
       <Page renderSubheader={this.renderHeader}>
-        <Spacer height={SPACING.large} />
         <ViewThreadContainer
           board={board}
           threadID={threadID}
@@ -87,6 +106,7 @@ export const ViewThreadPageContainer = compose(
               board={board}
               identity={board.identity}
               threadID={url.query.id}
+              colorScheme={board.color_scheme}
               networkStatus={networkStatus}
             />
           );
