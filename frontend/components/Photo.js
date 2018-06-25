@@ -1,5 +1,7 @@
 import classNames from "classnames";
 import { buildImgSrcSet, buildImgSrc } from "../lib/imgUri";
+import justifiedLayout from "justified-layout";
+import _ from "lodash";
 
 const DEFAULT_SIZE = "126px";
 
@@ -11,28 +13,25 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
 
   const { width: rawWidth, height: rawHeight } = photo.metadata;
 
-  let width,
-    height = 0;
-
-  if (rawWidth > rawHeight) {
-    const MAX_SIZE = (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
-    width = Math.min(rawWidth, MAX_SIZE);
-    height = rawHeight * (width / rawWidth);
-  } else if (rawHeight > rawWidth) {
-    const MAX_SIZE = (maxHeight / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT;
-    height = Math.min(rawHeight, MAX_SIZE);
-    width = rawWidth * (height / rawWidth);
-  } else {
-    const MAX_SIZE = Math.min(
-      (maxWidth / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT,
-      (maxHeight / MAX_COLUMN_COUNT) * MAX_COLUMN_COUNT
-    );
-
-    width = Math.min(rawWidth, MAX_SIZE);
-    height = Math.min(rawHeight, MAX_SIZE);
+  if (!rawWidth || !rawHeight) {
+    return { width: null, height: null };
   }
 
-  return { width, height };
+  const layout = justifiedLayout([rawWidth / rawHeight], {
+    containerWidth: maxWidth,
+    targetRowHeight: maxHeight,
+    showWidows: true,
+    containerPadding: 0,
+    maxNumRows: 1,
+    boxSpacing: 0
+  });
+
+  const { width = maxWidth, height = maxHeight } = _.first(layout.boxes);
+
+  return {
+    width: Math.ceil(width),
+    height: Math.ceil(height)
+  };
 };
 
 export default ({ onClick, width, height, size, photo, circle }) => {

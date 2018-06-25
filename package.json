@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "pegjs": "^0.10.0",
+    "pegjs-loader": "^0.5.4"
+  },
+  "dependencies": {
+    "justified-layout": "^2.1.1"
+  }
+}
