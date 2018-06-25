@@ -10,8 +10,10 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
 import auth, { wsAuth } from './auth'
+import * as Utils from './utils'
 import schema from './schema'
 import config from './config'
+import { UniqueDirectivesPerLocation } from 'graphql/validation/rules/UniqueDirectivesPerLocation'
 
 const PORT = config('port')
 
@@ -36,6 +38,12 @@ app.use(cookieParser())
 app.post('/session', sessionMiddleware)
 app.use('/graphql', auth)
 app.use('/healthz', (req, res) => res.json({ error: false }))
+
+app.use('/test', (req, res) => {
+  setTimeout(() => {
+    res.json({ done: true })
+  }, 5000)
+})
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -74,8 +82,10 @@ app.post(
   })
 )
 
+let wsServer
+
 const server = app.listen(PORT, () => {
-  SubscriptionServer.create(
+  wsServer = SubscriptionServer.create(
     {
       schema,
       execute,
@@ -87,4 +97,13 @@ const server = app.listen(PORT, () => {
       path: '/graphql',
     }
   )
+})
+
+process.on('SIGTERM', async () => {
+  console.info('Beginning graceful shutdown...')
+  await Utils.presence.closeServer()
+  wsServer.close()
+  await new Promise(resolve => server.close(resolve))
+  console.log('http closed')
+  process.exit(0)
 })
