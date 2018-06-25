@@ -18,7 +18,8 @@ import {
   buildPostPathSelectedPost,
   buildCommentDOMID,
   buildCommentPath,
-  buildPostDOMID
+  buildPostDOMID,
+  buildURLForPath
 } from "../lib/routeHelpers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Alert from "./Alert";
@@ -74,7 +75,7 @@ export const PostHeader = ({
           color={COLORS.gray}
         />
         <Spacer width={SPACING.small} />
-        <CopyToClipboard onCopy={copiedToClipboard} text={url}>
+        <CopyToClipboard onCopy={copiedToClipboard} text={buildURLForPath(url)}>
           <Icon
             data-tip="Copy link"
             icon={ICONS.link}
