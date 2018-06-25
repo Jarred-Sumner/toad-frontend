@@ -317,6 +317,10 @@ export class Post extends React.PureComponent {
             max-width: 1024px;
           }
 
+          .BodyContainer {
+            flex-direction: column;
+          }
+
           @media (max-width: ${MEDIUM_BEAKPOINT}px) {
             .Post {
               max-width: 100%;

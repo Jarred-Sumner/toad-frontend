@@ -67,6 +67,7 @@ export class Comment extends React.PureComponent {
           .BodyContainer {
             display: inline-flex;
             align-self: flex-start;
+            flex-direction: column;
             align-content: flex-start;
           }
 
