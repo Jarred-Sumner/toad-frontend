@@ -2,6 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: backend
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "backend"
 spec:
   backend:
     serviceName: backend
