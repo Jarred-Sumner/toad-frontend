@@ -26,6 +26,8 @@ spec:
           value: toads.app
         - name: HOSTNAME
           value: https://toads.app
+        - name: REDIS_URL
+          value: redis://redis:6379        
         - name: DB_CONNECTION_STRING
           value: "postgres://postgres@pgbouncer/toads"
         - name: GOOGLE_APPLICATION_CREDENTIALS
