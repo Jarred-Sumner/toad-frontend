@@ -44,6 +44,17 @@ type Board {
   thread(id: ID!): Thread
   identity: PersonalIdentity
   color_scheme: BoardColorScheme
+  chat(offset: Int, limit: Int): BoardChat
+  activity: BoardActivity
+}
+
+type BoardActivity {
+  active_count: Int
+  active_identities: [Identity]
+}
+
+type BoardChat {
+  messages: [ChatMessage]
 }
 
 interface Post {
@@ -61,6 +72,14 @@ type Reply implements Post {
   identity: Identity
   attachment: Attachment
   parent: ID
+}
+
+type ChatMessage implements Post {
+  id: ID!
+  created_at: DateTime
+  body: String
+  identity: Identity
+  attachment: Attachment
 }
 
 type Thread implements Post {
@@ -106,6 +125,8 @@ type Attachment {
 
 type BoardMutation {
   Post(parent_id: ID, body: String!, attachment_id: ID): Post
+  Chat(body: String!, attachment_id: ID): ChatMessage
+  Activity(visible: Boolean!): BoardActivity
 }
 
 type Mutation {
@@ -114,6 +135,12 @@ type Mutation {
   Session(email_token: String!): String
   Login(email: String!): Boolean
 }
+
+type Subscription {
+  NewBoardMessage(board: ID!): ChatMessage
+  BoardActivity(board: ID!): BoardActivity
+}
+
 `
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
