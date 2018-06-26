@@ -10,10 +10,28 @@ import { Spinner } from "../Spinner";
 import _ from "lodash";
 import { Text } from "../Text";
 import Head from "../head";
+import { CreateCommentForm } from "./CreateComment";
 
 class ViewThread extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showBottomCommentForm: props.thread.reply_count > 7
+    };
+  }
+
+  handleDismissBottomComment = () =>
+    this.setState({ showBottomCommentForm: false });
+
   render() {
-    const { thread, board, colorScheme, identity } = this.props;
+    const {
+      thread,
+      board,
+      colorScheme,
+      identity,
+      showCommentForm
+    } = this.props;
+    const { showBottomCommentForm } = this.state;
 
     return (
       <div className="Container">
@@ -29,6 +47,22 @@ class ViewThread extends React.PureComponent {
           ogImageHeight={_.get(thread, "attachment.metadata.height")}
         />
         <div className="PageWrapper PostWrapper" key={thread.id}>
+          {showCommentForm && (
+            <React.Fragment>
+              <Spacer height={SPACING.large} />
+              <CreateCommentForm
+                postId={thread.id}
+                draggable={false}
+                boardId={board.id}
+                title="Post in thread"
+                colorScheme={colorScheme}
+                identity={identity}
+                autoFocus
+                onDismiss={this.props.onDismissCommentForm}
+              />
+            </React.Fragment>
+          )}
+
           <Spacer height={SPACING.large} />
           <div className="ClearFix">
             <Post
@@ -41,6 +75,21 @@ class ViewThread extends React.PureComponent {
             />
           </div>
           <Spacer height={SPACING.large} />
+
+          {showBottomCommentForm && (
+            <React.Fragment>
+              <CreateCommentForm
+                postId={thread.id}
+                draggable={false}
+                boardId={board.id}
+                colorScheme={colorScheme}
+                identity={identity}
+                onDismiss={this.handleDismissBottomComment}
+              />
+
+              <Spacer height={SPACING.large} />
+            </React.Fragment>
+          )}
         </div>
 
         <style jsx>{`
@@ -95,11 +144,7 @@ export const ViewThreadContainer = ({
         ) {
           return <Spinner />;
         } else {
-          return (
-            <Text size="14px" weight="bold">
-              Something bad happened!
-            </Text>
-          );
+          return null;
         }
       }}
     </Query>
