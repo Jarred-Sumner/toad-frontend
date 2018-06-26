@@ -105,6 +105,7 @@ type AttachmentMetadata {
   height: Int
   wUnits: String
   hUnits: String
+  type: String
   size: Int
 }
 
