@@ -39,12 +39,6 @@ app.post('/session', sessionMiddleware)
 app.use('/graphql', auth)
 app.use('/healthz', (req, res) => res.json({ error: false }))
 
-app.use('/test', (req, res) => {
-  setTimeout(() => {
-    res.json({ done: true })
-  }, 5000)
-})
-
 const production = process.env.NODE_ENV === 'production'
 
 const Introspection = production ? NoIntrospection : () => true
@@ -101,8 +95,6 @@ const server = app.listen(PORT, () => {
 
 process.on('SIGTERM', async () => {
   console.info('Beginning graceful shutdown...')
-  await Utils.presence.closeServer()
-  wsServer.close()
   await new Promise(resolve => server.close(resolve))
   console.log('http closed')
   process.exit(0)

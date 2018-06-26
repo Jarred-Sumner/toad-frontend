@@ -26,8 +26,8 @@ spec:
           value: toads.app
         - name: HOSTNAME
           value: https://toads.app
-        - name: REDIS_URL
-          value: redis://redis:6379        
+        - name: REDIS_HOST
+          value: redis        
         - name: DB_CONNECTION_STRING
           value: "postgres://postgres@pgbouncer/toads"
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -42,7 +42,7 @@ spec:
             secretKeyRef:
               key: AWS_SECRET_ACCESS_KEY
               name: aws-email
-        image: gcr.io/toads-208000/toads-backend:9eb41a82808f17c4e45061525a3b840a570b1c0b
+        image: gcr.io/toads-208000/toads-backend:513d4eb2f2e28f566de419b8d1b1e87f8ebbd505
         imagePullPolicy: Always
         name: backend
         volumeMounts:

@@ -45,6 +45,12 @@ type Board {
   identity: PersonalIdentity
   color_scheme: BoardColorScheme
   chat(offset: Int, limit: Int): BoardChat
+  activity: BoardActivity
+}
+
+type BoardActivity {
+  active_count: Int
+  active_identities: [Identity]
 }
 
 type BoardChat {
@@ -120,6 +126,7 @@ type Attachment {
 type BoardMutation {
   Post(parent_id: ID, body: String!, attachment_id: ID): Post
   Chat(body: String!, attachment_id: ID): ChatMessage
+  Activity(visible: Boolean!): BoardActivity
 }
 
 type Mutation {
@@ -131,6 +138,7 @@ type Mutation {
 
 type Subscription {
   NewBoardMessage(board: ID!): ChatMessage
+  BoardActivity(board: ID!): BoardActivity
 }
 
 `

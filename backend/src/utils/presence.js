@@ -1,39 +1,30 @@
 import Redis from 'ioredis'
-import Bluebird from 'bluebird'
-import { isArray, pull } from 'lodash'
 import config from '../config'
 
-const redis = new Redis(config('redis_url'))
+const redis = new Redis({
+  host: config('redis_host'),
+  port: config('redis_port'),
+})
+const ts = () => Math.round(new Date().getTime() / 1000)
+const statusTTL = 30
 
-const connectedUsers = {}
+const getVisible = board => {
+  const setKey = `${board}-active`
+  const time = ts()
+  const timeStart = time - statusTTL
+  return redis.zrangebyscore(setKey, timeStart, time)
+}
 
 const setVisible = async ({ board, identity_id }) => {
-  if (!isArray(connectedUsers[board])) {
-    connectedUsers[board] = []
-  }
-  const setKey = `${board}-members`
-  await redis.sadd(setKey, identity_id)
-  connectedUsers[board].push(identity_id)
-  return redis.smembers(setKey)
+  const setKey = `${board}-active`
+  await redis.zadd(setKey, [ts(), identity_id])
+  return getVisible(board)
 }
 
 const setInactive = async ({ board, identity_id }) => {
-  if (!isArray(connectedUsers[board])) {
-    connectedUsers[board] = []
-  }
-  const setKey = `${board}-members`
-  await redis.srem(setKey, identity_id)
-  pull(connectedUsers[board], identity_id)
-  return redis.smembers(setKey)
+  const setKey = `${board}-active`
+  await redis.zrem(setKey, identity_id)
+  return getVisible(board)
 }
 
-const closeServer = () => {
-  const topics = Object.keys(connectedUsers)
-  return Bluebird.map(topics, async topic => {
-    const setKey = `${topic}-members`
-    const identities = connectedUsers[topic]
-    return redis.srem(setKey, identities)
-  })
-}
-
-export default { setVisible, setInactive, closeServer }
+export default { setVisible, setInactive, getVisible }

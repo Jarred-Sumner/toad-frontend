@@ -3,7 +3,10 @@ import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
 import * as Resolvers from './resolvers'
 import config from './config'
 
-export const pubsub = new RedisPubSub(config('redis_url'))
+export const pubsub = new RedisPubSub({
+  host: config('redis_host'),
+  port: config('redis_port'),
+})
 
 const resolvers = {
   DateTime: GraphQLDateTime,
@@ -26,11 +29,13 @@ const resolvers = {
   BoardMutation: {
     Post: Resolvers.createPost,
     Chat: Resolvers.createChat,
+    Activity: Resolvers.activityMutation,
   },
   Board: {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
     chat: Resolvers.chat,
+    activity: Resolvers.activity,
   },
   Thread: {
     replies: Resolvers.threadReplies,
@@ -43,6 +48,14 @@ const resolvers = {
           return 'Invalid session cookie'
         }
         return pubsub.asyncIterator(`NewBoardMessage.${board}`)
+      },
+    },
+    BoardActivity: {
+      subscribe: (_, { board }, { session }) => {
+        if (!session) {
+          return 'Invalid session cookie'
+        }
+        return pubsub.asyncIterator(`BoardActivity.${board}`)
       },
     },
   },

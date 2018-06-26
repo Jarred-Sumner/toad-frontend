@@ -6,5 +6,6 @@ export default deo({
   origin: 'localhost:5000',
   hostname: 'http://localhost:5000',
   google_application_credentials: 'src/google_credentials.json',
-  redis_url: 'redis://localhost:6379',
+  redis_host: 'localhost',
+  redis_port: '6379',
 })
