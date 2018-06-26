@@ -1,5 +1,4 @@
 import { Op } from 'sequelize'
-import moment from 'moment'
 import { clone, isEqual } from 'lodash'
 import { pubsub } from '../resolverDefinition'
 import Models from '../models'

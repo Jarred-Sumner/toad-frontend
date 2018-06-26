@@ -3,7 +3,7 @@ import config from '../config'
 
 const redis = new Redis({
   host: config('redis_host'),
-  port: config('redis_port'),
+  port: Number(config('redis_port')),
 })
 const ts = () => Math.round(new Date().getTime() / 1000)
 const statusTTL = 30
