@@ -54,7 +54,7 @@ export const Body = pure(({ children, colorScheme, ...otherProps }) => {
       {lines.map(({ type, text }, index) => {
         const LineComponent = COMPONENT_BY_TYPE[type];
 
-        // TODO: colro scheme
+        // TODO: color scheme, hover state
         if (LineComponent === COMPONENT_BY_TYPE.embed_line) {
         }
 
