@@ -20,6 +20,8 @@ spec:
           secretName: gstorage-key
       containers:
       - env:
+        - name: PORT
+          value: "3000"
         - name: NODE_ENV
           value: production
         - name: ORIGIN
@@ -27,7 +29,9 @@ spec:
         - name: HOSTNAME
           value: https://toads.app
         - name: REDIS_HOST
-          value: redis        
+          value: redis-prod
+        - name: REDIS_PORT
+          value: "6379"      
         - name: DB_CONNECTION_STRING
           value: "postgres://postgres@pgbouncer/toads"
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -42,7 +46,7 @@ spec:
             secretKeyRef:
               key: AWS_SECRET_ACCESS_KEY
               name: aws-email
-        image: gcr.io/toads-208000/toads-backend:513d4eb2f2e28f566de419b8d1b1e87f8ebbd505
+        image: gcr.io/toads-208000/toads-backend:7677068b55089d16d52a6241fcc4fbd439882e58
         imagePullPolicy: Always
         name: backend
         volumeMounts:
