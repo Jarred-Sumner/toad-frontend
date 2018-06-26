@@ -25,9 +25,14 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
     return { width: null, height: null };
   }
 
+  const targetDimensions =
+    maxWidth > rawWidth || maxHeight > rawHeight
+      ? { width: rawWidth, height: rawHeight }
+      : { width: maxWidth, height: maxHeight };
+
   const layout = justifiedLayout([rawWidth / rawHeight], {
-    containerWidth: maxWidth,
-    targetRowHeight: maxHeight,
+    containerWidth: targetDimensions.width,
+    targetRowHeight: targetDimensions.height,
     showWidows: true,
     containerPadding: 0,
     maxNumRows: 1,
@@ -162,7 +167,6 @@ export const Photo = pure(
             min-width: ${width}px;
             position: relative;
             border-radius: 2px;
-            overflow: hidden;
           }
 
           .Overlay {
@@ -172,9 +176,11 @@ export const Photo = pure(
             padding: ${SPACING.small}px ${SPACING.normal}px;
             display: flex;
             justify-content: space-between;
-            background-color: rgba(0, 0, 0, 0.65);
             opacity: 0;
             pointer-events: none;
+            height: 25px;
+            text-shadow: 0px 0px 1px #000;
+            background-color: rgba(0, 0, 0, 0.05);
           }
 
           .OverlayText {
