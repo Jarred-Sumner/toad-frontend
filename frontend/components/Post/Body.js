@@ -17,7 +17,12 @@ const TitleLine = defaultProps({
   color: COLORS.black,
   className: "BodyText BodyText--TitleLine"
 })(Text);
-
+const EmbedLine = defaultProps({
+  size: "14px",
+  lineHeight: "19px",
+  underline: true,
+  className: "BodyText BodyText--EmbedLine"
+})(Text);
 const QuoteLine = defaultProps({
   size: "14px",
   lineHeight: "19px",
@@ -35,10 +40,11 @@ const COMPONENT_BY_TYPE = {
   quote_line: QuoteLine,
   raw_line: NormalLine,
   blank_line: LineBreak,
-  title_line: TitleLine
+  title_line: TitleLine,
+  embed_line: EmbedLine
 };
 
-export const Body = pure(({ children, ...otherProps }) => {
+export const Body = pure(({ children, colorScheme, ...otherProps }) => {
   const text = parse(children);
 
   const lines = [text.title, ...text.body].filter(_.identity);
@@ -47,6 +53,10 @@ export const Body = pure(({ children, ...otherProps }) => {
     <React.Fragment>
       {lines.map(({ type, text }, index) => {
         const LineComponent = COMPONENT_BY_TYPE[type];
+
+        // TODO: colro scheme
+        if (LineComponent === COMPONENT_BY_TYPE.embed_line) {
+        }
 
         return (
           <div className="BodyTextLine">

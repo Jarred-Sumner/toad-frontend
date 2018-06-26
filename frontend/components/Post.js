@@ -87,7 +87,7 @@ export const PostHeader = ({
       >
         <a>
           <Text size="inherit" color="inherit">
-            #{post.id}
+            /{post.id}/
           </Text>
         </a>
       </Link>
@@ -188,8 +188,8 @@ export class Post extends React.PureComponent {
     return !!this.props.minimized;
   }
 
-  buildReplyText = url => {
-    return `>> ${url}\n`;
+  buildReplyText = id => {
+    return `/${id}/\n`;
   };
 
   handleShowCommentForm = url => {
@@ -219,12 +219,7 @@ export class Post extends React.PureComponent {
     if (!this.state.showCommentForm) {
       this.handleShowCommentForm();
     } else {
-      const text = this.buildReplyText(
-        buildPostPath({
-          boardId: this.props.board.id,
-          id: this.props.post.id
-        })
-      );
+      const text = this.buildReplyText(this.props.post.id);
       this.commentFormRef && this.commentFormRef.appendText(text);
     }
   };
@@ -238,13 +233,7 @@ export class Post extends React.PureComponent {
       });
     }
 
-    const text = this.buildReplyText(
-      buildCommentPath({
-        boardId: this.props.board.id,
-        postId: this.props.post.id,
-        commentId
-      })
-    );
+    const text = this.buildReplyText(commentId);
 
     if (this.state.showCommentForm) {
       this.commentFormRef && this.commentFormRef.appendText(text);

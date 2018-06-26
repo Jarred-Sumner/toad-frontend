@@ -34,10 +34,11 @@ OptionallyIndentedLine = Indent? txt:Line { return txt }
 
 RawLine = ( (!'\r' !'\n' .)* Newline / (.)+ Eof ) { return { type: "raw_line", text: text() } }
 QuoteLine = ( ">" (!'\r' !'\n' .)* Newline / ">"(.+) Eof ) { return { type: "quote_line", text: text() } }
+EmbedLine = ( "/" (!'\r' !'\n' !"/" .)* "/" Newline / "./"(.+)"/" Eof ) { return { type: "embed_line", text: text() } }
 
-Line =  BlankLine / QuoteLine / RawLine
+Line =  BlankLine / QuoteLine / EmbedLine / RawLine
 TitleLine
-  = ((!'\r' !'\n' !'https://' !'http://' !'>' .)* Sp) Newline? {
+  = ((!'\r' !'\n' !'https://' !'http://' !'>' !"." !"/" .)* Sp) Newline? {
     if (text().length < 100 && text().split(" ").length < 14) {
       return {type: "title_line", text: text() }
     } else {
