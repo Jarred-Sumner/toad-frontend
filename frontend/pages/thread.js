@@ -16,9 +16,13 @@ import { Author } from "components/Post/Author";
 import { COLORS } from "lib/colors";
 
 class ViewThreadPage extends React.Component {
-  state = {
-    showCreatePost: false
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showCommentForm: props.showCommentForm
+    };
+  }
 
   handleHideCreatePost = () => this.setState({ showCreatePost: false });
   handleShowCreatePost = () => {
@@ -28,6 +32,8 @@ class ViewThreadPage extends React.Component {
   };
 
   setDropzoneRef = dropZoneRef => (this.dropZoneRef = dropZoneRef);
+
+  handleDismissNewComment = () => this.setState({ showCommentForm: false });
 
   renderHeader = () => {
     const { identity, board, colorScheme } = this.props;
@@ -68,6 +74,7 @@ class ViewThreadPage extends React.Component {
 
   render() {
     const { board, threadID, identity, colorScheme } = this.props;
+    const { showCommentForm } = this.state;
 
     return (
       <Page renderSubheader={this.renderHeader}>
@@ -75,6 +82,7 @@ class ViewThreadPage extends React.Component {
           board={board}
           threadID={threadID}
           identity={identity}
+          showCommentForm={showCommentForm}
           colorScheme={colorScheme}
         />
       </Page>
@@ -106,6 +114,8 @@ export const ViewThreadPageContainer = compose(
               board={board}
               identity={board.identity}
               threadID={url.query.id}
+              onDismissCommentForm={this.handleDismissNewComment}
+              showCommentForm={!!url.query.r}
               colorScheme={board.color_scheme}
               networkStatus={networkStatus}
             />

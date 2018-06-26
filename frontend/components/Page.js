@@ -7,6 +7,7 @@ import { AlertHost } from "./Alert";
 import { NavHeader } from "./NavHeader";
 import { Spacer } from "./Spacer";
 import { Text } from "./Text";
+import { GITHUB_REPO_URL } from "config";
 
 // import Headroom from "react-headroom";
 
@@ -27,7 +28,7 @@ export class Page extends React.Component {
           <div className="FooterContent">
             <Text size="12px" color={COLORS.medium_white}>
               Toads is{" "}
-              <a href={process.env.GITHUB_REPO_URL} target="_blank">
+              <a href={GITHUB_REPO_URL} target="_blank">
                 open-source software
               </a>
             </Text>
@@ -35,7 +36,7 @@ export class Page extends React.Component {
 
           <div className="FooterContent">
             <a
-              href={`${process.env.GITHUB_REPO_URL}/commits/${GIT_COMMIT}`}
+              href={`${GITHUB_REPO_URL}/commits/${GIT_COMMIT}`}
               target="_blank"
             >
               <Text size="12px" color={COLORS.medium_white}>
