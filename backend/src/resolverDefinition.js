@@ -1,11 +1,15 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
+import * as Redis from 'ioredis'
 import * as Resolvers from './resolvers'
 import config from './config'
 
 export const pubsub = new RedisPubSub({
-  host: config('redis_host'),
-  port: config('redis_port'),
+  connection: {
+    host: config('redis_host'),
+    port: config('redis_port'),
+    retry_strategy: options => Math.max(options.attempt * 100, 3000),
+  },
 })
 
 const resolvers = {
