@@ -41,6 +41,16 @@ spec:
             secretKeyRef:
               key: AWS_ACCESS_KEY_ID
               name: aws-email
+        - name: CDN_KEY
+          valueFrom:
+            secretKeyRef:
+              key: cdn_key
+              name: cloudsigning
+        - name: CDN_KEY_NAME
+          valueFrom:
+            secretKeyRef:
+              key: key_name
+              name: cloudsigning
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:

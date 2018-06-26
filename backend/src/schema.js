@@ -119,7 +119,6 @@ type Attachment {
   mimetype: String
   filename: String
   url: String
-  thumbnail_url: String
   metadata: AttachmentMetadata
 }
 

@@ -4,10 +4,10 @@ import Storage from '@google-cloud/storage'
 import config from '../config'
 
 const storage = new Storage({
-  projectId: 'toads-208000',
+  projectId: config('google_project_id'),
   keyFilename: config('google_application_credentials'),
 })
-const bucket = storage.bucket('toad-uploads')
+const bucket = storage.bucket(config('google_bucket_id'))
 
 export default async ({ contentType }) => {
   const filename = nanoid()
@@ -19,6 +19,8 @@ export default async ({ contentType }) => {
   })
   return {
     url: url[0],
-    canonicalUrl: `https://storage.googleapis.com/toad-uploads/${filename}`,
+    canonicalUrl: `https://storage.googleapis.com/${config(
+      'google_bucket_id'
+    )}/${filename}`,
   }
 }

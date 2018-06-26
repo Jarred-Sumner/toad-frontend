@@ -6,6 +6,11 @@ export default deo({
   origin: 'localhost:5000',
   hostname: 'http://localhost:5000',
   google_application_credentials: 'src/google_credentials.json',
+  google_project_id: 'toads-208000',
+  google_bucket_id: 'toad-uploads',
+  cdn_hostname: 'cdn.toads.app',
+  cdn_key: '',
+  cdn_key_name: '',
   redis_host: 'localhost',
   redis_port: '6379',
 })

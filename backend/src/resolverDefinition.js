@@ -1,6 +1,6 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
-import * as Redis from 'ioredis'
+import * as Utils from './utils'
 import * as Resolvers from './resolvers'
 import config from './config'
 
@@ -22,7 +22,7 @@ const resolvers = {
     __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
   },
   Attachment: {
-    thumbnail_url: _ => _.url,
+    url: Utils.signImageUrl,
   },
   Mutation: {
     Board: Resolvers.board,

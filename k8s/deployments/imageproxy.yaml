@@ -27,7 +27,7 @@ spec:
           - "-cache"
           - "gcs://toad-upload-cache"
           - "-whitelist"
-          - "storage.googleapis.com"
+          - "cdn.toads.app"
         volumeMounts:
         - name: gstorage-key
           mountPath: /var/secrets/google
