@@ -25,9 +25,14 @@ export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
     return { width: null, height: null };
   }
 
+  const targetDimensions =
+    maxWidth > rawWidth || maxHeight > rawHeight
+      ? { width: rawWidth, height: rawHeight }
+      : { width: maxWidth, height: maxHeight };
+
   const layout = justifiedLayout([rawWidth / rawHeight], {
-    containerWidth: maxWidth,
-    targetRowHeight: maxHeight,
+    containerWidth: targetDimensions.width,
+    targetRowHeight: targetDimensions.height,
     showWidows: true,
     containerPadding: 0,
     maxNumRows: 1,
