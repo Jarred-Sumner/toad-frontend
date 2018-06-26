@@ -19,10 +19,13 @@ import {
   buildCommentDOMID,
   buildCommentPath,
   buildPostDOMID,
-  buildURLForPath
+  buildURLForPath,
+  buildPostPath,
+  buildPostURL
 } from "../lib/routeHelpers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Alert from "./Alert";
+import { Router } from "Toads/routes";
 
 export const MIN_POST_PHOTO_MINIMIZED_HEIGHT = 78;
 export const MIN_POST_PHOTO_HEIGHT = 78;
@@ -37,10 +40,12 @@ const copiedToClipboard = () => Alert.info("Copied link to clipboard");
 
 export const PostHeader = ({
   post,
+  threadId,
+  boardId,
   colorScheme = GRADIENT_COLORS.blue,
   onClick,
   muted,
-  url
+  minimized
 }) => {
   const color = COLORS[colorScheme];
 
@@ -53,15 +58,37 @@ export const PostHeader = ({
       <Author identity={post.identity} />
       <Spacer width={SPACING.small} />
 
-      <Link href={url}>
+      <Link
+        route="thread"
+        shallow={!minimized}
+        replace={!minimized}
+        params={{
+          board: String(boardId),
+          id: String(threadId),
+          h: String(post.id)
+        }}
+      >
         <a data-tip={moment(post.created_at).format("lll")}>
-          <Text color={COLORS.gray}>{moment(post.created_at).short()}</Text>
+          <Text size="inherit" color={COLORS.gray}>
+            {moment(post.created_at).short()}
+          </Text>
         </a>
       </Link>
       <Spacer width={SPACING.small} />
-      <Link href={url}>
+      <Link
+        route="thread"
+        shallow={!minimized}
+        replace={!minimized}
+        params={{
+          board: String(boardId),
+          id: String(threadId),
+          h: String(post.id)
+        }}
+      >
         <a>
-          <Text color="inherit">#{post.id}</Text>
+          <Text size="inherit" color="inherit">
+            #{post.id}
+          </Text>
         </a>
       </Link>
       <Spacer width={SPACING.small} />
@@ -75,7 +102,10 @@ export const PostHeader = ({
           color={COLORS.gray}
         />
         <Spacer width={SPACING.small} />
-        <CopyToClipboard onCopy={copiedToClipboard} text={buildURLForPath(url)}>
+        <CopyToClipboard
+          onCopy={copiedToClipboard}
+          text={buildPostURL(boardId, threadId, buildPostDOMID(post.id))}
+        >
           <Icon
             data-tip="Copy link"
             icon={ICONS.link}
@@ -87,13 +117,26 @@ export const PostHeader = ({
       <Spacer width={SPACING.small} />
       <Text color={COLORS.medium_white}>|</Text>
       <Spacer width={SPACING.small} />
-      <div onClick={onClick} className="Group">
-        <Text weight="semiBold" color="inherit">
-          Reply
-        </Text>
-        <Spacer width={SPACING.small} />
-        <Icon icon={ICONS.chevronRight} size="xs" color="inherit" />
-      </div>
+      <Link
+        route="thread"
+        shallow={!minimized}
+        replace={!minimized}
+        params={{
+          board: String(boardId),
+          id: String(threadId),
+          r: String(post.id)
+        }}
+      >
+        <a>
+          <div className="Group" onClick={onClick}>
+            <Text size="inherit" weight="semiBold" color="inherit">
+              Reply
+            </Text>
+            <Spacer width={SPACING.small} />
+            <Icon icon={ICONS.chevronRight} size="xs" color="inherit" />
+          </div>
+        </a>
+      </Link>
 
       <style jsx>{`
         .Header {
@@ -103,6 +146,8 @@ export const PostHeader = ({
           align-items: center;
           align-self: flex-start;
           color: ${color};
+
+          font-size: 12px;
         }
 
         a {
@@ -139,6 +184,10 @@ export class Post extends React.PureComponent {
     };
   }
 
+  get shouldRedirectToComment() {
+    return !!this.props.minimized;
+  }
+
   buildReplyText = url => {
     return `>> ${url}\n`;
   };
@@ -146,29 +195,49 @@ export class Post extends React.PureComponent {
   handleShowCommentForm = url => {
     this.setState({
       showCommentForm: true,
-      defautReplyText: this.state.defautReplyText + url
+      defautReplyText: url
+        ? this.state.defautReplyText + url
+        : this.state.defautReplyText
     });
   };
 
   handleDismissCommentForm = () =>
     this.setState({ showCommentForm: false, defautReplyText: "" });
 
-  handleReplyToPost = () => {
-    const text = this.buildReplyText(
-      buildPostPathSelectedPost({
-        boardId: this.props.board.id,
-        id: this.props.post.id
-      })
-    );
+  handleReplyToPost = evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
 
-    if (this.state.showCommentForm) {
-      this.commentFormRef && this.commentFormRef.appendText(text);
+    if (this.shouldRedirectToComment) {
+      return Router.pushRoute("thread", {
+        board: this.props.board.id,
+        id: this.props.post.id,
+        r: this.props.post.id
+      });
+    }
+
+    if (!this.state.showCommentForm) {
+      this.handleShowCommentForm();
     } else {
-      this.handleShowCommentForm(text);
+      const text = this.buildReplyText(
+        buildPostPath({
+          boardId: this.props.board.id,
+          id: this.props.post.id
+        })
+      );
+      this.commentFormRef && this.commentFormRef.appendText(text);
     }
   };
 
   handleReplyToComment = commentId => {
+    if (this.shouldRedirectToComment) {
+      return Router.pushRoute("thread", {
+        board: this.props.board.id,
+        id: this.props.post.id,
+        r: commentId
+      });
+    }
+
     const text = this.buildReplyText(
       buildCommentPath({
         boardId: this.props.board.id,
@@ -195,6 +264,8 @@ export class Post extends React.PureComponent {
       identity,
       minimized
     } = this.props;
+    const { showCommentForm } = this.state;
+
     const color = COLORS[GRADIENT_COLORS[colorScheme]];
     const dimensions = calculateDimensions({
       photo: post.attachment,
@@ -210,14 +281,15 @@ export class Post extends React.PureComponent {
     const postDomID = buildPostDOMID(post.id);
     return (
       <div id={postDomID} className="PostContainer">
-        {this.state.showCommentForm && (
+        {showCommentForm && (
           <CreateCommentForm
             stickyTo={postDomID}
             postId={post.id}
             boardId={board.id}
+            draggable
             colorScheme={colorScheme}
             identity={identity}
-            ref={this.setCommentFormRef}
+            innerRef={this.setCommentFormRef}
             onDismiss={this.handleDismissCommentForm}
             initialText={this.state.defautReplyText}
           />
@@ -244,10 +316,11 @@ export class Post extends React.PureComponent {
           <div className="ContentContainer">
             <PostHeader
               onClick={this.handleReplyToPost}
-              board={board}
-              url={url}
+              boardId={board.id}
               colorScheme={colorScheme}
               post={post}
+              minimized={minimized}
+              threadId={post.id}
             />
             <Spacer height={SPACING.small} />
             <div className="BodyContainer">
@@ -281,13 +354,10 @@ export class Post extends React.PureComponent {
                 <Comment
                   createReply={this.handleReplyToComment}
                   comment={comment}
+                  boardId={board.id}
+                  threadId={post.id}
                   minimized={minimized}
                   colorScheme={colorScheme}
-                  url={buildCommentPath({
-                    boardId: board.id,
-                    postId: post.id,
-                    commentId: comment.id
-                  })}
                 />
                 {comments.length - 1 > index && (
                   <Spacer height={SPACING.small} />
