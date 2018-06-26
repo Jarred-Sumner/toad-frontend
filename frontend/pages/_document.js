@@ -149,7 +149,9 @@ export default class MyDocument extends Document {
             body,
             textarea,
             input {
-              font-family: "Open Sans", sans-serif;
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                Helvetica, Arial, sans-serif, "Apple Color Emoji",
+                "Segoe UI Emoji", "Segoe UI Symbol";
             }
 
             * {
@@ -173,11 +175,7 @@ export default class MyDocument extends Document {
               text-decoration: none;
             }
           `}</style>
-          <link
-            key="font"
-            href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700"
-            rel="stylesheet"
-          />
+
           <link
             key="static-stylesheet"
             rel="stylesheet"

@@ -106,16 +106,10 @@ const TextComponent = ({
           text-decoration: underline;
         }
 
-        .Text--serif {
-          font-family: Frank Ruhl Libre, serif;
-        }
-
         .Text--sans-serif {
-          font-family: Open Sans, sans-serif;
-        }
-
-        .Text--lucida {
-          font-family: Lucida Grande, sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
         }
 
         .Text--lucida.Text--extraBold {

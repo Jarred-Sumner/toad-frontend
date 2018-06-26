@@ -2,7 +2,7 @@ import { GRADIENT_COLORS } from "../components/Gradient";
 
 export const COLORS = {
   black: "rgba(38,38,40,1)",
-  green: "rgba(51,93,0,1)",
+  greentext: "rgba(51,93,0,1)",
   purple: "rgba(91,36,122,1)",
   gray: "#AAA",
   medium_white: "rgba(200, 200, 200, 1)",

@@ -1,80 +1,70 @@
 import React from "react";
-import Markdown from "react-markdown";
-import breaks from "remark-breaks";
 import { COLORS } from "../../lib/colors";
 import { SPACING } from "../../lib/spacing";
 import { Text } from "../Text";
 import { defaultProps } from "recompose";
-// const QuoteText = defaultProps({ color: COLORS.green })(BodyText);
-// import Lowlight from "remark-react-lowlight";
-// import js from "highlight.js/lib/languages/javascript";
+import { parse } from "./BodyParser.pegjs";
+import { Spacer } from "../Spacer";
+import Linkify from "react-linkify";
+import { pure } from "recompose";
+import _ from "lodash";
 
-const LineBreak = () => <p className="MarkdownBody-LineBreak" />;
+const LineBreak = defaultProps({ height: SPACING.small })(Spacer);
+const TitleLine = defaultProps({
+  size: "18px",
+  lineHeight: "24px",
+  weight: "semiBold",
+  color: COLORS.black,
+  className: "BodyText BodyText--TitleLine"
+})(Text);
 
-export const Body = ({ children, ...otherProps }) => (
-  <React.Fragment>
-    <Markdown
-      skipHtml
-      renderers={{
-        root: defaultProps({ className: "MarkdownBody" })(Text),
-        break: LineBreak,
-        link: ({ children, href, ...otherProps }) => (
-          <a href={href} target="_blank">
-            {href}
-          </a>
-        )
-      }}
-      plugins={[breaks]}
-      unwrapDisallowed
-      allowedTypes={[
-        "root",
-        "text",
-        "break",
-        "paragraph",
-        "emphasis",
-        "strong",
-        "blockquote",
-        "link",
-        "inlineCode",
-        "delete",
-        "paragraph",
-        "break"
-      ]}
-    >
-      {children}
-    </Markdown>
+const QuoteLine = defaultProps({
+  size: "14px",
+  lineHeight: "19px",
+  color: COLORS.greentext,
+  className: "BodyText BodyText--QuoteLine"
+})(Text);
+const NormalLine = defaultProps({
+  size: "14px",
+  lineHeight: "19px",
+  color: COLORS.black,
+  className: "BodyText BodyText--NormalLine"
+})(Text);
 
-    <style global jsx>{`
-      .MarkdownBody p {
-        margin-bottom: ${SPACING.normal}px;
-        line-height: 19px;
-      }
+const COMPONENT_BY_TYPE = {
+  quote_line: QuoteLine,
+  raw_line: NormalLine,
+  blank_line: LineBreak,
+  title_line: TitleLine
+};
 
-      .MarkdownBody p p {
-        margin-bottom: ${SPACING.small}px;
-      }
+export const Body = pure(({ children, ...otherProps }) => {
+  const text = parse(children);
 
-      .MarkdownBody a {
-        text-decoration: underline;
-      }
+  const lines = [text.title, ...text.body].filter(_.identity);
 
-      .MarkdownBody blockquote {
-        color: ${COLORS.green};
-      }
+  return (
+    <React.Fragment>
+      {lines.map(({ type, text }, index) => {
+        const LineComponent = COMPONENT_BY_TYPE[type];
 
-      .MarkdownBody blockquote p {
-        white-space: pre-wrap;
-      }
-
-      .MarkdownBody blockquote .MarkdownBody-LineBreak {
-        margin-bottom: 0;
-      }
-
-      .MarkdownBody blockquote > p:before {
-        content: "> ";
-      }
-    `}</style>
-  </React.Fragment>
-);
+        return (
+          <div className="BodyTextLine">
+            <LineComponent key={index}>
+              <Linkify properties={{ target: "_blank", className: "AutoLink" }}>
+                {text}
+              </Linkify>
+            </LineComponent>
+          </div>
+        );
+      })}
+      <style jsx>{`
+        .BodyTextLine {
+          display: block;
+        }
+      `}</style>
+    </React.Fragment>
+  );
+});
 
 export default Body;
