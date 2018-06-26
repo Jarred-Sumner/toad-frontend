@@ -18,7 +18,7 @@ import EditPhotoContainer from "../UploadPhoto";
 import { Author } from "./Author";
 import { withRouter } from "next/router";
 
-class _CreateCommentForm extends React.PureComponent {
+class RawCreateCommentForm extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -82,7 +82,7 @@ class _CreateCommentForm extends React.PureComponent {
         });
       }
 
-      this.props.onDismiss();
+      this.props.onDismiss && this.props.onDismiss();
     } catch (exception) {
       console.error(exception);
       this.setState({ isPosting: false });
@@ -107,7 +107,9 @@ class _CreateCommentForm extends React.PureComponent {
       boardId,
       colorScheme,
       onDismiss,
-      identity
+      identity,
+      draggable,
+      title = "Reply to thread"
     } = this.props;
     const { focused, dragging, isPosting } = this.state;
     const color = COLORS[colorScheme];
@@ -117,18 +119,20 @@ class _CreateCommentForm extends React.PureComponent {
         onStart={this.handleDragging}
         onStop={this.handleStopDragging}
         cancel=".CommentTextArea"
+        disabled={!draggable}
       >
         <div
           onClick={this.handleFocus}
           className={classNames("Container", {
             "Container--blur": !focused && !dragging,
-            "Container--focused": focused || dragging
+            "Container--focused": focused || dragging,
+            "Container--static": !draggable
           })}
         >
           <form className="CreateCommentForm" onSubmit={this.handleSubmit}>
             <div className="Menu HeaderMenu">
               <Text size="14px" color={color} weight="bold">
-                Reply to thread{" "}
+                {title}&nbsp;
                 <a href={`#${buildPostDOMID(postId)}`}>
                   <Text weight="inherit" color="inherit" underline>
                     #{postId}
@@ -136,9 +140,11 @@ class _CreateCommentForm extends React.PureComponent {
                 </a>
               </Text>
 
-              <div className="Close">
-                <Icon onClick={onDismiss} icon={ICONS.close} color={color} />
-              </div>
+              {onDismiss && (
+                <div className="Close">
+                  <Icon onClick={onDismiss} icon={ICONS.close} color={color} />
+                </div>
+              )}
             </div>
             <div className="InputRow">
               <div className="Photo">
@@ -161,7 +167,7 @@ class _CreateCommentForm extends React.PureComponent {
 
                 <textarea
                   className="CommentTextArea"
-                  autoFocus
+                  autoFocus={draggable}
                   autoCapitalize
                   autoCorrect
                   onFocus={this.handleFocus}
@@ -197,6 +203,18 @@ class _CreateCommentForm extends React.PureComponent {
               right: ${SPACING.large}px;
               border-radius: 4px;
               filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, 0.2));
+            }
+
+            .Container--static {
+              position: static;
+              top: unset;
+              right: unset;
+              filter: unset;
+              border: 1px solid ${COLORS.offwhite};
+            }
+
+            .Container--static .HeaderMenu {
+              cursor: default;
             }
 
             .Close {
@@ -363,6 +381,8 @@ export const CreateCommentForm = compose(
     })
   }),
   withRouter
-)(_CreateCommentForm);
+)(({ innerRef, ...otherProps }) => (
+  <RawCreateCommentForm ref={innerRef} {...otherProps} />
+));
 
 export default CreateCommentForm;

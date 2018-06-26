@@ -9,6 +9,7 @@ import moment from "moment";
 import { MAX_POST_CONTENT_WIDTH, PostHeader } from "../Post";
 import Photo, { calculateDimensions } from "../Photo";
 import { buildCommentDOMID } from "../../lib/routeHelpers";
+import _ from "lodash";
 
 export const MAX_PHOTO_WIDTH_MINIMIZED = 125;
 export const MAX_PHOTO_HEIGHT_MINIMIZED = 125;
@@ -16,12 +17,18 @@ export const MAX_PHOTO_WIDTH = 175;
 export const MAX_PHOTO_HEIGHT = 300;
 
 export class Comment extends React.PureComponent {
-  handleShowReply = () => this.props.createReply(this.props.comment.id);
+  handleShowReply = evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.props.createReply(this.props.comment.id);
+  };
   render() {
     const {
       comment,
       backgroundColor = COLORS.offwhite,
       url,
+      boardId,
+      threadId,
       minimized
     } = this.props;
     const dimensions = calculateDimensions({
@@ -47,14 +54,21 @@ export class Comment extends React.PureComponent {
           <PostHeader
             onClick={this.handleShowReply}
             post={comment}
+            boardId={boardId}
             muted
-            url={url}
+            minimized={minimized}
+            threadId={threadId}
           />
 
-          <Spacer height={SPACING.normal} />
+          <Spacer height={SPACING.small} />
           <div className="BodyContainer">
-            <Body>{comment.body}</Body>
+            <Body>
+              {minimized
+                ? _.truncate(comment.body, { length: 500 })
+                : comment.body}
+            </Body>
           </div>
+          <Spacer height={SPACING.small} />
         </div>
         <style jsx>{`
           .CommentContainer {

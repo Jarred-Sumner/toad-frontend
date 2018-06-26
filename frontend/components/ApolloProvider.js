@@ -15,6 +15,7 @@ import { defaultProps } from "recompose";
 import { DEFAULT_DEPRECATION_REASON } from "graphql";
 import { withData } from "next-apollo";
 import cookies from "next-cookies";
+import { isProduction, baseHostname, BASE_HOSTNAME, BASE_DOMAIN } from "config";
 
 let cookieJar;
 
@@ -44,7 +45,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const GRAPHQL_URL = `${process.env.BASE_HOSTNAME}/graphql`;
+const GRAPHQL_URL = `${BASE_HOSTNAME}/graphql`;
 
 console.log("Initializing Apollo –", GRAPHQL_URL);
 const httpLink = new BatchHttpLink({
@@ -149,7 +150,7 @@ const fetchSessionCookie = async ctx => {
   if (sessionCookie) {
     return sessionCookie;
   } else {
-    const response = await fetch(process.env.BASE_HOSTNAME + "/session", {
+    const response = await fetch(BASE_HOSTNAME + "/session", {
       method: "POST",
       credentials: "include"
     });
@@ -177,20 +178,12 @@ export const withApollo = Component => {
     const sessionCookie = await fetchSessionCookie(ctx);
 
     if (sessionCookie && ctx.req) {
-      cookieJar.setCookieSync(
-        `toads_session=${sessionCookie}`,
-        process.env.BASE_HOSTNAME
-      );
+      cookieJar.setCookieSync(`toads_session=${sessionCookie}`, BASE_HOSTNAME);
 
       ctx.res.cookie("toads_session", sessionCookie, {
         expires: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        // TODO: check this is correct in prod
-        domain:
-          process.env.NODE_ENV === "production"
-            ? `.${process.env.BASE_DOMAIN}`
-            : undefined
+        secure: isProduction()
       });
     }
 

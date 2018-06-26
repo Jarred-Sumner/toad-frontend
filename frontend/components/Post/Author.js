@@ -48,7 +48,7 @@ export class Author extends React.PureComponent {
   render() {
     const { name } = this.state;
     return (
-      <Text color="inherit" weight="bold" lineHeight="19px" wrap={false}>
+      <Text size="12px" color="inherit" weight="bold" wrap={false}>
         {name}
       </Text>
     );

@@ -1,4 +1,4 @@
-const IMAGE_HOST = process.env.IMAGE_PROXY_HOST;
+import { IMAGE_HOST } from "config";
 
 const DEFAULT_SIZES = [1, 1.5, 2, 3, 4];
 const DEFAULT_PIXEL_RATIO = 1.0;
