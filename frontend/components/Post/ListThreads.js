@@ -85,11 +85,7 @@ export const ListThreadsContainer = ({ board, page, ...otherProps }) => {
         ) {
           return <Spinner />;
         } else {
-          return (
-            <Text size="14px" weight="bold">
-              Something bad happened!
-            </Text>
-          );
+          return null;
         }
       }}
     </Query>
