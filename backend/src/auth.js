@@ -1,5 +1,20 @@
 import { get, isNull, isObject } from 'lodash'
+import cookie from 'cookie'
 import Models from './models'
+
+export const wsAuth = async (params, socket) => {
+  const req = socket.upgradeReq
+  const cookies = cookie.parse(get(req, 'headers.cookie'), '')
+  const token = get(cookies, 'toads_session', null)
+  if (isNull(token)) {
+    return {}
+  }
+  const session = await Models.session.findOne({ where: { token } })
+  if (!isObject(session)) {
+    return {}
+  }
+  return { session }
+}
 
 export default async (req, res, next) => {
   const token = get(req, 'cookies.toads_session', null)

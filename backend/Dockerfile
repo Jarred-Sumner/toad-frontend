@@ -1,4 +1,4 @@
-FROM gcr.io/toads-208000/nodejs
+FROM node:jessie
 
 # Create app directory
 WORKDIR /usr/src/app
