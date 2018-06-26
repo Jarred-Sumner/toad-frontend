@@ -4,7 +4,7 @@ import { Author } from "./Post/Author";
 import { Text } from "./Text";
 import { SPACING } from "../lib/spacing";
 import { Body } from "./Post/Body";
-import Photo, { calculateDimensions } from "./Photo";
+import Photo, { calculateDimensions, PreviewablePhoto } from "./Photo";
 import { Spacer } from "./Spacer";
 import { MEDIUM_BEAKPOINT } from "../lib/mobile";
 import { Comment } from "./Post/Comment";
@@ -299,7 +299,7 @@ export class Post extends React.PureComponent {
           {post.attachment && (
             <div className="PhotoWrapper">
               <div className="PhotoContainer">
-                <Photo
+                <PreviewablePhoto
                   width={dimensions.width}
                   height={dimensions.height}
                   minHeight={

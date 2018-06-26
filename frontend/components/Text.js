@@ -17,6 +17,7 @@ const TextComponent = ({
   align = "inherit",
   wrap = null,
   width,
+  tooltip,
   animated = false,
   onClick,
   opacity,
@@ -42,7 +43,7 @@ const TextComponent = ({
   });
 
   return (
-    <div onClick={onClick} className={classes}>
+    <div data-tip={tooltip} onClick={onClick} className={classes}>
       <style jsx>{`
         .Text {
           color: ${color};

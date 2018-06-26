@@ -8,7 +8,9 @@ import {
   faFlag,
   faLink,
   faBackward,
-  faForward
+  faForward,
+  faDownload,
+  faExpandArrowsAlt
 } from "@fortawesome/free-solid-svg-icons";
 
 export const ICONS = {
@@ -19,7 +21,9 @@ export const ICONS = {
   link: faLink,
   chevronRight: faChevronRight,
   previous: faBackward,
-  next: faForward
+  next: faForward,
+  download: faDownload,
+  expand: faExpandArrowsAlt
 };
 
 export const Icon = FontAwesomeIcon;

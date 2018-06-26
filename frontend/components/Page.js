@@ -7,11 +7,25 @@ import { AlertHost } from "./Alert";
 import { NavHeader } from "./NavHeader";
 import { Spacer } from "./Spacer";
 import { Text } from "./Text";
+import { Router } from "Toads/routes";
 import { GITHUB_REPO_URL } from "config";
+import { ImagePreviewProvider, ImagePreviewViewer } from "./ImagePreview";
 
 // import Headroom from "react-headroom";
 
 export class Page extends React.Component {
+  componentDidMount() {
+    const orignialRouteChangeComplete = Router.onRouteChangeComplete;
+
+    Router.onRouteChangeComplete = url => {
+      ReactTooltip.rebuild();
+
+      if (orignialRouteChangeComplete) {
+        return orignialRouteChangeComplete(url);
+      }
+    };
+  }
+
   render() {
     const { children, backgroundColor, renderSubheader } = this.props;
 
@@ -23,7 +37,13 @@ export class Page extends React.Component {
           {renderSubheader && renderSubheader()}
         </React.Fragment>
 
-        <main className="PageContainer">{children}</main>
+        <ImagePreviewProvider>
+          <main className="PageContainer">
+            {children}
+            <ImagePreviewViewer />
+          </main>
+        </ImagePreviewProvider>
+
         <footer>
           <div className="FooterContent">
             <Text size="12px" color={COLORS.medium_white}>

@@ -7,7 +7,7 @@ import { Author } from "./Author";
 import { Text } from "../Text";
 import moment from "moment";
 import { MAX_POST_CONTENT_WIDTH, PostHeader } from "../Post";
-import Photo, { calculateDimensions } from "../Photo";
+import Photo, { calculateDimensions, PreviewablePhoto } from "../Photo";
 import { buildCommentDOMID } from "../../lib/routeHelpers";
 import _ from "lodash";
 
@@ -41,7 +41,7 @@ export class Comment extends React.PureComponent {
       <div id={buildCommentDOMID(comment.id)} className="CommentContainer">
         {comment.attachment && (
           <React.Fragment>
-            <Photo
+            <PreviewablePhoto
               width={dimensions.width}
               height={dimensions.height}
               photo={comment.attachment}
