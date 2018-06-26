@@ -4,8 +4,7 @@ import * as Utils from '../utils'
 
 export const validatePost = async (
   { id, identity },
-  { parent_id, body, attachment_id },
-  { session }
+  { parent_id, body, attachment_id }
 ) => {
   let foundParent
   // verify that we can reply to the parent
@@ -61,11 +60,11 @@ export default async (_, args, ctx) => {
     return null
   }
 
+  const { post, foundParent } = validation
+
   if (foundParent === undefined && post.attachment === undefined) {
     return null // Don't allow OPs without attachment
   }
-
-  const { post, foundParent } = validation
 
   const bumped_at = post.parent_id === undefined ? new Date() : null
 

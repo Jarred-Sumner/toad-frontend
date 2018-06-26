@@ -10,10 +10,8 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
 import auth, { wsAuth } from './auth'
-import * as Utils from './utils'
 import schema from './schema'
 import config from './config'
-import { UniqueDirectivesPerLocation } from 'graphql/validation/rules/UniqueDirectivesPerLocation'
 
 const PORT = config('port')
 
@@ -48,7 +46,7 @@ if (!production) {
   app.get(
     '/graphiql',
     bodyParser.json(),
-    graphiqlExpress(req => ({
+    graphiqlExpress(() => ({
       endpointURL: '/graphql',
       subscriptionsEndpoint: `ws://localhost:${PORT}/graphql`,
     }))
@@ -76,10 +74,8 @@ app.post(
   })
 )
 
-let wsServer
-
 const server = app.listen(PORT, () => {
-  wsServer = SubscriptionServer.create(
+  SubscriptionServer.create(
     {
       schema,
       execute,
