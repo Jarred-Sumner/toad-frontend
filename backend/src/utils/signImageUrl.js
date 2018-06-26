@@ -17,7 +17,7 @@ export default ({ url }) => {
     cdnHostname
   )
   const expiry = moment()
-    .add(1, 'hour')
+    .add(1, 'year')
     .format('X')
 
   const urlToSign = `${contentUrl}?Expires=${expiry}&KeyName=${cdnKeyName}`
