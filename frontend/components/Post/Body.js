@@ -3,11 +3,13 @@ import { COLORS } from "../../lib/colors";
 import { SPACING } from "../../lib/spacing";
 import { Text } from "../Text";
 import { defaultProps } from "recompose";
-import { parse } from "./BodyParser.pegjs";
+import { parse as _parseBody } from "./BodyParser.pegjs";
 import { Spacer } from "../Spacer";
 import Linkify from "react-linkify";
 import { pure } from "recompose";
 import _ from "lodash";
+
+const parseBody = _.memoize(_parseBody);
 
 const LineBreak = defaultProps({ height: SPACING.small })(Spacer);
 const TitleLine = defaultProps({
@@ -45,7 +47,7 @@ const COMPONENT_BY_TYPE = {
 };
 
 export const Body = pure(({ children, colorScheme, ...otherProps }) => {
-  const text = parse(children);
+  const text = parseBody(children);
 
   const lines = [text.title, ...text.body].filter(_.identity);
 
