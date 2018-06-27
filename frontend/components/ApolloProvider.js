@@ -212,6 +212,7 @@ export const withApollo = Component => {
       ctx.res.cookie("toads_session", sessionCookie, {
         expires: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
         httpOnly: true,
+        domain: isProduction() ? `.${BASE_DOMAIN}` : undefined,
         secure: isProduction()
       });
     }
