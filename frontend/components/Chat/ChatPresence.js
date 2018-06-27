@@ -84,6 +84,9 @@ class RawChatPresence extends React.Component {
     });
   };
 
+  // We don't actually ever mark as offline because cross-tab coordination sounds more nuanced than what I currently have time for
+  // This means the online now count could be innacurate by like...30 seconds.
+  // which is nbd anyway.
   handleVisibilityChange = () => {
     if (typeof document === "undefined") {
       return;
