@@ -1,3 +1,7 @@
+require("dotenv").config({
+  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env"
+});
+
 const next = require("next");
 const routes = require("./routes");
 const config = require("./config");

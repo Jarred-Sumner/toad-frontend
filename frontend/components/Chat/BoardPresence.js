@@ -9,11 +9,11 @@ import _ from "lodash";
 import { SPACING } from "lib/spacing";
 
 const POLL_INTERVAL = 20000; // server-side it's 30 seconds, but we do 20 seconds just to be safe
-class ChatPresenceIndicator extends React.PureComponent {
+class BoardPresenceIndicator extends React.PureComponent {
   render() {
     const { onlineCount } = this.props;
     return (
-      <div className="ChatPresence">
+      <div className="BoardPresence">
         <GreenDot />
         <Spacer width={SPACING.small} />
         <Text
@@ -29,7 +29,7 @@ class ChatPresenceIndicator extends React.PureComponent {
         </Text>
 
         <style jsx>{`
-          .ChatPresence {
+          .BoardPresence {
             display: flex;
             align-items: center;
           }
@@ -39,7 +39,7 @@ class ChatPresenceIndicator extends React.PureComponent {
   }
 }
 
-class RawChatPresence extends React.Component {
+class RawBoardPresence extends React.Component {
   componentDidMount() {
     if (!document.hidden) {
       this.touchOnline();
@@ -108,7 +108,7 @@ class RawChatPresence extends React.Component {
         variables={{ boardID }}
       >
         {({ data }) => (
-          <ChatPresenceIndicator
+          <BoardPresenceIndicator
             onlineCount={
               _.get(data, "BoardActivity.active_count") || onlineCount
             }
@@ -119,14 +119,14 @@ class RawChatPresence extends React.Component {
   }
 }
 
-export const ChatPresence = ({ boardID, onlineCount, ...otherProps }) => {
+export const BoardPresence = ({ boardID, onlineCount, ...otherProps }) => {
   return (
     <Mutation
       mutation={Queries.UpdatePresence}
       variables={{ boardID, visible: true }}
     >
       {updatePresence => (
-        <RawChatPresence
+        <RawBoardPresence
           boardID={boardID}
           updatePresence={updatePresence}
           onlineCount={onlineCount}
@@ -136,4 +136,4 @@ export const ChatPresence = ({ boardID, onlineCount, ...otherProps }) => {
   );
 };
 
-export default ChatPresence;
+export default BoardPresence;
