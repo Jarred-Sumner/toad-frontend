@@ -6,7 +6,7 @@ import {
 } from "apollo-cache-inmemory";
 import { onError } from "apollo-link-error";
 import { ApolloClient } from "apollo-client";
-import { concat } from "apollo-link";
+import { concat, split } from "apollo-link";
 import { BatchHttpLink } from "apollo-link-batch-http";
 import { CachePersistor } from "apollo-cache-persist";
 import Alert from "./Alert";
@@ -15,9 +15,18 @@ import { defaultProps } from "recompose";
 import { DEFAULT_DEPRECATION_REASON } from "graphql";
 import { withData } from "next-apollo";
 import cookies from "next-cookies";
-import { isProduction, baseHostname, BASE_HOSTNAME, BASE_DOMAIN } from "config";
+import {
+  isProduction,
+  baseHostname,
+  BASE_HOSTNAME,
+  BASE_DOMAIN,
+  WEBSOCKET_HOSTNAME
+} from "config";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities";
 
 let cookieJar;
+let wsLink;
 
 const { fetch: rawFetch } = fetchPonyfill();
 
@@ -29,6 +38,13 @@ if (typeof window === "undefined") {
   fetch = require("fetch-cookie")(rawFetch, cookieJar);
 } else {
   fetch = rawFetch;
+
+  wsLink = new WebSocketLink({
+    uri: `${WEBSOCKET_HOSTNAME}/graphql`,
+    options: {
+      reconnect: true
+    }
+  });
 }
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -165,9 +181,22 @@ const fetchSessionCookie = async ctx => {
   }
 };
 
+const link =
+  typeof window !== "undefined"
+    ? split(
+        // split based on operation type
+        ({ query }) => {
+          const { kind, operation } = getMainDefinition(query);
+          return kind === "OperationDefinition" && operation === "subscription";
+        },
+        wsLink,
+        httpLink
+      )
+    : httpLink;
+
 export const withApollo = Component => {
   const NewComponent = withData({
-    link: httpLink,
+    link,
     createCache,
     fetchPolicy: "cache-and-network"
   })(Component);
