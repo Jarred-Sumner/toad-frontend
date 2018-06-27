@@ -1,8 +1,12 @@
 const next = require("next");
 const routes = require("./routes");
-const app = next({ dev: process.env.NODE_ENV !== "production" });
+const config = require("./config");
+const app = next({ dev: !config.isProduction() });
 const handler = routes.getRequestHandler(app);
 const path = require("path");
+const Raven = require("raven");
+
+Raven.config(config.SENTRY_URL).install();
 
 // With express
 const express = require("express");
@@ -19,7 +23,7 @@ app.prepare().then(() => {
       throw err;
     }
 
-    console.log(`Toads is listening on ${process.env.BASE_DOMAIN}:${PORT}`);
+    console.log(`Toads is listening on ${config.BASE_DOMAIN}:${PORT}`);
   });
 });
 

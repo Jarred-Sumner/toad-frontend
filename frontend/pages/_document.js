@@ -1,12 +1,15 @@
 import PageHead from "../components/head";
 import Document, { Head, Main, NextScript } from "next/document";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import Raven from "raven-js";
+import { SENTRY_URL } from "Toads/config";
 
 if (typeof window !== "undefined") {
   window.Promise = require("bluebird");
   window.FontAwesomeConfig = {
     autoAddCss: false
   };
+  Raven.config(SENTRY_URL).install();
 } else if (typeof global !== "undefined") {
   global.Promise = require("bluebird");
 }
