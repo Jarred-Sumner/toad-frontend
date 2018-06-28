@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "../Text";
 import * as EmojiConvertor from "emoji-js/lib/emoji.js";
 
-const normalizeName = name => {
+export const normalizeName = name => {
   const emoji = new EmojiConvertor();
   emoji.use_sheet = false;
   emoji.text_mode = false;
@@ -12,7 +12,7 @@ const normalizeName = name => {
   return emoji.replace_colons(name);
 };
 
-const normalizeAnonymousName = name => {
+export const normalizeAnonymousName = name => {
   return `@Anon${normalizeName(name)}`;
 };
 

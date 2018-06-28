@@ -35,6 +35,13 @@ fragments.post = `
       ${fragments.attachment}
     }
   `;
+fragments.chatMessage = `
+id
+created_at
+body
+identity { ${fragments.identity} }
+attachment { ${fragments.attachment}}
+`;
 
 export const Queries = {
   ViewBoard: gql`
@@ -132,6 +139,34 @@ export const Queries = {
       Board(id: $boardID) {
         Activity(visible: $visible) {
           ${fragments.activity}
+        }
+      }
+    }
+  `,
+  SubscribeToBoardChat: gql`
+    subscription NewBoardMessage($boardID: ID!) {
+      NewBoardMessage(board: $boardID) {
+        ${fragments.chatMessage}
+      }
+    }
+  `,
+  BoardChatHistory: gql`
+    query BoardChatHistory($boardID: ID!, $offset: Int, $limit: Int) {
+      Board(id: $boardID) {
+        id
+        chat(offset: $offset, limit: $limit) {
+          messages {
+            ${fragments.chatMessage}
+          }
+        }
+      }
+    }
+  `,
+  SendBoardMessage: gql`
+    mutation SendBoardMessage($boardID: ID!, $body: String!, $attachmentID: ID) {
+      Board(id: $boardID) {
+        Chat(body: $body, attachment_id: $attachmentID) {
+          ${fragments.chatMessage}
         }
       }
     }

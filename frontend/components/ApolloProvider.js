@@ -204,17 +204,24 @@ export const withApollo = Component => {
   const oldInitialProps = NewComponent.getInitialProps;
 
   NewComponent.getInitialProps = async ctx => {
-    const sessionCookie = await fetchSessionCookie(ctx);
+    if (ctx.req) {
+      const sessionCookie = await fetchSessionCookie(ctx);
 
-    if (sessionCookie && ctx.req) {
-      cookieJar.setCookieSync(`toads_session=${sessionCookie}`, BASE_HOSTNAME);
+      if (sessionCookie) {
+        cookieJar.setCookieSync(
+          `toads_session=${sessionCookie}`,
+          BASE_HOSTNAME
+        );
 
-      ctx.res.cookie("toads_session", sessionCookie, {
-        expires: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        httpOnly: true,
-        domain: isProduction() ? `.${BASE_DOMAIN}` : undefined,
-        secure: isProduction()
-      });
+        ctx.res.cookie("toads_session", sessionCookie, {
+          expires: new Date(
+            new Date().setFullYear(new Date().getFullYear() + 1)
+          ),
+          httpOnly: true,
+          domain: isProduction() ? `.${BASE_DOMAIN}` : undefined,
+          secure: isProduction()
+        });
+      }
     }
 
     if (oldInitialProps) {

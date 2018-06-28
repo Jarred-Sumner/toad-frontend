@@ -18,6 +18,7 @@ import { Router } from "Toads/routes";
 import Head from "Toads/components/head";
 import { buildBoardURL } from "lib/routeHelpers";
 import { Paginator, MAX_PAGE, MIN_PAGE } from "components/Paginator";
+import { BoardChat } from "components/Chat/BoardChat";
 
 class ViewBoardPage extends React.Component {
   state = {
@@ -66,6 +67,8 @@ class ViewBoardPage extends React.Component {
         >
           <Paginator page={page} colorScheme={colorScheme} boardId={board.id} />
         </ListThreadsContainer>
+
+        <BoardChat board={board} colorScheme={colorScheme} />
       </Page>
     );
   }

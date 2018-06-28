@@ -51,6 +51,7 @@
     "react": "^16.4.1",
     "react-addons-shallow-compare": "^15.6.2",
     "react-apollo": "^2.1.6",
+    "react-autosize-textarea": "^4.0.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.4.1",
     "react-draggable": "^3.0.5",
