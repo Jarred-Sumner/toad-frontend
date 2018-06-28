@@ -2,7 +2,7 @@ export default (sequelize, DataTypes) => {
   const chat_message = sequelize.define(
     'chat_message',
     {
-      body: DataTypes.TEXT,
+      body: { type: DataTypes.TEXT, allowNull: true },
       identity_id: DataTypes.UUID,
       board: DataTypes.STRING,
       attachment_id: { type: DataTypes.STRING, allowNull: true },

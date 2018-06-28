@@ -9,7 +9,7 @@ export default {
       },
       body: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       identity_id: {
         type: Sequelize.UUID,
