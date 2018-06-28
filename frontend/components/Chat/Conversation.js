@@ -51,7 +51,9 @@ class ChatConversation extends React.PureComponent {
               colorScheme={colorScheme}
               isSentByCurrentUser={message.identity.id === identity.id}
             />
-            <Spacer height={SPACING.small} />
+            {message.identity.id !== identity.id && (
+              <Spacer height={SPACING.small} />
+            )}
           </React.Fragment>
         ))}
 
