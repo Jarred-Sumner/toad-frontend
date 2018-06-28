@@ -5,6 +5,12 @@ fragments.identity = `
     id
     name
   `;
+fragments.activity = `
+  active_count
+  active_identities {
+    ${fragments.identity}
+  }
+`;
 fragments.attachment = `
   id
   type
@@ -37,6 +43,10 @@ export const Queries = {
         id
         label
         color_scheme
+
+        activity {
+          ${fragments.activity}
+        }
 
         identity {
           ${fragments.identity}
@@ -106,6 +116,22 @@ export const Queries = {
             ${fragments.post}
           }
           reply_count
+        }
+      }
+    }
+  `,
+  BoardActivitySubscription: gql`
+    subscription GetBoardActivity($boardID: ID!) {
+      BoardActivity(board: $boardID) {
+        ${fragments.activity}
+      }
+    }
+  `,
+  UpdatePresence: gql`
+    mutation UpdatePresence($visible: Boolean!, $boardID: ID!) {
+      Board(id: $boardID) {
+        Activity(visible: $visible) {
+          ${fragments.activity}
         }
       }
     }

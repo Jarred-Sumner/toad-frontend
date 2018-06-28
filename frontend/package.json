@@ -20,6 +20,7 @@
     "apollo-link": "^1.2.2",
     "apollo-link-batch-http": "^1.2.2",
     "apollo-link-error": "^1.1.0",
+    "apollo-link-ws": "^1.0.8",
     "babel-plugin-module-resolver": "^3.1.1",
     "bluebird": "^3.5.1",
     "classnames": "^2.2.6",
@@ -45,6 +46,8 @@
     "next-progressbar": "^1.0.0",
     "next-routes": "^1.4.2",
     "node-fetch": "^2.1.2",
+    "raven": "^2.6.3",
+    "raven-js": "^3.26.3",
     "react": "^16.4.1",
     "react-addons-shallow-compare": "^15.6.2",
     "react-apollo": "^2.1.6",
@@ -63,6 +66,7 @@
     "react-tooltip": "^3.6.1",
     "react-waypoint": "^8.0.2",
     "recompose": "^0.27.1",
+    "subscriptions-transport-ws": "^0.9.11",
     "yarn": "^1.7.0"
   },
   "devDependencies": {

@@ -13,6 +13,18 @@ import { pure } from "recompose";
 
 const DEFAULT_SIZE = "126px";
 
+const SUPPORTED_RESIZE_MIMETYPES = [
+  "image/png",
+  "image/tiff",
+  "image/webp",
+  "image/jpeg",
+  "image/bmp"
+];
+
+export const isAutosizingSupported = mimetype => {
+  return SUPPORTED_RESIZE_MIMETYPES.includes(mimetype);
+};
+
 export const calculateDimensions = ({ photo, maxWidth, maxHeight }) => {
   const MAX_COLUMN_COUNT = 1;
   if (!photo || !photo.metadata) {
@@ -96,9 +108,29 @@ export const PreviewablePhoto = ({ photo, ...otherProps }) => (
   </ImagePreviewContext.Consumer>
 );
 
+export const buildPhotoSrc = ({ url, mimetype, width, height, size }) => {
+  if (isAutosizingSupported(mimetype) && width && height) {
+    return buildImgSrc(url, width, height);
+  } else if (isAutosizingSupported(mimetype) && size) {
+    return buildImgSrc(url, size);
+  } else {
+    return url;
+  }
+};
+
+export const buildPhotoSrcSet = ({ url, mimetype, width, height, size }) => {
+  if (isAutosizingSupported(mimetype) && width && height) {
+    return buildImgSrcSet(url, width, height);
+  } else if (isAutosizingSupported(mimetype) && size) {
+    return buildImgSrcSet(url, size);
+  } else {
+    return null;
+  }
+};
+
 export const Photo = pure(
   ({ onClick, width, height, size, photo, circle, ...otherProps }) => {
-    const { url } = photo || {};
+    const { url, mimetype } = photo || {};
 
     const dimensions = _.pick(_.get(photo, "metadata"), ["width", "height"]);
 
@@ -113,15 +145,9 @@ export const Photo = pure(
       >
         {url && (
           <img
-            src={
-              size ? buildImgSrc(url, size) : buildImgSrc(url, width, height)
-            }
+            src={buildPhotoSrc({ url, mimetype, width, height, size })}
             key={photo.id}
-            srcSet={
-              size
-                ? buildImgSrcSet(url, size)
-                : buildImgSrcSet(url, width, height)
-            }
+            srcSet={buildPhotoSrcSet({ url, mimetype, width, height, size })}
           />
         )}
 
@@ -144,13 +170,7 @@ export const Photo = pure(
 
           {!_.isEmpty(dimensions) &&
             width > 100 && (
-              <Text
-                tooltip={photo.filename}
-                wrap={false}
-                color="white"
-                size="12px"
-                weight="semiBold"
-              >
+              <Text wrap={false} color="white" size="12px" weight="semiBold">
                 {dimensions.width}x{dimensions.height}
               </Text>
             )}

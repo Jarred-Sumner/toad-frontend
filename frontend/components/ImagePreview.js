@@ -1,5 +1,9 @@
 import React from "react";
-import Photo, { calculateDimensions } from "./Photo";
+import Photo, {
+  calculateDimensions,
+  buildPhotoSrc,
+  buildPhotoSrcSet
+} from "./Photo";
 import { buildImgSrcSet, buildImgSrc } from "lib/imgUri";
 import { MOBILE_BEAKPOINT } from "lib/mobile";
 
@@ -36,7 +40,7 @@ class RawImagePreviewViewer extends React.PureComponent {
     if (!imagePreview) {
       return null;
     }
-    const { url } = imagePreview;
+    const { url, mimetype } = imagePreview;
 
     const { width, height } = calculateDimensions({
       photo: imagePreview,
@@ -44,13 +48,12 @@ class RawImagePreviewViewer extends React.PureComponent {
       maxHeight: window.innerHeight
     });
 
+    const src = buildPhotoSrc({ url, width, height, mimetype });
+    const srcSet = buildPhotoSrcSet({ url, width, height, mimetype });
+
     return (
       <div className="ImagePreview">
-        <img
-          src={buildImgSrc(url, width, height)}
-          key={imagePreview.id}
-          srcSet={buildImgSrcSet(url, width, height)}
-        />
+        <img src={src} key={imagePreview.id} srcSet={srcSet} />
 
         <style jsx>{`
           .ImagePreview {
@@ -61,6 +64,7 @@ class RawImagePreviewViewer extends React.PureComponent {
 
           img {
             object-fit: contain;
+            max-height: 100vh;
           }
 
           @media (max-width: ${MOBILE_BEAKPOINT}px) {

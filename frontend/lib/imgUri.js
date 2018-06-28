@@ -36,11 +36,9 @@ export const buildImgSrc = (source, rawSize, rawHeight, pixelRatio) => {
     return source;
   }
 
-  return `${IMAGE_HOST}/${normalizeSize(
-    rawSize,
-    rawHeight,
-    pixelRatio
-  )}/${source}`;
+  return encodeURI(
+    `${IMAGE_HOST}/${normalizeSize(rawSize, rawHeight, pixelRatio)}/${source}`
+  );
 };
 
 export const buildImgSrcSet = (

@@ -1,18 +1,15 @@
 import React from "react";
-import { Post } from "../Post";
-import { Spacer } from "../Spacer";
-import { SPACING } from "../../lib/spacing";
-import { COLORS } from "../../lib/colors";
-import { Gradient, GRADIENT_COLORS } from "../Gradient";
-import { Text } from "../Text";
-import GreenDot from "../GreenDot";
-import { Button } from "../Button";
-import { BOARD_LIST } from "../NavHeader";
-import { CreatePostForm } from "./CreatePost";
-import { Icon, ICONS } from "../Icon";
-import { withApollo } from "../ApolloProvider";
 import { defaultProps } from "recompose";
+import { COLORS } from "../../lib/colors";
+import { SPACING } from "../../lib/spacing";
+import { Button } from "../Button";
+import { BoardPresence } from "../Chat/BoardPresence";
+import { Gradient, GRADIENT_COLORS } from "../Gradient";
+import { Icon, ICONS } from "../Icon";
+import { Spacer } from "../Spacer";
+import { Text } from "../Text";
 import { Author } from "./Author";
+import { CreatePostForm } from "./CreatePost";
 
 const NewPostButton = ({ classes, onPress }) => (
   <Button
@@ -49,7 +46,8 @@ export class BoardHeader extends React.PureComponent {
       online_count: onlineCount = 12,
       color_scheme: colorScheme,
       id,
-      label
+      label,
+      activity
     } = board;
 
     const color = COLORS[colorScheme];
@@ -76,19 +74,7 @@ export class BoardHeader extends React.PureComponent {
                 />
               )}
               <Spacer width={SPACING.normal} />
-              <GreenDot />
-              <Spacer width={SPACING.small} />
-              <Text
-                size="14px"
-                weight="bold"
-                letterSpacing="0.22px"
-                color={COLORS.white}
-              >
-                <Text underline weight="inherit" color="inherit" size="inherit">
-                  {onlineCount} toads
-                </Text>
-                &nbsp;online now
-              </Text>
+              <BoardPresence boardID={id} onlineCount={activity.active_count} />
             </div>
           </div>
 
