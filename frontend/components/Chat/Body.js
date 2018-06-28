@@ -65,6 +65,8 @@ export const Body = pure(({ children, colorScheme, ...otherProps }) => {
         .BodyTextLine {
           display: flex;
           width: max-content;
+          flex-wrap: wrap;
+          max-width: 100%;
         }
       `}</style>
     </React.Fragment>

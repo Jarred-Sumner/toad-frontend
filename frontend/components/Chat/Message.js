@@ -43,6 +43,8 @@ export class Message extends React.PureComponent {
             display: flex;
             flex-direction: column;
             align-self: flex-start;
+            flex-wrap: wrap;
+            flex: 1;
             flex-shrink: 0;
           }
 
@@ -50,7 +52,9 @@ export class Message extends React.PureComponent {
             background-color: ${COLORS.offwhite};
             padding: ${SPACING.small}px ${SPACING.small}px;
             display: flex;
+            flex-wrap: wrap;
             width: max-content;
+            max-width: 180px;
             border-radius: 4px;
             overflow: hidden;
           }
