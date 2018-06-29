@@ -14,6 +14,8 @@ import { Queries } from "../Queries";
 import { Text } from "components/Text";
 import { Author } from "components/Post/Author";
 import { COLORS } from "lib/colors";
+import { BoardChat } from "components/Chat/BoardChat";
+import { ThreadHeader } from "components/Post/ThreadHeader";
 
 class ViewThreadPage extends React.Component {
   constructor(props) {
@@ -24,51 +26,21 @@ class ViewThreadPage extends React.Component {
     };
   }
 
-  handleHideCreatePost = () => this.setState({ showCreatePost: false });
-  handleShowCreatePost = () => {
-    this.setState({ showCreatePost: true }, () => {
-      this.dropZoneRef.open();
-    });
-  };
+  toggleReplyToThread = () =>
+    this.setState({ showCommentForm: !this.state.showCommentForm });
 
   setDropzoneRef = dropZoneRef => (this.dropZoneRef = dropZoneRef);
 
   handleDismissNewComment = () => this.setState({ showCommentForm: false });
 
   renderHeader = () => {
-    const { identity, board, colorScheme } = this.props;
-    const { id, label } = board;
+    const { board, identity } = this.props;
     return (
-      <Gradient color={GRADIENT_COLORS[colorScheme]}>
-        <div className="Header">
-          <div className="HeaderContent">
-            <BoardTitle>
-              /{id}/ - {label}
-            </BoardTitle>
-          </div>
-
-          <div className="HeaderContent HeaderContent--right">
-            <div className="HeaderContentRow">
-              <Text color="inherit">You:</Text>&nbsp;
-              <Author identity={identity} />
-            </div>
-          </div>
-        </div>
-
-        <style jsx>{`
-          .Header {
-            padding: ${SPACING.normal}px ${SPACING.huge}px;
-            display: flex;
-            justify-content: space-between;
-          }
-
-          .HeaderContentRow {
-            display: flex;
-            align-items: center;
-            color: ${COLORS.white};
-          }
-        `}</style>
-      </Gradient>
+      <ThreadHeader
+        board={board}
+        identity={identity}
+        onClick={this.toggleReplyToThread}
+      />
     );
   };
 
@@ -84,7 +56,10 @@ class ViewThreadPage extends React.Component {
           identity={identity}
           showCommentForm={showCommentForm}
           colorScheme={colorScheme}
+          onDismissCommentForm={this.handleDismissNewComment}
         />
+
+        <BoardChat board={board} colorScheme={colorScheme} />
       </Page>
     );
   }
