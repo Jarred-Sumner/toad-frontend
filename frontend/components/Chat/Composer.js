@@ -2,7 +2,7 @@ import React from "react";
 import { Icon, ICONS } from "../Icon";
 import { COLORS } from "lib/colors";
 import { SPACING } from "lib/spacing";
-import TextAreaAutosize from "react-autosize-textarea";
+
 import { Text } from "../Text";
 import { Spacer } from "../Spacer";
 import Dropzone from "react-dropzone";
@@ -10,6 +10,7 @@ import { Mutation } from "react-apollo";
 import { Queries } from "Queries";
 import { uploadFile } from "lib/uploadFile";
 import Alert from "../Alert";
+import { TextArea } from "../TextArea";
 
 const ENTER_KEYCODE = 13;
 
@@ -128,7 +129,7 @@ class RawChatComposer extends React.PureComponent {
                 <Spacer height={SPACING.small} />
               </React.Fragment>
             )}
-          <TextAreaAutosize
+          <TextArea
             name="body"
             value={body}
             maxRows={20}

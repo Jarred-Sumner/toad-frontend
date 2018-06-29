@@ -216,13 +216,13 @@ class _CreatePostForm extends React.PureComponent {
           }
 
           .Content,
-          textarea {
+          .Content > :global(textarea) {
             width: auto;
             flex: 1;
             display: flex;
           }
 
-          textarea {
+          .Content > :global(textarea) {
             background-color: transparent;
             border-radius: 4px;
             outline: 0;
@@ -232,7 +232,7 @@ class _CreatePostForm extends React.PureComponent {
           }
 
           button {
-            -webkit-appearance: none;
+            appearance: none;
             border: 0;
             box-shadow: none;
             background: transparent;
@@ -278,7 +278,7 @@ class _CreatePostForm extends React.PureComponent {
               flex-direction: column;
             }
 
-            textarea {
+            .Content > :global(textarea) {
               height: 100px;
             }
 

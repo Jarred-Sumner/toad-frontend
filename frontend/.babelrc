@@ -9,6 +9,7 @@
         "tagCommitLength": 7
       }
     ],
+    ["styled-jsx/babel", { "plugins": ["styled-jsx-plugin-postcss"] }],
     [
       "module-resolver",
       {

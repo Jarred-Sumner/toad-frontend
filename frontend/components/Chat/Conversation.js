@@ -28,6 +28,10 @@ const groupMessages = _.memoize(messages => {
     lastMessageGroup.messages.unshift(message);
   });
 
+  messageGroups.forEach(messageGroup => {
+    messageGroup.messages = _.uniqBy(messageGroup.messages, "id");
+  });
+
   return messageGroups;
 });
 
@@ -37,9 +41,14 @@ class ChatConversation extends React.PureComponent {
   };
 
   static getDerivedStateFromProps(props, state) {
-    return {
-      messageGroups: groupMessages(props.messages)
-    };
+    if (props.messages !== state.messages) {
+      return {
+        messageGroups: groupMessages(props.messages),
+        messages: props.messages
+      };
+    } else {
+      return {};
+    }
   }
   componentDidMount() {
     ReactTooltip.rebuild();
