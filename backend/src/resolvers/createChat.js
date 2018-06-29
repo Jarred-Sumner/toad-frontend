@@ -6,7 +6,6 @@ import { pubsub } from '../resolverDefinition'
 export default async (_, args, ctx) => {
   const board = _.id
   const validation = await validatePost(_, args, ctx)
-
   if (!isObject(validation)) {
     return null
   }

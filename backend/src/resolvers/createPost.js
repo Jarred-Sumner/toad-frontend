@@ -1,4 +1,4 @@
-import { isObject } from 'lodash'
+import { isObject, isString, isNumber } from 'lodash'
 import Models from '../models'
 import * as Utils from '../utils'
 
@@ -20,7 +20,7 @@ export const validatePost = async (
     }
   }
 
-  if (attachment_id !== undefined) {
+  if (isString(attachment_id) || isNumber(attachment_id)) {
     const attachment = await Models.attachment.findOne({
       where: {
         id: attachment_id,
@@ -61,8 +61,7 @@ export default async (_, args, ctx) => {
   }
 
   const { post, foundParent } = validation
-
-  if (foundParent === undefined && post.attachment === undefined) {
+  if (foundParent === undefined && post.attachment_id === undefined) {
     return null // Don't allow OPs without attachment
   }
 
