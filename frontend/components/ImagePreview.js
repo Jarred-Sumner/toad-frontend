@@ -6,6 +6,7 @@ import Photo, {
 } from "./Photo";
 import { buildImgSrcSet, buildImgSrc } from "lib/imgUri";
 import { MOBILE_BEAKPOINT } from "lib/mobile";
+import _ from "lodash";
 
 export const ImagePreviewContext = React.createContext({
   setImagePreview: null,
@@ -15,8 +16,13 @@ export const ImagePreviewContext = React.createContext({
 export class ImagePreviewProvider extends React.Component {
   state = { imagePreview: null };
   handleSetImagePreview = imagePreview => {
-    if (imagePreview !== this.state.imagePreview) {
+    if (
+      imagePreview &&
+      _.get(imagePreview, "id") !== _.get(this, "state.imagePreview.id")
+    ) {
       this.setState({ imagePreview });
+    } else if (!imagePreview) {
+      this.setState({ imagePreview: null });
     }
   };
 
@@ -60,6 +66,7 @@ class RawImagePreviewViewer extends React.PureComponent {
             position: fixed;
             top: 0;
             right: 0;
+            pointer-events: none;
           }
 
           img {
