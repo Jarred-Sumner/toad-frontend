@@ -50,7 +50,7 @@
     "moment": "^2.22.2",
     "moment-shortformat": "^2.1.0",
     "net": "^1.0.2",
-    "next": "^6.0.3",
+    "next": "^6.1.0",
     "next-apollo": "^2.0.0",
     "next-cookies": "^1.0.2",
     "next-plugin-graphql": "^0.0.1",
