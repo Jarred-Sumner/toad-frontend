@@ -17,5 +17,5 @@ export const buildURLForPath = path => `${SCHEME}://${BASE_DOMAIN}${path}`;
 export const buildBoardURL = boardId =>
   buildURLForPath(buildBoardPath({ boardId }));
 export const buildPostURL = (boardId, id, domID) => {
-  return `${buildURLForPath(buildBoardPath({ boardId, id }))}#${domID}`;
+  return `${buildURLForPath(buildPostPath({ boardId, id }))}#${domID}`;
 };
