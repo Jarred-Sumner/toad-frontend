@@ -7,6 +7,7 @@ import Alert from "./Alert";
 import { MAX_PHOTO_WIDTH } from "./Post/Comment";
 // import { logEvent } from "../../lib/analytics";
 import { Spinner } from "./Spinner";
+import { uploadFile as performFileUpload } from "lib/uploadFile";
 
 export const materialStyles = theme => ({
   icon: {
@@ -133,42 +134,21 @@ class EditPhotoContainer extends React.Component {
 
     this.setState({ status: Status.uploading });
 
-    return this.props
-      .createAttachment({
-        variables: { mimetype: file.type, filename: file.name }
-      })
-      .then(({ data }) => {
-        const attachment = _.get(data, "Attachment");
-        if (attachment) {
-          const { id, signed_url } = attachment;
-          return window
-            .fetch(signed_url, {
-              mode: "cors",
-              method: "PUT",
-              headers: {
-                "Content-Type": file.type
-              },
-              body: file
-            })
-            .then(response => {
-              if (response.ok) {
-                this.setState({ status: Status.preview });
-                return id;
-              } else {
-                console.error(response);
-                this.setState({ status: Status.error });
-                return Promise.reject({
-                  message: "File upload failed. Please try again."
-                });
-              }
-            });
-        } else {
-          this.setState({ status: Status.error });
-          return Promise.reject({
-            message: "File upload failed. Please try again."
-          });
-        }
-      });
+    return performFileUpload({
+      createAttachment: this.props.createAttachment,
+      file
+    }).then(
+      id => {
+        this.setState({ status: Status.preview });
+        return id;
+      },
+      error => {
+        this.setState({ status: Status.error });
+        return Promise.reject({
+          message: "File upload failed. Please try again."
+        });
+      }
+    );
   };
 
   handleUploadError = error => {

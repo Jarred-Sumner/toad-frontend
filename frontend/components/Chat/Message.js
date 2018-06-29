@@ -9,11 +9,11 @@ import { GRADIENT_COLORS } from "../Gradient";
 import { Text } from "../Text";
 import moment from "moment";
 
-export class Message extends React.PureComponent {
+export class MessageGroup extends React.PureComponent {
   render() {
-    const { isSentByCurrentUser, message, colorScheme } = this.props;
+    const { isSentByCurrentUser, messageGroup, colorScheme } = this.props;
 
-    const { body, identity } = message;
+    const { identity } = messageGroup;
 
     return (
       <div
@@ -29,14 +29,19 @@ export class Message extends React.PureComponent {
         </div>
         <Spacer height={SPACING.small} />
 
-        <div
-          data-tip={moment(message.created_at).format("h:mm A")}
-          className="ChatMessage-body"
-        >
-          <Body wrap colorScheme={colorScheme}>
-            {body}
-          </Body>
-        </div>
+        {messageGroup.messages.map((message, index) => (
+          <React.Fragment key={message.id}>
+            <div
+              data-tip={moment(message.created_at).format("h:mm A")}
+              className="ChatMessage-body"
+            >
+              <Body wrap colorScheme={colorScheme}>
+                {message.body}
+              </Body>
+            </div>
+            <Spacer height={SPACING.small} />
+          </React.Fragment>
+        ))}
 
         <style jsx>{`
           .ChatMessage {

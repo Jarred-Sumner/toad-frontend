@@ -5,6 +5,7 @@ import { SPACING } from "lib/spacing";
 import TextAreaAutosize from "react-autosize-textarea";
 import { Text } from "../Text";
 import { Spacer } from "../Spacer";
+import Dropzone from "react-dropzone";
 
 const ENTER_KEYCODE = 13;
 
@@ -51,13 +52,34 @@ export class ChatComposer extends React.PureComponent {
     }
   };
 
+  handleDrop = event => {
+    const file = _.first(event.target.files);
+
+    if (!file) {
+      return;
+    }
+  };
+
   render() {
     const { body } = this.state;
 
     return (
       <form onSubmit={this.handleSend} className="Container">
         <div className="PhotoPicker">
-          <Icon color="inherit" icon={ICONS.camera} />
+          <Dropzone
+            multiple={false}
+            // disabled={status === Status.uploading}
+            accept="image/*"
+            style={{
+              borderWidth: 0,
+              borderRadius: 0,
+              width: "100%",
+              height: "100%"
+            }}
+            onDrop={this.handleDrop}
+          >
+            <Icon color="inherit" icon={ICONS.camera} />
+          </Dropzone>
         </div>
 
         <Spacer width={SPACING.normal} />
@@ -84,6 +106,7 @@ export class ChatComposer extends React.PureComponent {
             border-left: 1px solid ${COLORS.offwhite};
             border-right: 1px solid ${COLORS.offwhite};
             border-top: 1px solid ${COLORS.offwhite};
+            width: 100%;
           }
 
           .PhotoPicker {
