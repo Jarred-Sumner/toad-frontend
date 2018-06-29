@@ -6,15 +6,23 @@ export class TextArea extends React.PureComponent {
     super(props);
   }
 
+  setRef = ref => {
+    this.textAreaRef = ref;
+
+    if (this.props.innerRef) {
+      this.props.innerRef(ref);
+    }
+  };
+
   render() {
-    const { value, onChange, innerRef, ...otherProps } = this.props;
+    const { value, onChange, ...otherProps } = this.props;
     return (
       <React.Fragment>
         <TextAreaAutosize
           {...otherProps}
           value={value}
           onChange={onChange}
-          innerRef={innerRef}
+          innerRef={this.setRef}
         />
       </React.Fragment>
     );

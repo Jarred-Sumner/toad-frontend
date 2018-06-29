@@ -232,7 +232,7 @@ class _CreatePostForm extends React.PureComponent {
           }
 
           button {
-            -webkit-appearance: none;
+            appearance: none;
             border: 0;
             box-shadow: none;
             background: transparent;
