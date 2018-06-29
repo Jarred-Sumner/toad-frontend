@@ -17,6 +17,7 @@ import { Text } from "../Text";
 import EditPhotoContainer from "../UploadPhoto";
 import { Author } from "./Author";
 import { withRouter } from "next/router";
+import { TextArea } from "../TextArea";
 
 class RawCreateCommentForm extends React.PureComponent {
   constructor(props) {
@@ -165,7 +166,7 @@ class RawCreateCommentForm extends React.PureComponent {
                   <Author identity={identity} />
                 </div>
 
-                <textarea
+                <TextArea
                   className="CommentTextArea"
                   autoFocus={draggable}
                   autoCapitalize
@@ -259,13 +260,13 @@ class RawCreateCommentForm extends React.PureComponent {
             }
 
             .Content,
-            textarea {
+            .Content > :global(.CommentTextArea) {
               width: auto;
               flex: 1;
               display: flex;
             }
 
-            textarea {
+            .Content > :global(.CommentTextArea) {
               background-color: transparent;
               border-radius: 4px;
               outline: 0;
