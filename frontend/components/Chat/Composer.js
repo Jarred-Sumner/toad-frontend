@@ -11,6 +11,7 @@ import { Queries } from "Queries";
 import { uploadFile } from "lib/uploadFile";
 import Alert from "../Alert";
 import { TextArea } from "../TextArea";
+import { EMOJI_PICKER_DIRECTIONS } from "../InlineEmojiSearch";
 
 const ENTER_KEYCODE = 13;
 
@@ -99,6 +100,7 @@ class RawChatComposer extends React.PureComponent {
 
   render() {
     const { body, file } = this.state;
+    const { colorScheme } = this.props;
 
     return (
       <form onSubmit={this.handleSend} className="Container">
@@ -133,10 +135,12 @@ class RawChatComposer extends React.PureComponent {
             name="body"
             value={body}
             maxRows={20}
+            colorScheme={colorScheme}
             rows={1}
             placeholder="Type a message..."
             onChange={this.handleChange}
             onKeyDown={this.handleReturn}
+            emojiPickerDirection={EMOJI_PICKER_DIRECTIONS.bottom}
             type="text"
           />
         </div>
@@ -172,6 +176,10 @@ class RawChatComposer extends React.PureComponent {
 
           .PhotoPicker:hover {
             color: ${COLORS.black};
+          }
+
+          .ComposerInputContainer {
+            position: relative;
           }
 
           :global(.ComposerInputContainer > textarea) {

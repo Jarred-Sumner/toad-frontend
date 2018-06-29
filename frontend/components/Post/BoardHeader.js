@@ -70,6 +70,7 @@ export class BoardHeader extends React.PureComponent {
                   boardId={id}
                   identity={board.identity}
                   dropZoneRef={dropZoneRef}
+                  colorScheme={colorScheme}
                   onDismiss={hideCreatePost}
                 />
               )}

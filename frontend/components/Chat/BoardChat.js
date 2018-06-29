@@ -67,7 +67,10 @@ class RawBoardChat extends React.Component {
                 identity={board.identity}
                 colorScheme={colorScheme}
               />
-              <ChatComposer onSend={this.handleSendMessage} />
+              <ChatComposer
+                colorScheme={colorScheme}
+                onSend={this.handleSendMessage}
+              />
             </React.Fragment>
           )}
         </div>

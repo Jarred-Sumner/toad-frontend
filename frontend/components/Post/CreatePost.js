@@ -15,6 +15,7 @@ import Alert from "../Alert";
 import { graphql } from "react-apollo";
 import { Queries } from "Toads/Queries";
 import { Router } from "Toads/routes";
+import { TextArea } from "../TextArea";
 
 class _CreatePostForm extends React.PureComponent {
   state = {
@@ -89,7 +90,7 @@ class _CreatePostForm extends React.PureComponent {
   };
 
   render() {
-    const { identity, dropZoneRef, boardId } = this.props;
+    const { identity, dropZoneRef, boardId, colorScheme } = this.props;
     const { isPosting } = this.state;
 
     return (
@@ -131,10 +132,11 @@ class _CreatePostForm extends React.PureComponent {
                 <Author identity={identity} />
               </div>
 
-              <textarea
+              <TextArea
                 autoFocus
                 autoCapitalize
                 autoCorrect
+                colorScheme={colorScheme}
                 placeholder="(Optional) leave a comment to go along with your pic"
                 value={this.state.text}
                 onChange={this.handleSetText}
@@ -206,6 +208,8 @@ class _CreatePostForm extends React.PureComponent {
           .Content {
             flex-direction: column;
             flex: 1;
+            position: relative;
+            z-index: 2;
           }
 
           .InputRow {

@@ -1,4 +1,5 @@
 export const SPACING = {
+  xsmall: 3,
   small: 6,
   ten: 10,
   normal: 12,

@@ -171,6 +171,7 @@ class RawCreateCommentForm extends React.PureComponent {
                   autoFocus={draggable}
                   autoCapitalize
                   autoCorrect
+                  colorScheme={colorScheme}
                   onFocus={this.handleFocus}
                   onBlur={this.handleBlur}
                   ref={this.setTextAreaRef}
