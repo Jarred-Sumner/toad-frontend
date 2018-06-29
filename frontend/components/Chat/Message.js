@@ -8,6 +8,8 @@ import { Body } from "./Body";
 import { GRADIENT_COLORS } from "../Gradient";
 import { Text } from "../Text";
 import moment from "moment";
+import _ from "lodash";
+import { Photo, calculateDimensions } from "../Photo";
 
 export class MessageGroup extends React.PureComponent {
   render() {
@@ -29,19 +31,36 @@ export class MessageGroup extends React.PureComponent {
         </div>
         <Spacer height={SPACING.small} />
 
-        {messageGroup.messages.map((message, index) => (
-          <React.Fragment key={message.id}>
-            <div
-              data-tip={moment(message.created_at).format("h:mm A")}
-              className="ChatMessage-body"
-            >
-              <Body wrap colorScheme={colorScheme}>
-                {message.body}
-              </Body>
-            </div>
-            <Spacer height={SPACING.small} />
-          </React.Fragment>
-        ))}
+        {messageGroup.messages.map((message, index) => {
+          const dimensions = calculateDimensions({
+            photo: message.attachment,
+            maxWidth: 180,
+            maxHeight: 180
+          });
+
+          return (
+            <React.Fragment key={message.id}>
+              {!!message.attachment && (
+                <Photo
+                  photo={message.attachment}
+                  width={dimensions.width}
+                  height={dimensions.height}
+                />
+              )}
+              {!_.isEmpty(message.body) && (
+                <div
+                  data-tip={moment(message.created_at).format("h:mm A")}
+                  className="ChatMessage-body"
+                >
+                  <Body wrap colorScheme={colorScheme}>
+                    {message.body}
+                  </Body>
+                </div>
+              )}
+              <Spacer height={SPACING.small} />
+            </React.Fragment>
+          );
+        })}
 
         <style jsx>{`
           .ChatMessage {

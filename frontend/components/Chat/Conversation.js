@@ -9,32 +9,36 @@ import ReactTooltip from "react-tooltip";
 import { COLORS } from "lib/colors";
 const DEFAULT_LIMIT = 20;
 
+const groupMessages = _.memoize(messages => {
+  const messageGroups = [];
+  let lastMessageGroup;
+
+  messages.forEach((message, index) => {
+    if (
+      !lastMessageGroup ||
+      lastMessageGroup.identity.id !== message.identity.id
+    ) {
+      lastMessageGroup = {
+        identity: message.identity,
+        messages: []
+      };
+      messageGroups.push(lastMessageGroup);
+    }
+
+    lastMessageGroup.messages.unshift(message);
+  });
+
+  return messageGroups;
+});
+
 class ChatConversation extends React.PureComponent {
   state = {
     messageGroups: []
   };
 
   static getDerivedStateFromProps(props, state) {
-    const messageGroups = [];
-    let lastMessageGroup;
-
-    props.messages.forEach((message, index) => {
-      if (
-        !lastMessageGroup ||
-        lastMessageGroup.identity.id !== message.identity.id
-      ) {
-        lastMessageGroup = {
-          identity: message.identity,
-          messages: []
-        };
-        messageGroups.push(lastMessageGroup);
-      }
-
-      lastMessageGroup.messages.push(message);
-    });
-
     return {
-      messageGroups
+      messageGroups: groupMessages(props.messages)
     };
   }
   componentDidMount() {

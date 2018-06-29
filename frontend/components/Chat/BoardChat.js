@@ -22,7 +22,6 @@ class RawBoardChat extends React.Component {
 
   async componentDidMount() {
     const isVisible = !(await Settings.isBoardChatHidden(this.props.board.id));
-    console.log({ isVisible });
     this.setState({ isVisible, hasInitialized: true });
   }
 
@@ -34,11 +33,11 @@ class RawBoardChat extends React.Component {
       });
     });
   };
-  handleSendMessage = ({ body, attachment }) => {
+  handleSendMessage = ({ body, attachmentID }) => {
     this.props.sendMessage({
       variables: {
         body,
-        attachmentID: attachment ? attachment.id : undefined,
+        attachmentID,
         boardID: this.props.board.id
       }
     });
@@ -46,7 +45,7 @@ class RawBoardChat extends React.Component {
 
   render() {
     const { board, colorScheme } = this.props;
-    const { isVisible, hasInitialized } = this.state;
+    const { isVisible, hasInitialized, file } = this.state;
 
     return (
       <div

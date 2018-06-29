@@ -6,16 +6,21 @@ import TextAreaAutosize from "react-autosize-textarea";
 import { Text } from "../Text";
 import { Spacer } from "../Spacer";
 import Dropzone from "react-dropzone";
+import { Mutation } from "react-apollo";
+import { Queries } from "Queries";
+import { uploadFile } from "lib/uploadFile";
+import Alert from "../Alert";
 
 const ENTER_KEYCODE = 13;
 
-export class ChatComposer extends React.PureComponent {
+class RawChatComposer extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       body: "",
-      attachment: null
+      attachment: null,
+      isUploadingFile: false
     };
   }
 
@@ -26,18 +31,47 @@ export class ChatComposer extends React.PureComponent {
     this.sendMessage();
   };
 
-  sendMessage = () => {
-    const { body, attachment } = this.state;
-    if (_.isEmpty(body) && !attachment) {
+  sendMessage = async () => {
+    const { body, attachment, file, isUploadingFile } = this.state;
+    if ((_.isEmpty(body) && !attachment && !file) || isUploadingFile) {
       return;
+    }
+
+    let attachmentID = attachment;
+
+    if (file && !attachmentID) {
+      this.setState({ isUploadingFile: true });
+      try {
+        attachmentID = await uploadFile({
+          createAttachment: this.props.createAttachment,
+          file
+        }).then(
+          id => {
+            return id;
+          },
+          error => {
+            return Promise.reject({
+              message: "File upload failed. Please try again."
+            });
+          }
+        );
+
+        this.setState({ isUploadingFile: false });
+      } catch (exception) {
+        console.error(exception);
+        Alert.error(
+          "Something went wrong while uploading the file. Please retry."
+        );
+        return;
+      }
     }
 
     this.props.onSend({
       body,
-      attachment
+      attachmentID
     });
 
-    this.setState({ body: "", attachment: null });
+    this.setState({ body: "", attachment: null, file: null });
   };
 
   handleReturn = event => {
@@ -52,16 +86,18 @@ export class ChatComposer extends React.PureComponent {
     }
   };
 
-  handleDrop = event => {
-    const file = _.first(event.target.files);
+  handleDrop = files => {
+    const file = _.first(files);
 
     if (!file) {
       return;
     }
+
+    this.setState({ file });
   };
 
   render() {
-    const { body } = this.state;
+    const { body, file } = this.state;
 
     return (
       <form onSubmit={this.handleSend} className="Container">
@@ -85,6 +121,13 @@ export class ChatComposer extends React.PureComponent {
         <Spacer width={SPACING.normal} />
 
         <div className="ComposerInputContainer">
+          {file &&
+            file.preview && (
+              <React.Fragment>
+                <img src={file.preview} className="PhotoPreview" />
+                <Spacer height={SPACING.small} />
+              </React.Fragment>
+            )}
           <TextAreaAutosize
             name="body"
             value={body}
@@ -109,10 +152,20 @@ export class ChatComposer extends React.PureComponent {
             width: 100%;
           }
 
+          img {
+            max-width: 75px;
+            max-height: 60px;
+            object-fit: contain;
+            border-radius: 4px;
+          }
+
           .PhotoPicker {
             display: flex;
             align-items: center;
             cursor: pointer;
+            align-self: flex-end;
+            padding: ${SPACING.small}px 0;
+            margin-bottom: 1px;
             color: ${COLORS.gray};
           }
 
@@ -149,3 +202,11 @@ export class ChatComposer extends React.PureComponent {
     );
   }
 }
+
+export const ChatComposer = props => (
+  <Mutation mutation={Queries.CreateAttachment}>
+    {createAttachment => (
+      <RawChatComposer createAttachment={createAttachment} {...props} />
+    )}
+  </Mutation>
+);
