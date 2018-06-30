@@ -1,3 +1,5 @@
+import { Op } from 'sequelize'
+
 export default (sequelize, DataTypes) => {
   const Board = sequelize.define(
     'board',

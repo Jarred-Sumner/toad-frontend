@@ -18,6 +18,12 @@ const resolvers = {
   Query: {
     Board: Resolvers.board,
   },
+  Conversation: {
+    __resolveType: _ =>
+      _.type === 'board_conversation'
+        ? 'BoardConversation'
+        : 'DirectConversation',
+  },
   Post: {
     __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
   },
@@ -29,31 +35,33 @@ const resolvers = {
     Session: Resolvers.session,
     Login: Resolvers.login,
     Attachment: Resolvers.createAttachment,
+    ConversationPresence: Resolvers.conversationPresence,
   },
   BoardMutation: {
     Post: Resolvers.createPost,
-    Chat: Resolvers.createChat,
     Activity: Resolvers.activityMutation,
+    StartDirectConversation: Resolvers.startDirectConversation,
+    Message: Resolvers.message,
   },
   Board: {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
-    chat: Resolvers.chat,
     activity: Resolvers.activity,
+    board_conversation: Resolvers.boardConversation,
   },
   Thread: {
     replies: Resolvers.threadReplies,
     reply_count: Resolvers.replyCount,
   },
   Subscription: {
-    NewBoardMessage: {
-      subscribe: (_, { board }, { session }) => {
-        if (!session) {
-          return 'Invalid session cookie'
-        }
-        return pubsub.asyncIterator(`NewBoardMessage.${board}`)
-      },
-    },
+    // NewBoardMessage: {
+    //   subscribe: (_, { board }, { session }) => {
+    //     if (!session) {
+    //       return 'Invalid session cookie'
+    //     }
+    //     return pubsub.asyncIterator(`NewBoardMessage.${board}`)
+    //   },
+    // },
     BoardActivity: {
       subscribe: (_, { board }, { session }) => {
         if (!session) {
