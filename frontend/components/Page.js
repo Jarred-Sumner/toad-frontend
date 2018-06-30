@@ -27,7 +27,7 @@ export class Page extends React.Component {
   }
 
   render() {
-    const { children, backgroundColor, renderSubheader } = this.props;
+    const { children, renderSubheader } = this.props;
 
     return (
       <article className="Page">
@@ -83,7 +83,7 @@ export class Page extends React.Component {
           }
 
           .Page {
-            background-color: ${backgroundColor || COLORS.background};
+            background-color: ${COLORS.background};
           }
 
           footer {
