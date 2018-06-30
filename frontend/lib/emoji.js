@@ -9,7 +9,7 @@ export const normalizeEmoji = string => {
   emoji.colons_mode = true;
   emoji.allow_native = false;
 
-  return emoji.replace_unified(string);
+  return emoji.replace_unified(emoji.replace_emoticons_with_colons(string));
 };
 
 export const convertEmojiToNative = string => {
