@@ -23,6 +23,24 @@
   "env": {
     "production": {
       "plugins": [
+        [
+          "git-version",
+          {
+            "showDirty": true,
+            "commitLength": 7,
+            "tagCommitLength": 7
+          }
+        ],
+        ["styled-jsx/babel", { "plugins": ["styled-jsx-plugin-postcss"] }],
+        [
+          "module-resolver",
+          {
+            "root": ["./"],
+            "alias": {
+              "Toads": "./"
+            }
+          }
+        ],
         "transform-remove-console",
         "transform-react-constant-elements"
       ]
