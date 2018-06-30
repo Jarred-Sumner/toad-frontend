@@ -1,6 +1,6 @@
 export default {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('user_conversations', {
+    await queryInterface.createTable('session_conversations', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -37,11 +37,11 @@ export default {
         type: Sequelize.DATE,
       },
     })
-    return queryInterface.addIndex('user_conversations', {
+    return queryInterface.addIndex('session_conversations', {
       unique: true,
       fields: ['session_id', 'conversation_id'],
     })
   },
   down: (queryInterface, Sequelize) =>
-    queryInterface.dropTable('user_conversations'),
+    queryInterface.dropTable('session_conversations'),
 }

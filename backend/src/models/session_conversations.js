@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
-  const user_conversations = sequelize.define(
-    'user_conversations',
+  const session_conversations = sequelize.define(
+    'session_conversations',
     {
       session_id: DataTypes.INTEGER,
       conversation_id: DataTypes.UUID,
@@ -12,20 +12,20 @@ export default (sequelize, DataTypes) => {
     },
     { underscored: true }
   )
-  user_conversations.associate = models => {
-    user_conversations.belongsTo(models.session, {
+  session_conversations.associate = models => {
+    session_conversations.belongsTo(models.session, {
       foreign_key: 'session_id',
     })
-    models.session.hasMany(user_conversations, {
+    models.session.hasMany(session_conversations, {
       foreign_key: 'session_id',
     })
 
-    models.conversation.hasMany(user_conversations, {
+    models.conversation.hasMany(session_conversations, {
       foreignKey: 'conversation_id',
     })
-    user_conversations.belongsTo(models.conversation, {
+    session_conversations.belongsTo(models.conversation, {
       foreignKey: 'conversation_id',
     })
   }
-  return user_conversations
+  return session_conversations
 }

@@ -8,6 +8,9 @@ export default async (_, args, ctx) => {
   const { identity } = _
   const { conversation_id } = args
   // Get conversation
+
+  // const identity = Models.
+
   const convo = await Models.conversation.findOne({
     where: {
       id: conversation_id,

@@ -43,7 +43,7 @@ export default async ({ id, identity }, { target_user }, { session }) => {
   })
 
   // add convo to users' conversations
-  const newConvos = await Model.user_conversations.bulkCreate([
+  const newConvos = await Model.session_conversations.bulkCreate([
     {
       // Conversation creator:
       session_id: session.id,

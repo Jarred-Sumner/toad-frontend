@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
-  const conversation_messages = sequelize.define(
-    'conversation_messages',
+  const session_conversations = sequelize.define(
+    'session_conversations',
     {
       body: { type: DataTypes.TEXT, allowNull: true },
       identity_id: DataTypes.UUID,
@@ -11,29 +11,29 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   )
-  conversation_messages.associate = models => {
-    models.conversation.hasMany(conversation_messages, {
+  session_conversations.associate = models => {
+    models.conversation.hasMany(session_conversations, {
       foreignKey: 'conversation_id',
     })
-    conversation_messages.belongsTo(models.conversation, {
+    session_conversations.belongsTo(models.conversation, {
       foreignKey: 'conversation_id',
     })
 
-    models.identity.hasMany(conversation_messages, {
+    models.identity.hasMany(session_conversations, {
       foreignKey: 'identity_id',
     })
-    conversation_messages.belongsTo(models.identity, {
+    session_conversations.belongsTo(models.identity, {
       foreignKey: 'identity_id',
     })
 
-    models.attachment.hasMany(conversation_messages, {
+    models.attachment.hasMany(session_conversations, {
       foreignKey: 'attachment_id',
     })
-    conversation_messages.belongsTo(models.attachment, {
+    session_conversations.belongsTo(models.attachment, {
       foreignKey: 'attachment_id',
     })
 
-    conversation_messages.addScope(
+    session_conversations.addScope(
       'defaultScope',
       {
         include: [
@@ -54,5 +54,5 @@ export default (sequelize, DataTypes) => {
       { override: true }
     )
   }
-  return conversation_messages
+  return session_conversations
 }

@@ -3,7 +3,7 @@ import Models from '../models'
 
 export default async (_, { presence, conversation_id }, { session }) => {
   const optInStatus = presence ? 'explicit_opt_in' : 'declined'
-  const existing = await Models.user_conversations.findOne({
+  const existing = await Models.session_conversations.findOne({
     where: {
       conversation_id,
       session_id: session.id,
@@ -13,14 +13,14 @@ export default async (_, { presence, conversation_id }, { session }) => {
     existing.opt_in_status = optInStatus
     await existing.save()
   } else {
-    await Models.user_conversations.create({
+    await Models.session_conversations.create({
       conversation_id,
       session_id: session.id,
       opt_in_status: optInStatus,
     })
   }
 
-  const usersConversations = await Models.user_conversations.find({
+  const usersConversations = await Models.session_conversations.find({
     where: {
       session_id: session.id,
       opt_in_status: {
