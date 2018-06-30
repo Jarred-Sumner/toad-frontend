@@ -62,6 +62,7 @@ export const PostHeader = ({
         route="thread"
         shallow={!minimized}
         replace={!minimized}
+        scroll={minimized}
         params={{
           board: String(boardId),
           id: String(threadId),
@@ -79,6 +80,7 @@ export const PostHeader = ({
         route="thread"
         shallow={!minimized}
         replace={!minimized}
+        scroll={minimized}
         params={{
           board: String(boardId),
           id: String(threadId),
@@ -121,6 +123,7 @@ export const PostHeader = ({
         route="thread"
         shallow={!minimized}
         replace={!minimized}
+        scroll={minimized}
         params={{
           board: String(boardId),
           id: String(threadId),
@@ -189,7 +192,7 @@ export class Post extends React.PureComponent {
   }
 
   buildReplyText = id => {
-    return `/${id}/\n`;
+    return `> /${id}/\n`;
   };
 
   handleShowCommentForm = url => {
@@ -212,7 +215,7 @@ export class Post extends React.PureComponent {
       return Router.pushRoute("thread", {
         board: this.props.board.id,
         id: this.props.post.id,
-        r: this.props.post.id
+        h: this.props.post.id
       });
     }
 
@@ -229,7 +232,7 @@ export class Post extends React.PureComponent {
       return Router.pushRoute("thread", {
         board: this.props.board.id,
         id: this.props.post.id,
-        r: commentId
+        h: commentId
       });
     }
 
@@ -313,7 +316,14 @@ export class Post extends React.PureComponent {
             />
             <Spacer height={SPACING.small} />
             <div className="BodyContainer">
-              <Body>{post.body}</Body>
+              <Body
+                colorScheme={colorScheme}
+                commentId={null}
+                threadId={post.id}
+                boardId={board.id}
+              >
+                {post.body}
+              </Body>
             </div>
 
             {post.reply_count > 0 &&

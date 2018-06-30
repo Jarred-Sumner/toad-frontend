@@ -11,6 +11,8 @@ import _ from "lodash";
 import { Text } from "../Text";
 import Head from "../head";
 import { CreateCommentForm } from "./CreateComment";
+import { buildPostDOMID } from "lib/routeHelpers";
+import { Router } from "Toads/routes";
 
 class ViewThread extends React.PureComponent {
   constructor(props) {
@@ -22,6 +24,51 @@ class ViewThread extends React.PureComponent {
 
   handleDismissBottomComment = () =>
     this.setState({ showBottomCommentForm: false });
+
+  componentDidMount() {
+    if (this.props.initialFocus) {
+      window.requestIdleCallback(() => {
+        this.scrollFocusElementIntoView();
+      });
+    }
+  }
+
+  scrollFocusElementIntoView = () => {
+    const focusElement = document.querySelector(
+      `#${buildPostDOMID(this.props.initialFocus)}`
+    );
+
+    if (focusElement) {
+      focusElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start"
+      });
+
+      Router.replaceRoute(
+        "thread",
+        {
+          board: this.props.board.id,
+          id: this.props.thread.id
+        },
+        {
+          shallow: true
+        }
+      );
+    }
+  };
+
+  componentDidUpdate(prevProps) {
+    if (
+      typeof window !== "undefined" &&
+      this.props.initialFocus !== prevProps.initialFocus &&
+      this.props.initialFocus
+    ) {
+      window.requestIdleCallback(() => {
+        this.scrollFocusElementIntoView();
+      });
+    }
+  }
 
   render() {
     const {
@@ -119,6 +166,7 @@ class ViewThread extends React.PureComponent {
 export const ViewThreadContainer = ({
   board,
   colorScheme,
+  initialFocus,
   threadID,
   ...otherProps
 }) => {
@@ -134,6 +182,7 @@ export const ViewThreadContainer = ({
             <ViewThread
               colorScheme={colorScheme}
               board={board}
+              initialFocus={initialFocus}
               thread={thread}
               {...otherProps}
             />

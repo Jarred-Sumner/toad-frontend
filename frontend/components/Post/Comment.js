@@ -29,7 +29,8 @@ export class Comment extends React.PureComponent {
       url,
       boardId,
       threadId,
-      minimized
+      minimized,
+      colorScheme
     } = this.props;
     const dimensions = calculateDimensions({
       photo: comment.attachment,
@@ -62,7 +63,13 @@ export class Comment extends React.PureComponent {
 
           <Spacer height={SPACING.small} />
           <div className="BodyContainer">
-            <Body>
+            <Body
+              colorScheme={colorScheme}
+              commentId={comment.id}
+              threadId={threadId}
+              boardId={boardId}
+              minimized={minimized}
+            >
               {minimized
                 ? _.truncate(comment.body, { length: 500 })
                 : comment.body}

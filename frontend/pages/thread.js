@@ -45,7 +45,7 @@ class ViewThreadPage extends React.Component {
   };
 
   render() {
-    const { board, threadID, identity, colorScheme } = this.props;
+    const { board, threadID, identity, colorScheme, initialFocus } = this.props;
     const { showCommentForm } = this.state;
 
     return (
@@ -56,6 +56,7 @@ class ViewThreadPage extends React.Component {
           identity={identity}
           showCommentForm={showCommentForm}
           colorScheme={colorScheme}
+          initialFocus={initialFocus}
           onDismissCommentForm={this.handleDismissNewComment}
         />
 
@@ -92,6 +93,7 @@ export const ViewThreadPageContainer = compose(
               onDismissCommentForm={this.handleDismissNewComment}
               showCommentForm={!!url.query.r}
               colorScheme={board.color_scheme}
+              initialFocus={url.query.h}
               networkStatus={networkStatus}
             />
           );

@@ -66,7 +66,7 @@ class RawCreateCommentForm extends React.PureComponent {
         attachmentId = await this.editPhotoRef.uploadFile(this.props.boardId);
       }
 
-      const thread = await createComment({
+      const comment = await createComment({
         variables: {
           boardID: boardId,
           body: normalizeEmoji(body),
@@ -75,12 +75,15 @@ class RawCreateCommentForm extends React.PureComponent {
         }
       });
 
+      const commentId = _.get(comment, "data.Board.Post.id");
+
       Alert.success("Replied successfully.");
 
-      if (this.props.router.route !== "thread") {
+      if (this.props.router.route !== "thread" && commentId) {
         Router.pushRoute("thread", {
           board: boardId,
-          id: String(postId)
+          id: String(postId),
+          h: commentId
         });
       }
 

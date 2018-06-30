@@ -35,10 +35,19 @@ ColonEmoji = Sp?':'(AlphanumericAscii / "_")*':'Sp?
 
 ColonEmojiLine = ( (!'\r' !'\n' ColonEmoji)* Newline / (ColonEmoji)+ Eof ) { return { type: "emoji_line", text: text() } }
 RawLine = ( (!'\r' !'\n' .)* Newline / (.)+ Eof ) { return { type: "raw_line", text: text() } }
-QuoteLine = ( ">" (!'\r' !'\n' .)* Newline / ">"(.+) Eof ) { return { type: "quote_line", text: text() } }
-EmbedLine = ( "/" (!'\r' !'\n' !"/" .)* "/" Newline / "./"(.+)"/" Eof ) { return { type: "embed_line", text: text() } }
+QuoteLine = ( ">" (!Newline .)* Newline / ">"(.+) Eof ) { return { type: "quote_line", text: text() } }
+EmbedID = (!Newline !"/" .)* { return text() }
+EmbedLine = (
+   ">" Spacechar? "/" embed:EmbedID Spacechar? "/"  Newline {
+   return { type: "embed_line", text: text(), embed: embed }
+   }
+    /
+   ">" Spacechar? "/" embed:EmbedID "/" Spacechar? Eof {
+   return { type: "embed_line", text: text(), embed: embed }
+   }
+)
 
-Line =  BlankLine / QuoteLine / EmbedLine / ColonEmojiLine / RawLine
+Line =  BlankLine / EmbedLine / QuoteLine / ColonEmojiLine / RawLine
 TitleLine
   = ((!'\r' !'\n' !'https://' !'http://' !'>' !"." !"/" .)* Sp) Newline? {
     if (text().length < 100 && text().split(" ").length < 14) {
