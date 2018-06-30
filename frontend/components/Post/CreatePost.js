@@ -16,6 +16,7 @@ import { graphql } from "react-apollo";
 import { Queries } from "Toads/Queries";
 import { Router } from "Toads/routes";
 import { TextArea } from "../TextArea";
+import { normalizeEmoji } from "lib/emoji";
 
 class _CreatePostForm extends React.PureComponent {
   state = {
@@ -47,7 +48,7 @@ class _CreatePostForm extends React.PureComponent {
       const thread = await createPost({
         variables: {
           boardID: boardId,
-          body,
+          body: normalizeEmoji(body),
           attachment_id: attachmentId
         }
       });

@@ -14,7 +14,6 @@ export const EMOJI_PICKER_DIRECTIONS = {
 };
 
 export const searchEmoji = keyword => {
-  console.log(keyword);
   return _.uniq(
     ordered
       .filter(phrase => phrase.startsWith(keyword))

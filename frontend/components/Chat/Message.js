@@ -4,12 +4,13 @@ import { COLORS } from "lib/colors";
 import { normalizeAnonymousName } from "../Post/Author";
 import { Spacer } from "../Spacer";
 import { SPACING } from "lib/spacing";
-import { Body } from "./Body";
+import { Body, TEXT_TYPES, EmojiLine, parseBody } from "./Body";
 import { GRADIENT_COLORS } from "../Gradient";
 import { Text } from "../Text";
 import moment from "moment";
 import _ from "lodash";
 import { Photo, calculateDimensions } from "../Photo";
+import { convertEmojiToNative } from "lib/emoji";
 
 export class MessageGroup extends React.PureComponent {
   render() {
@@ -38,28 +39,54 @@ export class MessageGroup extends React.PureComponent {
             maxHeight: 180
           });
 
-          return (
-            <React.Fragment key={message.id}>
-              {!!message.attachment && (
-                <Photo
-                  photo={message.attachment}
-                  width={dimensions.width}
-                  height={dimensions.height}
-                />
-              )}
-              {!_.isEmpty(message.body) && (
-                <div
-                  data-tip={moment(message.created_at).format("h:mm A")}
-                  className="ChatMessage-body"
-                >
-                  <Body wrap colorScheme={colorScheme}>
-                    {message.body}
-                  </Body>
-                </div>
-              )}
-              <Spacer height={SPACING.small} />
-            </React.Fragment>
-          );
+          const lines = parseBody(message.body);
+
+          if (
+            lines.length > 0 &&
+            lines.filter(({ type }) => type === TEXT_TYPES.emoji_line)
+              .length === lines.length
+          ) {
+            return (
+              <React.Fragment key={message.id}>
+                {!!message.attachment && (
+                  <Photo
+                    photo={message.attachment}
+                    width={dimensions.width}
+                    height={dimensions.height}
+                  />
+                )}
+                {!_.isEmpty(message.body) &&
+                  lines.map((line, index) => (
+                    <React.Fragment key={index}>
+                      <EmojiLine>{convertEmojiToNative(line.text)}</EmojiLine>
+                      <Spacer height={SPACING.small} />
+                    </React.Fragment>
+                  ))}
+                <Spacer height={SPACING.small} />
+              </React.Fragment>
+            );
+          } else {
+            return (
+              <React.Fragment key={message.id}>
+                {!!message.attachment && (
+                  <Photo
+                    photo={message.attachment}
+                    width={dimensions.width}
+                    height={dimensions.height}
+                  />
+                )}
+                {!_.isEmpty(message.body) && (
+                  <div
+                    data-tip={moment(message.created_at).format("h:mm A")}
+                    className="ChatMessage-body"
+                  >
+                    <Body lines={lines} wrap colorScheme={colorScheme} />
+                  </div>
+                )}
+                <Spacer height={SPACING.small} />
+              </React.Fragment>
+            );
+          }
         })}
 
         <style jsx>{`

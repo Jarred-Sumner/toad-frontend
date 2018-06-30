@@ -1,4 +1,4 @@
-Lines = title:(TitleLine?) body:(Line*) {return {title: title, body: body}}
+Lines = title:(ColonEmojiLine / TitleLine)? body:(Line*) {return {title: title, body: body}}
 
 BlankLine =     Sp Newline { return { type: "blank_line", text: text() }}
 
@@ -31,12 +31,14 @@ Indents =           ind:Indent+ { return ind.length; }
 AnyIndent =         ind:Indent* { return ind.length; }
 IndentedLine =      Indent txt:Line { return txt }
 OptionallyIndentedLine = Indent? txt:Line { return txt }
+ColonEmoji = Sp?':'(AlphanumericAscii / "_")*':'Sp?
 
+ColonEmojiLine = ( (!'\r' !'\n' ColonEmoji)* Newline / (ColonEmoji)+ Eof ) { return { type: "emoji_line", text: text() } }
 RawLine = ( (!'\r' !'\n' .)* Newline / (.)+ Eof ) { return { type: "raw_line", text: text() } }
 QuoteLine = ( ">" (!'\r' !'\n' .)* Newline / ">"(.+) Eof ) { return { type: "quote_line", text: text() } }
 EmbedLine = ( "/" (!'\r' !'\n' !"/" .)* "/" Newline / "./"(.+)"/" Eof ) { return { type: "embed_line", text: text() } }
 
-Line =  BlankLine / QuoteLine / EmbedLine / RawLine
+Line =  BlankLine / QuoteLine / EmbedLine / ColonEmojiLine / RawLine
 TitleLine
   = ((!'\r' !'\n' !'https://' !'http://' !'>' !"." !"/" .)* Sp) Newline? {
     if (text().length < 100 && text().split(" ").length < 14) {

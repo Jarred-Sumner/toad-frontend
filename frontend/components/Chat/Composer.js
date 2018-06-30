@@ -12,6 +12,7 @@ import { uploadFile } from "lib/uploadFile";
 import Alert from "../Alert";
 import { TextArea } from "../TextArea";
 import { EMOJI_PICKER_DIRECTIONS } from "../InlineEmojiSearch";
+import { normalizeEmoji } from "lib/emoji";
 
 const ENTER_KEYCODE = 13;
 
@@ -69,7 +70,7 @@ class RawChatComposer extends React.PureComponent {
     }
 
     this.props.onSend({
-      body,
+      body: normalizeEmoji(body),
       attachmentID
     });
 

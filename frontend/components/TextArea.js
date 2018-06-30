@@ -88,6 +88,7 @@ export class TextArea extends React.PureComponent {
     if (
       _.values(SPECIAL_KEYCODES).includes(evt.keyCode) &&
       this.emojiRef &&
+      this.state.isEmojiPickerVisible &&
       this.textAreaRef
     ) {
       this.setState({

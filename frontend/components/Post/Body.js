@@ -8,6 +8,7 @@ import { Spacer } from "../Spacer";
 import Linkify from "react-linkify";
 import { pure } from "recompose";
 import _ from "lodash";
+import { convertEmojiToNative } from "lib/emoji";
 
 const parseBody = _.memoize(_parseBody);
 
@@ -31,6 +32,12 @@ const QuoteLine = defaultProps({
   color: COLORS.greentext,
   className: "BodyText BodyText--QuoteLine"
 })(Text);
+const EmojiLine = defaultProps({
+  size: "36px",
+  lineHeight: "unset",
+  color: COLORS.black,
+  className: "BodyText BodyText--EmojiLine"
+})(Text);
 const NormalLine = defaultProps({
   size: "14px",
   lineHeight: "19px",
@@ -43,6 +50,7 @@ const COMPONENT_BY_TYPE = {
   raw_line: NormalLine,
   blank_line: LineBreak,
   title_line: TitleLine,
+  emoji_line: EmojiLine,
   embed_line: EmbedLine
 };
 
@@ -64,7 +72,7 @@ export const Body = pure(({ children, colorScheme, ...otherProps }) => {
           <div className="BodyTextLine">
             <LineComponent key={index}>
               <Linkify properties={{ target: "_blank", className: "AutoLink" }}>
-                {text}
+                {convertEmojiToNative(text)}
               </Linkify>
             </LineComponent>
           </div>
@@ -73,6 +81,11 @@ export const Body = pure(({ children, colorScheme, ...otherProps }) => {
       <style jsx>{`
         .BodyTextLine {
           display: block;
+        }
+
+        .BodyText--EmojiLine :global(span) {
+          vertical-align: middle;
+          letter-spacing: 0;
         }
       `}</style>
     </React.Fragment>

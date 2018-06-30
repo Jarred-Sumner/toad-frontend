@@ -18,6 +18,7 @@ import EditPhotoContainer from "../UploadPhoto";
 import { Author } from "./Author";
 import { withRouter } from "next/router";
 import { TextArea } from "../TextArea";
+import { normalizeEmoji } from "lib/emoji";
 
 class RawCreateCommentForm extends React.PureComponent {
   constructor(props) {
@@ -68,7 +69,7 @@ class RawCreateCommentForm extends React.PureComponent {
       const thread = await createComment({
         variables: {
           boardID: boardId,
-          body,
+          body: normalizeEmoji(body),
           attachment_id: attachmentId,
           threadID: postId
         }

@@ -8,8 +8,13 @@ import { Spacer } from "../Spacer";
 import Linkify from "react-linkify";
 import { pure } from "recompose";
 import _ from "lodash";
+import { convertEmojiToNative } from "lib/emoji";
 
-const parseBody = _.memoize(_parseBody);
+export const parseBody = _.memoize(string => {
+  const text = _parseBody(string);
+
+  return [text.title, ...text.body].filter(_.identity);
+});
 
 const LineBreak = defaultProps({ height: SPACING.small })(Spacer);
 const EmbedLine = defaultProps({
@@ -28,20 +33,32 @@ const NormalLine = defaultProps({
   color: "inherit",
   className: "BodyText BodyText--NormalLine"
 })(Text);
+export const EmojiLine = defaultProps({
+  size: "36px",
+  lineHeight: "unset",
+  color: COLORS.black,
+  className: "BodyText BodyText--EmojiLine"
+})(Text);
 
-const COMPONENT_BY_TYPE = {
-  quote_line: QuoteLine,
-  raw_line: NormalLine,
-  blank_line: LineBreak,
-  title_line: NormalLine,
-  embed_line: EmbedLine
+export const TEXT_TYPES = {
+  quote_line: "quote_line",
+  raw_line: "raw_line",
+  blank_line: "blank_line",
+  title_line: "title_line",
+  embed_line: "embed_line",
+  emoji_line: "emoji_line"
 };
 
-export const Body = pure(({ children, colorScheme, ...otherProps }) => {
-  const text = parseBody(children);
+const COMPONENT_BY_TYPE = {
+  [TEXT_TYPES.quote_line]: QuoteLine,
+  [TEXT_TYPES.raw_line]: NormalLine,
+  [TEXT_TYPES.blank_line]: LineBreak,
+  [TEXT_TYPES.title_line]: NormalLine,
+  [TEXT_TYPES.embed_line]: EmbedLine,
+  [TEXT_TYPES.emoji_line]: EmojiLine
+};
 
-  const lines = [text.title, ...text.body].filter(_.identity);
-
+export const Body = pure(({ lines, colorScheme, ...otherProps }) => {
   return (
     <React.Fragment>
       {lines.map(({ type, text }, index) => {
@@ -55,7 +72,7 @@ export const Body = pure(({ children, colorScheme, ...otherProps }) => {
           <div className="BodyTextLine">
             <LineComponent key={index}>
               <Linkify properties={{ target: "_blank", className: "AutoLink" }}>
-                {text}
+                {convertEmojiToNative(text)}
               </Linkify>
             </LineComponent>
           </div>
@@ -67,6 +84,11 @@ export const Body = pure(({ children, colorScheme, ...otherProps }) => {
           width: max-content;
           flex-wrap: wrap;
           max-width: 100%;
+        }
+
+        .BodyText--EmojiLine :global(span) {
+          vertical-align: middle;
+          letter-spacing: 0;
         }
       `}</style>
     </React.Fragment>

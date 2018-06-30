@@ -1,19 +1,9 @@
 import React from "react";
 import { Text } from "../Text";
-import * as EmojiConvertor from "emoji-js/lib/emoji.js";
-
-export const normalizeName = name => {
-  const emoji = new EmojiConvertor();
-  emoji.use_sheet = false;
-  emoji.text_mode = false;
-  emoji.replace_mode = "unified";
-  emoji.init_env(); // else auto-detection will trigger when we first convert
-
-  return emoji.replace_colons(name);
-};
+import { convertEmojiToNative } from "lib/emoji";
 
 export const normalizeAnonymousName = name => {
-  return `@Anon${normalizeName(name)}`;
+  return `@Anon${convertEmojiToNative(name)}`;
 };
 
 // This will have more stuff later.
