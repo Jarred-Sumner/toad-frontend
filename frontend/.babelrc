@@ -22,6 +22,7 @@
   ],
   "env": {
     "production": {
+      "presets": ["next/babel"],
       "plugins": [
         [
           "git-version",
