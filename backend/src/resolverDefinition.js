@@ -56,19 +56,13 @@ const resolvers = {
     reply_count: Resolvers.replyCount,
   },
   Subscription: {
-    // NewBoardMessage: {
-    //   subscribe: (_, { board }, { session }) => {
-    //     if (!session) {
-    //       return 'Invalid session cookie'
-    //     }
-    //     return pubsub.asyncIterator(`NewBoardMessage.${board}`)
-    //   },
-    // },
     ConversationMessages: {
       subscribe: async (_, { conversation_id }, { session }) => {
         const convo = await Models.session_conversations.findOne({
-          conversation_id,
-          session_id: session.id,
+          where: {
+            conversation_id,
+            session_id: session.id,
+          },
         })
 
         if (!isObject(convo)) {

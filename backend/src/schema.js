@@ -123,7 +123,7 @@ type Attachment {
 
 type BoardMutation {
   Post(parent_id: ID, body: String!, attachment_id: ID): Post
-  StartDirectConversation(target_user: ID!): Conversation
+  StartDirectConversation(target: ID!): Conversation
   Activity(visible: Boolean!): BoardActivity
 }
 
@@ -175,7 +175,7 @@ type BoardConversation implements Conversation {
 type Subscription {
   ActiveConversations: [Conversation]
   BoardActivity(board: ID!): BoardActivity
-  ConversationMessages(board: ID!, conversation_id: ID!): Message
+  ConversationMessages(conversation_id: ID!): Message
   ConversationUpdates(conversation_id: ID!): Conversation
 }
 `
