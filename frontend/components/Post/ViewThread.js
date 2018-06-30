@@ -173,6 +173,7 @@ export const ViewThreadContainer = ({
   return (
     <Query
       query={Queries.ViewThread}
+      fetchPolicy="cache-and-network"
       variables={{ boardID: board.id, threadID: threadID }}
     >
       {({ data, networkStatus }) => {
