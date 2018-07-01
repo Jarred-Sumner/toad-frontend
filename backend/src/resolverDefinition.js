@@ -19,12 +19,20 @@ const resolvers = {
   Date: GraphQLDate,
   Query: {
     Board: Resolvers.board,
+    ActiveConversations: Resolvers.activeConversations,
+    Conversation: Resolvers.conversation,
   },
   Conversation: {
     __resolveType: _ =>
       _.type === 'board_conversation'
         ? 'BoardConversation'
         : 'DirectConversation',
+  },
+  DirectConversation: {
+    messages: Resolvers.conversationMessages,
+  },
+  BoardConversation: {
+    messages: Resolvers.conversationMessages,
   },
   Post: {
     __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
@@ -70,6 +78,14 @@ const resolvers = {
         }
 
         return pubsub.asyncIterator(`ConversationMessages-${conversation_id}`)
+      },
+    },
+    ActiveConversations: {
+      subscribe: (_, args, { session }) => {
+        if (!isObject(session)) {
+          return null
+        }
+        return pubsub.asyncIterator(`ConversationUpdates-${session.id}`)
       },
     },
     BoardActivity: {

@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { broadcastList } from './activeConversations'
 import Models from '../models'
 
 export default async (_, { presence, conversation_id }, { session }) => {
@@ -20,14 +20,8 @@ export default async (_, { presence, conversation_id }, { session }) => {
     })
   }
 
-  const usersConversations = await Models.session_conversations.find({
-    where: {
-      session_id: session.id,
-      opt_in_status: {
-        [Op.or]: ['explicit_opt_in', 'auto'],
-      },
-    },
-  })
+  const usersConversations = await broadcastList(session.id)
+
   // Update the subscription here
   return usersConversations
 }

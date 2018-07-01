@@ -2,6 +2,7 @@ import moment from 'moment'
 import { isObject } from 'lodash'
 import { Op } from 'sequelize'
 import Model from '../models'
+import { broadcastList } from './activeConversations'
 
 export default async ({ id, identity }, { target }, { session }) => {
   const board = id
@@ -15,7 +16,6 @@ export default async ({ id, identity }, { target }, { session }) => {
       type: 'direct_conversation',
     },
   })
-  console.log(JSON.stringify(existing, null, 2))
   if (isObject(existing)) {
     return existing
   }
@@ -34,7 +34,6 @@ export default async ({ id, identity }, { target }, { session }) => {
   }
 
   let newConvo
-  let newConvos
 
   await Model.sequelize.transaction(async t => {
     newConvo = await Model.conversation.create(
@@ -50,7 +49,7 @@ export default async ({ id, identity }, { target }, { session }) => {
     )
 
     // add convo to users' conversations
-    newConvos = await Model.session_conversations.bulkCreate(
+    await Model.session_conversations.bulkCreate(
       [
         {
           // Conversation creator:
@@ -69,6 +68,11 @@ export default async ({ id, identity }, { target }, { session }) => {
     )
   })
 
-  // Broadcast subscription update here
+  // Send updates to the involved parties
+  await Promise.all([
+    broadcastList(session.id),
+    broadcastList(targetIdentity.session_id),
+  ])
+
   return newConvo
 }

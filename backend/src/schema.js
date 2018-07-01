@@ -90,7 +90,7 @@ type Thread implements Post {
 
 type Query {
   Board(id:ID!): Board
-  Conversation(id: ID!, limit: Int, offset: Int): Conversation
+  Conversation(id: ID!): Conversation
   ActiveConversations: [Conversation]
 }
 
@@ -146,7 +146,7 @@ enum ParticipationStatus {
 interface Conversation {
   id: ID!
   participation_status: ParticipationStatus
-  messages: [Message]
+  messages(limit: Int, offset: Int): [Message]
   participants: [ID]
   participant_count: Int
   typing: [Identity]
@@ -155,7 +155,7 @@ interface Conversation {
 type DirectConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
-  messages: [Message]
+  messages(limit: Int, offset: Int): [Message]
   participants: [ID]
   participant_count: Int
   typing: [Identity]
@@ -166,7 +166,7 @@ type BoardConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
   board_id: ID!
-  messages: [Message]
+  messages(limit: Int, offset: Int): [Message]
   participants: [ID]
   participant_count: Int
   typing: [Identity]
