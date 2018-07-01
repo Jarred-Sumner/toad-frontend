@@ -1,7 +1,7 @@
 {
   "name": "create-next-example-app",
   "scripts": {
-    "dev": "REACT_SPINKIT_NO_STYLES=true node server.js",
+    "dev": "node server.js",
     "build": "REACT_SPINKIT_NO_STYLES=true next build",
     "start": "REACT_SPINKIT_NO_STYLES=true NODE_ENV=production node server.js"
   },

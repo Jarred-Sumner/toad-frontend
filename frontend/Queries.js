@@ -43,6 +43,15 @@ identity { ${fragments.identity} }
 attachment { ${fragments.attachment}}
 `;
 
+fragments.conversation = `
+    id
+    particiatpion_status
+    participants
+    participants_count
+    typing { id }
+    expiry_date
+`;
+
 export const Queries = {
   ViewBoard: gql`
     query ViewBoard($id: ID!) {
@@ -162,15 +171,23 @@ export const Queries = {
       }
     }
   `,
-  SendBoardMessage: gql`
-    mutation SendBoardMessage($boardID: ID!, $body: String!, $attachmentID: ID) {
+  StartDirectConversation: gql`
+    mutation StartDirectConversation($identityID: ID!, $boardID: ID!) {
       Board(id: $boardID) {
-        Chat(body: $body, attachment_id: $attachmentID) {
-          ${fragments.chatMessage}
+        StartDirectConversation(target: $identityID) {
+          ${fragments.conversation}
         }
       }
     }
-  `
+  `,
+  SendMessage: gql`
+    mutation SendMessage($conversationID: ID!, $body: String!, $attachmentID: ID) {
+        Message(conversation_id: $conversationID, body: $body, attachment_id: $attachmentID) {
+          ${fragments.chatMessage}
+        }
+      }
+  `,
+
 };
 
 export default Queries;
