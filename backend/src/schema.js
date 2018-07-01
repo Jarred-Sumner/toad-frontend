@@ -44,17 +44,13 @@ type Board {
   thread(id: ID!): Thread
   identity: PersonalIdentity
   color_scheme: BoardColorScheme
-  chat(offset: Int, limit: Int): BoardChat
   activity: BoardActivity
+  board_conversation: BoardConversation
 }
 
 type BoardActivity {
   active_count: Int
   active_identities: [Identity]
-}
-
-type BoardChat {
-  messages: [ChatMessage]
 }
 
 interface Post {
@@ -74,7 +70,7 @@ type Reply implements Post {
   parent: ID
 }
 
-type ChatMessage implements Post {
+type Message implements Post {
   id: ID!
   created_at: DateTime
   body: String
@@ -94,6 +90,8 @@ type Thread implements Post {
 
 type Query {
   Board(id:ID!): Board
+  Conversation(id: ID!): Conversation
+  ActiveConversations: [Conversation]
 }
 
 enum AttachmentType {
@@ -125,7 +123,7 @@ type Attachment {
 
 type BoardMutation {
   Post(parent_id: ID, body: String!, attachment_id: ID): Post
-  Chat(body: String!, attachment_id: ID): ChatMessage
+  StartDirectConversation(target: ID!): Conversation
   Activity(visible: Boolean!): BoardActivity
 }
 
@@ -133,14 +131,53 @@ type Mutation {
   Attachment(mimetype: String!, filename: String!): NewAttachment
   Board(id:ID!): BoardMutation
   Session(email_token: String!): String
+  Message(conversation_id: ID!, body: String, attachment_id: ID): Message
   Login(email: String!): Boolean
+  ConversationPresence(conversation_id: ID!, presence: Boolean!): [Conversation] # returns active conversations
+}
+
+enum ParticipationStatus {
+  auto
+  explicit_opt_in
+  declined
+  expired
+}
+
+interface Conversation {
+  id: ID!
+  participation_status: ParticipationStatus
+  messages(limit: Int, offset: Int): [Message]
+  participants: [ID]
+  participant_count: Int
+  typing: [Identity]
+}
+
+type DirectConversation implements Conversation {
+  id: ID!
+  participation_status: ParticipationStatus
+  messages(limit: Int, offset: Int): [Message]
+  participants: [ID]
+  participant_count: Int
+  typing: [Identity]
+  expiry_date: DateTime
+}
+
+type BoardConversation implements Conversation {
+  id: ID!
+  participation_status: ParticipationStatus
+  board_id: ID!
+  messages(limit: Int, offset: Int): [Message]
+  participants: [ID]
+  participant_count: Int
+  typing: [Identity]
 }
 
 type Subscription {
-  NewBoardMessage(board: ID!): ChatMessage
+  ActiveConversations: [Conversation]
   BoardActivity(board: ID!): BoardActivity
+  ConversationMessages(conversation_id: ID!): Message
+  ConversationUpdates(conversation_id: ID!): Conversation
 }
-
 `
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })

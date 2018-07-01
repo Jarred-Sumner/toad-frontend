@@ -1,5 +1,7 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions'
+import { isObject } from 'lodash'
 import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
+import Models from './models'
 import * as Utils from './utils'
 import * as Resolvers from './resolvers'
 import config from './config'
@@ -17,6 +19,20 @@ const resolvers = {
   Date: GraphQLDate,
   Query: {
     Board: Resolvers.board,
+    ActiveConversations: Resolvers.activeConversations,
+    Conversation: Resolvers.conversation,
+  },
+  Conversation: {
+    __resolveType: _ =>
+      _.type === 'board_conversation'
+        ? 'BoardConversation'
+        : 'DirectConversation',
+  },
+  DirectConversation: {
+    messages: Resolvers.conversationMessages,
+  },
+  BoardConversation: {
+    messages: Resolvers.conversationMessages,
   },
   Post: {
     __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
@@ -29,29 +45,47 @@ const resolvers = {
     Session: Resolvers.session,
     Login: Resolvers.login,
     Attachment: Resolvers.createAttachment,
+    Message: Resolvers.message,
+    ConversationPresence: Resolvers.conversationPresence,
   },
   BoardMutation: {
     Post: Resolvers.createPost,
-    Chat: Resolvers.createChat,
     Activity: Resolvers.activityMutation,
+    StartDirectConversation: Resolvers.startDirectConversation,
   },
   Board: {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
-    chat: Resolvers.chat,
     activity: Resolvers.activity,
+    board_conversation: Resolvers.boardConversation,
   },
   Thread: {
     replies: Resolvers.threadReplies,
     reply_count: Resolvers.replyCount,
   },
   Subscription: {
-    NewBoardMessage: {
-      subscribe: (_, { board }, { session }) => {
-        if (!session) {
-          return 'Invalid session cookie'
+    ConversationMessages: {
+      subscribe: async (_, { conversation_id }, { session }) => {
+        const convo = await Models.session_conversations.findOne({
+          where: {
+            conversation_id,
+            session_id: session.id,
+          },
+        })
+
+        if (!isObject(convo)) {
+          return null
         }
-        return pubsub.asyncIterator(`NewBoardMessage.${board}`)
+
+        return pubsub.asyncIterator(`ConversationMessages-${conversation_id}`)
+      },
+    },
+    ActiveConversations: {
+      subscribe: (_, args, { session }) => {
+        if (!isObject(session)) {
+          return null
+        }
+        return pubsub.asyncIterator(`ConversationUpdates-${session.id}`)
       },
     },
     BoardActivity: {
