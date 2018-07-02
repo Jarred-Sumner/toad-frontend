@@ -1,4 +1,5 @@
 import { Op } from 'sequelize'
+import { isObject } from 'lodash'
 import { pubsub } from '../resolverDefinition'
 import Models from '../models'
 
@@ -19,7 +20,6 @@ export const getConversations = async sessionId => {
     ],
     raw: true,
   })
-
   const usersConversations = uc.map(c => ({
     ...c,
     participation_status: c['session_conversations.participation_status'],
@@ -27,12 +27,30 @@ export const getConversations = async sessionId => {
   return usersConversations
 }
 
-export const broadcastList = async sessionId => {
-  const convos = await getConversations(sessionId)
-  await pubsub.publish(`ConversationUpdates-${sessionId}`, {
-    ActiveConversations: convos,
+export const broadcastList = async (sessionId, conversationId) => {
+  const uc = await Models.conversation.findOne({
+    where: { id: conversationId },
+    include: [
+      {
+        model: Models.session_conversations,
+        attributes: ['participation_status'],
+        where: {
+          session_id: sessionId,
+        },
+        required: true,
+      },
+    ],
+    raw: true,
   })
-  return convos
+  if (!isObject(uc)) {
+    return null
+  }
+  uc.participation_status = uc['session_conversations.participation_status']
+
+  pubsub.publish(`ConversationUpdates-${sessionId}`, {
+    ConversationUpdates: uc,
+  })
+  return uc
 }
 
 // Main resolver function

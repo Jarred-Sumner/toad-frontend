@@ -133,7 +133,7 @@ type Mutation {
   Session(email_token: String!): String
   Message(conversation_id: ID!, body: String, attachment_id: ID): Message
   Login(email: String!): Boolean
-  ConversationPresence(conversation_id: ID!, presence: Boolean!): [Conversation] # returns active conversations
+  ConversationPresence(conversation_id: ID!, presence: Boolean!): Conversation 
 }
 
 enum ParticipationStatus {
@@ -173,10 +173,9 @@ type BoardConversation implements Conversation {
 }
 
 type Subscription {
-  ActiveConversations: [Conversation]
+  ConversationUpdates: Conversation
   BoardActivity(board: ID!): BoardActivity
   ConversationMessages(conversation_id: ID!): Message
-  ConversationUpdates(conversation_id: ID!): Conversation
 }
 `
 
