@@ -7,12 +7,21 @@ const redis = new Redis({
 })
 const ts = () => Math.round(new Date().getTime() / 1000)
 const statusTTL = 30
+const typingTTL = 15
 
 const getVisible = board => {
   const setKey = `${board}-active`
   const time = ts()
   const timeStart = time - statusTTL
   return redis.zrangebyscore(setKey, timeStart, time)
+}
+
+const getTyping = async conversation => {
+  const setKey = `${conversation}-typing`
+  const time = ts()
+  const timeStart = time - typingTTL
+  const raw = await redis.zrangebyscore(setKey, timeStart, time)
+  return raw.map(r => JSON.parse(r))
 }
 
 const setVisible = async ({ board, identity_id }) => {
@@ -27,4 +36,24 @@ const setInactive = async ({ board, identity_id }) => {
   return getVisible(board)
 }
 
-export default { setVisible, setInactive, getVisible }
+const setTyping = async ({ conversation, identity }) => {
+  const setKey = `${conversation}-typing`
+  await redis.zadd(setKey, [ts(), JSON.stringify(identity)])
+  return getTyping(conversation)
+}
+
+const setNotTyping = async ({ conversation, identity }) => {
+  const setKey = `${conversation}-typing`
+  await redis.zrem(setKey, JSON.stringify(identity))
+  return getTyping(conversation)
+}
+
+export default {
+  setVisible,
+  setInactive,
+  getVisible,
+  getTyping,
+  setTyping,
+  setNotTyping,
+  redis,
+}

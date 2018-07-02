@@ -133,7 +133,8 @@ type Mutation {
   Session(email_token: String!): String
   Message(conversation_id: ID!, body: String, attachment_id: ID): Message
   Login(email: String!): Boolean
-  ConversationPresence(conversation_id: ID!, presence: Boolean!): Conversation 
+  ConversationPresence(conversation_id: ID!, presence: Boolean!): Conversation
+  ConversationTyping(conversation_id: ID!, is_typing: Boolean!): Boolean
 }
 
 enum ParticipationStatus {
@@ -147,9 +148,11 @@ interface Conversation {
   id: ID!
   participation_status: ParticipationStatus
   messages(limit: Int, offset: Int): [Message]
+  user_identity: Identity
   participants: [ID]
   participant_count: Int
   typing: [Identity]
+  expiry_date: DateTime
 }
 
 type DirectConversation implements Conversation {
@@ -157,6 +160,8 @@ type DirectConversation implements Conversation {
   participation_status: ParticipationStatus
   messages(limit: Int, offset: Int): [Message]
   participants: [ID]
+  user_identity: Identity
+  board: Board
   participant_count: Int
   typing: [Identity]
   expiry_date: DateTime
@@ -165,15 +170,18 @@ type DirectConversation implements Conversation {
 type BoardConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
-  board_id: ID!
+  board: Board
+  user_identity: Identity
   messages(limit: Int, offset: Int): [Message]
   participants: [ID]
   participant_count: Int
   typing: [Identity]
+  expiry_date: DateTime
 }
 
 type Subscription {
   ConversationUpdates: Conversation
+  ConversationActivity(conversation_id: ID!): Conversation
   BoardActivity(board: ID!): BoardActivity
   ConversationMessages(conversation_id: ID!): Message
 }

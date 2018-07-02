@@ -1,5 +1,5 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions'
-import { isObject } from 'lodash'
+import { isObject, get } from 'lodash'
 import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
 import Models from './models'
 import * as Utils from './utils'
@@ -30,9 +30,11 @@ const resolvers = {
   },
   DirectConversation: {
     messages: Resolvers.conversationMessages,
+    board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   BoardConversation: {
     messages: Resolvers.conversationMessages,
+    board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   Post: {
     __resolveType: _ => (_.parent === null ? 'Thread' : 'Reply'),
@@ -47,6 +49,7 @@ const resolvers = {
     Attachment: Resolvers.createAttachment,
     Message: Resolvers.message,
     ConversationPresence: Resolvers.conversationPresence,
+    ConversationTyping: Resolvers.conversationTyping,
   },
   BoardMutation: {
     Post: Resolvers.createPost,
@@ -78,6 +81,22 @@ const resolvers = {
         }
 
         return pubsub.asyncIterator(`ConversationMessages-${conversation_id}`)
+      },
+    },
+    ConversationActivity: {
+      subscribe: async (_, { conversation_id }, { session }) => {
+        const convo = await Models.session_conversations.findOne({
+          where: {
+            conversation_id,
+            session_id: session.id,
+          },
+        })
+
+        if (!isObject(convo)) {
+          return null
+        }
+
+        return pubsub.asyncIterator(`ConversationActivity-${conversation_id}`)
       },
     },
     ConversationUpdates: {
