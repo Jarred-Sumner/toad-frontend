@@ -70,8 +70,8 @@ export default async ({ id, identity }, { target }, { session }) => {
 
   // Send updates to the involved parties
   await Promise.all([
-    broadcastList(session.id),
-    broadcastList(targetIdentity.session_id),
+    broadcastList(session.id, newConvo.id),
+    broadcastList(targetIdentity.session_id, newConvo.id),
   ])
 
   return newConvo
