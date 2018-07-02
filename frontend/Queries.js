@@ -148,8 +148,6 @@ export const Queries = {
     }
 
     ${fragments.post}
-    ${fragments.identity}
-    ${fragments.activity}
   `,
   ViewThreads: gql`
     query ViewThreads($id: ID!, $page: Int) {

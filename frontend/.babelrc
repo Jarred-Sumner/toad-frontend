@@ -1,6 +1,7 @@
 {
   "presets": ["next/babel"],
   "plugins": [
+    "graphql-tag",
     [
       "git-version",
       {
@@ -24,6 +25,7 @@
     "production": {
       "presets": ["next/babel"],
       "plugins": [
+        "graphql-tag",
         [
           "git-version",
           {
