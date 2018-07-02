@@ -80,7 +80,7 @@ const resolvers = {
         return pubsub.asyncIterator(`ConversationMessages-${conversation_id}`)
       },
     },
-    ActiveConversations: {
+    ConversationUpdates: {
       subscribe: (_, args, { session }) => {
         if (!isObject(session)) {
           return null

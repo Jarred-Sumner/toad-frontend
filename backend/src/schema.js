@@ -173,10 +173,9 @@ type BoardConversation implements Conversation {
 }
 
 type Subscription {
-  ActiveConversations: Conversation
+  ConversationUpdates: Conversation
   BoardActivity(board: ID!): BoardActivity
   ConversationMessages(conversation_id: ID!): Message
-  ConversationUpdates(conversation_id: ID!): Conversation
 }
 `
 
