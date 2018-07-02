@@ -47,8 +47,8 @@ export const broadcastList = async (sessionId, conversationId) => {
   }
   uc.participation_status = uc['session_conversations.participation_status']
 
-  pubsub.publish(`ConversationUpdates-${sessionId}`, {
-    ConversationUpdates: uc,
+  pubsub.publish(`ParticipatingConversations-${sessionId}`, {
+    ParticipatingConversations: uc,
   })
   return uc
 }
