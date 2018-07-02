@@ -180,7 +180,7 @@ type BoardConversation implements Conversation {
 }
 
 type Subscription {
-  ParticipatingConversations: Conversation # Conversations the user is participating in
+  VisibleConversations: Conversation # Conversations the user is participating in
   ConversationActivity(conversation_id: ID!): Conversation # Updates for a conversation, e.g. typing
   BoardActivity(board: ID!): BoardActivity
   ConversationMessages(conversation_id: ID!): Message
