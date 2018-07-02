@@ -24,6 +24,7 @@ import {
 } from "config";
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
+import introspectionQueryResultData from "Toads/fragmentTypes.json";
 
 let cookieJar;
 let wsLink;
@@ -70,13 +71,13 @@ const httpLink = new BatchHttpLink({
   credentials: "include"
 });
 
-// const fragmentMatcher = new IntrospectionFragmentMatcher({
-//   introspectionQueryResultData
-// });
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData
+});
 
 const createCache = () => {
   const cache = new InMemoryCache({
-    // fragmentMatcher,
+    fragmentMatcher,
     dataIdFromObject: o => {
       if (o.id) {
         return `${o.__typename}-${o.id}`;

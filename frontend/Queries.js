@@ -1,55 +1,83 @@
 import gql from "graphql-tag";
 
 const fragments = {};
-fragments.identity = `
+fragments.identity = gql`
+  fragment IdentityFragment on IdentityBase {
     id
     name
-  `;
-fragments.activity = `
-  active_count
-  active_identities {
-    ${fragments.identity}
   }
 `;
-fragments.attachment = `
-  id
-  type
-  mimetype
-  filename
-  url
+fragments.activity = gql`
+  fragment ActivityFragment on BoardActivity {
+    active_count
+    active_identities {
+      ...IdentityFragment
+    }
+  }
 
-  metadata {
-    width
-    height
+  ${fragments.identity}
+`;
+fragments.attachment = gql`
+  fragment AttachmentFragment on Attachment {
+    id
+    type
+    mimetype
+    filename
+    url
+
+    metadata {
+      width
+      height
+    }
   }
 `;
-fragments.post = `
+fragments.post = gql`
+  fragment PostFragment on Post {
     created_at
     body
 
     identity {
-      ${fragments.identity}
+      ...IdentityFragment
     }
 
     attachment {
-      ${fragments.attachment}
+      ...AttachmentFragment
     }
-  `;
-fragments.chatMessage = `
-id
-created_at
-body
-identity { ${fragments.identity} }
-attachment { ${fragments.attachment}}
+  }
+
+  ${fragments.identity}
+  ${fragments.attachment}
+`;
+fragments.chatMessage = gql`
+  fragment MessageFragment on Message {
+    id
+    created_at
+    body
+    identity {
+      ...IdentityFragment
+    }
+    attachment {
+      ...AttachmentFragment
+    }
+  }
+
+  ${fragments.identity}
+  ${fragments.attachment}
 `;
 
-fragments.conversation = `
+fragments.conversation = gql`
+  fragment ConversationFragment on Conversation {
     id
-    particiatpion_status
+    participation_status
     participants
     participants_count
-    typing { id }
+    typing {
+      ...IdentityFragment
+    }
     expiry_date
+  }
+
+  ${fragments.identity}
 `;
 
 export const Queries = {
@@ -59,16 +87,17 @@ export const Queries = {
         id
         label
         color_scheme
-
         activity {
-          ${fragments.activity}
+          ...ActivityFragment
         }
-
         identity {
-          ${fragments.identity}
+          ...IdentityFragment
         }
       }
     }
+
+    ${fragments.identity}
+    ${fragments.activity}
   `,
   CreateAttachment: gql`
     mutation CreateAttachment($mimetype: String!, $filename: String!) {
@@ -81,113 +110,135 @@ export const Queries = {
   CreateThread: gql`
     mutation CreateThread($body: String!, $attachment_id: ID, $boardID: ID!) {
       Board(id: $boardID) {
-
         Post(body: $body, attachment_id: $attachment_id) {
           id
-          ${fragments.post}
+          ...PostFragment
         }
       }
     }
+
+    ${fragments.post}
   `,
   CreateReplyToThread: gql`
   mutation CreateReplyToThread($body: String!, $attachment_id: ID, $boardID: ID!, $threadID: ID!) {
     Board(id: $boardID) {
-
       Post(body: $body, parent_id: $threadID, attachment_id: $attachment_id) {
         id
-        ${fragments.post}
+        ...PostFragment
       }
     }
+
+    ${fragments.post}
   }
   `,
   ViewThread: gql`
     query ViewThread($boardID: ID!, $threadID: ID!) {
       Board(id: $boardID) {
         id
-
         thread(id: $threadID) {
           id
-          ${fragments.post}
-
+          ...PostFragment
           replies {
             id
-            ${fragments.post}
+            ...PostFragment
           }
           reply_count
         }
       }
     }
+
+    ${fragments.post}
+    ${fragments.identity}
+    ${fragments.activity}
   `,
   ViewThreads: gql`
     query ViewThreads($id: ID!, $page: Int) {
       Board(id: $id) {
         id
-
         threads(page: $page) {
           id
-          ${fragments.post}
-
+          ...PostFragment
           replies {
             id
-            ${fragments.post}
+            ...PostFragment
           }
           reply_count
         }
       }
     }
+
+    ${fragments.post}
   `,
   BoardActivitySubscription: gql`
     subscription GetBoardActivity($boardID: ID!) {
       BoardActivity(board: $boardID) {
-        ${fragments.activity}
+        ...ActivityFragment
       }
     }
+
+    ${fragments.activity}
   `,
   UpdatePresence: gql`
     mutation UpdatePresence($visible: Boolean!, $boardID: ID!) {
       Board(id: $boardID) {
         Activity(visible: $visible) {
-          ${fragments.activity}
+          ...ActivityFragment
         }
       }
     }
+
+    ${fragments.activity}
   `,
   SubscribeToBoardChat: gql`
     subscription NewBoardMessage($boardID: ID!) {
       NewBoardMessage(board: $boardID) {
-        ${fragments.chatMessage}
+        ...MessageFragment
       }
     }
+
+    ${fragments.chatMessage}
   `,
-  BoardChatHistory: gql`
-    query BoardChatHistory($boardID: ID!, $offset: Int, $limit: Int) {
-      Board(id: $boardID) {
+  ChatHistory: gql`
+    query ChatHistory($conversationID: ID!, $offset: Int, $limit: Int) {
+      Conversation(id: $conversationID) {
         id
-        chat(offset: $offset, limit: $limit) {
-          messages {
-            ${fragments.chatMessage}
-          }
+
+        messages(offset: $offset, limit: $limit) {
+          ...MessageFragment
         }
       }
     }
+
+    ${fragments.chatMessage}
   `,
-  StartDirectConversation: gql`
-    mutation StartDirectConversation($identityID: ID!, $boardID: ID!) {
+  CreateDirectConversation: gql`
+    mutation CreateDirectConversation($identityID: ID!, $boardID: ID!) {
       Board(id: $boardID) {
         StartDirectConversation(target: $identityID) {
-          ${fragments.conversation}
+          ...ConversationFragment
         }
       }
     }
+
+    ${fragments.conversation}
   `,
   SendMessage: gql`
-    mutation SendMessage($conversationID: ID!, $body: String!, $attachmentID: ID) {
-        Message(conversation_id: $conversationID, body: $body, attachment_id: $attachmentID) {
-          ${fragments.chatMessage}
-        }
+    mutation SendMessage(
+      $conversationID: ID!
+      $body: String!
+      $attachmentID: ID
+    ) {
+      Message(
+        conversation_id: $conversationID
+        body: $body
+        attachment_id: $attachmentID
+      ) {
+        ...MessageFragment
       }
-  `,
+    }
 
+    ${fragments.chatMessage}
+  `
 };
 
 export default Queries;

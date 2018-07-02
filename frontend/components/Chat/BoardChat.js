@@ -102,7 +102,7 @@ class RawBoardChat extends React.Component {
 }
 
 export const BoardChat = ({ board, ...otherProps }) => (
-  <Mutation mutation={Queries.SendBoardMessage}>
+  <Mutation mutation={Queries.SendMessage}>
     {sendMessage => (
       <RawBoardChat sendMessage={sendMessage} board={board} {...otherProps} />
     )}
