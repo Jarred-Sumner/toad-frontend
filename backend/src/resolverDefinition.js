@@ -99,12 +99,12 @@ const resolvers = {
         return pubsub.asyncIterator(`ConversationActivity-${conversation_id}`)
       },
     },
-    ConversationUpdates: {
+    VisibleConversations: {
       subscribe: (_, args, { session }) => {
         if (!isObject(session)) {
           return null
         }
-        return pubsub.asyncIterator(`ConversationUpdates-${session.id}`)
+        return pubsub.asyncIterator(`VisibleConversations-${session.id}`)
       },
     },
     BoardActivity: {
