@@ -3,7 +3,6 @@ import Models from '../models'
 
 export default async (_, { presence, conversation_id }, { session }) => {
   const optInStatus = presence ? 'explicit_opt_in' : 'declined'
-  console.log(optInStatus)
   const existing = await Models.session_conversations.findOne({
     where: {
       conversation_id,
