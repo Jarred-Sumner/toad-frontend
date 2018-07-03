@@ -11,7 +11,7 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
 import auth, { wsAuth } from './auth'
-import * as Utils from './utils'
+import * as Loaders from './loaders'
 import schema from './schema'
 import config from './config'
 
@@ -70,7 +70,8 @@ app.post(
   graphqlExpress(req => {
     const { session } = req
     const loaders = {
-      participation: new Dataloader(Utils.participation),
+      participation: new Dataloader(Loaders.participation),
+      conversation: new Dataloader(Loaders.conversation),
     }
     return {
       ...graphqlOptions,

@@ -23,9 +23,11 @@ export default async ({ id, identity }, { target }, { session }) => {
   // get target_user's identity, return null if not found
 
   const targetIdentity = await Model.identity.findOne({
-    id: target,
-    expires_at: {
-      [Op.gt]: new Date(),
+    where: {
+      id: target,
+      expires_at: {
+        [Op.gt]: new Date(),
+      },
     },
   })
 
