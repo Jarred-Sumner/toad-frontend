@@ -69,7 +69,6 @@ const resolvers = {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
     activity: Resolvers.activity,
-    board_conversation: Resolvers.boardConversation,
   },
   Thread: {
     replies: Resolvers.threadReplies,

@@ -1,5 +1,6 @@
 import { Op } from 'sequelize'
 import { isObject, isNumber, isNull, get } from 'lodash'
+import boardConversation from './boardConversation'
 import moment from 'moment'
 import Models from '../models'
 import * as Utils from '../utils'
@@ -49,8 +50,17 @@ export default async (_, { id }, { session }) => {
     accountId: session.account_id,
   })
 
+  const boardConvo = await boardConversation({ id })
+  const sessionConvo = await Models.session_conversations.findOrCreate({
+    where: { session_id: session.id, conversation_id: boardConvo.id },
+  })
+
   return {
     identity,
+    board_conversation: {
+      ...sessionConvo[0].dataValues,
+      ...boardConvo.dataValues,
+    },
     ...board.dataValues,
   }
 }

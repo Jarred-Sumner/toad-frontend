@@ -154,7 +154,6 @@ interface Conversation {
   participants: [Identity]
   user_identity: Identity
   board: Board
-  participant_count: Int
   typing: [Identity]
   expiry_date: DateTime
 }
@@ -167,7 +166,6 @@ type DirectConversation implements Conversation {
   participants: [Identity]
   user_identity: Identity
   board: Board
-  participant_count: Int
   typing: [Identity]
   expiry_date: DateTime
 }
@@ -180,7 +178,6 @@ type BoardConversation implements Conversation {
   participants: [Identity]
   user_identity: Identity
   board: Board
-  participant_count: Int
   typing: [Identity]
   expiry_date: DateTime
 }
