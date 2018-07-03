@@ -10,6 +10,7 @@ import { Subscription } from "react-apollo";
 import _ from "lodash";
 import classNames from "classnames";
 import { Icon, ICONS } from "../Icon";
+import { normalizeAnonymousName } from "../Post/Author";
 
 export const CONVERSATION_TYPES = {
   board_chat: "BoardConversation",
@@ -42,12 +43,14 @@ class BoardConversationChatHeader extends React.PureComponent {
 }
 
 class DirectConversationChatHeader extends React.PureComponent {
-  get participant() {
-    const { identity, conversation } = this.props;
+  get participants() {
+    return _.compact(this.props.conversation.participants);
+  }
 
-    return _
-      .compact(Array(conversation.participants))
-      .find(({ id }) => id !== identity.id);
+  get participant() {
+    const { identity } = this.props;
+
+    return this.participants.find(({ id }) => id !== identity.id);
   }
 
   get isOnline() {
@@ -55,7 +58,7 @@ class DirectConversationChatHeader extends React.PureComponent {
       active_participants: activeParticipants = {}
     } = this.props.conversation;
 
-    if (!this.participant) {
+    if (!this.participant || !activeParticipants) {
       return false;
     }
 
@@ -63,6 +66,10 @@ class DirectConversationChatHeader extends React.PureComponent {
   }
 
   render() {
+    if (!this.participant) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         {this.isOnline && (
@@ -73,7 +80,7 @@ class DirectConversationChatHeader extends React.PureComponent {
         )}
 
         <Text color={COLORS.white} weight="semiBold" size="inherit">
-          {this.participant.name}
+          {normalizeAnonymousName(this.participant.name)}
         </Text>
       </React.Fragment>
     );

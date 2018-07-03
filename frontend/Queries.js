@@ -70,9 +70,10 @@ fragments.conversation = gql`
     id
     participation_status
     participants {
-      ...IdentityFragmnet
+      ...IdentityFragment
     }
-    participant_count
+
+    active_participants
 
     board {
       id
@@ -80,10 +81,6 @@ fragments.conversation = gql`
     }
 
     user_identity {
-      ...IdentityFragment
-    }
-
-    typing {
       ...IdentityFragment
     }
   }
@@ -291,6 +288,15 @@ export const Queries = {
   UpdateTypingStatus: gql`
     mutation UpdateTypingStatus($conversationID: ID!, $isTyping: Boolean!) {
       ConversationTyping(conversation_id: $conversationID, is_typing: $isTyping)
+    }
+  `,
+  SubscribeToConversationUpdates: gql`
+    subscription SubscribeToConversationUpdates($conversationID: ID!) {
+      ConversationActivity(conversation_id: $conversationID) {
+        typing {
+          id
+        }
+      }
     }
   `
 };

@@ -142,11 +142,21 @@ class ChatConversation extends React.PureComponent {
         <div className="ConversationList">
           {messageGroups.map(this.renderMessageGroup)}
         </div>
-        <TypingIndicator
-          typing={typing}
-          participants={conversation.participants || []}
-          excludedID={identity.id}
-        />
+        <Subscription
+          subscription={Queries.SubscribeToConversationUpdates}
+          variables={{ conversationID: conversation.id }}
+        >
+          {({ data = {} }) => (
+            <TypingIndicator
+              typing={_.map(
+                _.get(data, "ConversationActivity.typing") || [],
+                "id"
+              )}
+              participants={conversation.participants || []}
+              excludedID={identity.id}
+            />
+          )}
+        </Subscription>
         <style jsx>{`
           .Container {
             background-color: white;
@@ -160,6 +170,7 @@ class ChatConversation extends React.PureComponent {
             width: auto;
             max-width: 100%;
             max-height: 300px;
+            min-height: 200px;
             height: auto;
             border-left: 1px solid ${COLORS.offwhite};
             border-right: 1px solid ${COLORS.offwhite};
