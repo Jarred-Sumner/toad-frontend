@@ -1,10 +1,11 @@
+import moment from 'moment'
 import { isObject, isNull, isString, get } from 'lodash'
 import * as Utils from '../utils'
 import Models from '../models'
 
 const queryIdentity = ({ session_id, conversation_id }) =>
   Models.sequelize.query(
-    `select i.id, i.name, i.board
+    `select i.id, i.name, i.board, i.expires_at
 from session_conversations sc
 join identities i on (i.session_id = sc.session_id)
 join conversations c on (c.id = sc.conversation_id)
@@ -20,7 +21,7 @@ limit 1`,
   )
 
 const getIdentityFromSession = async ({ session_id, conversation_id }) => {
-  const key = `${conversation_id}-${session_id}`
+  const key = `${conversation_id}-${session_id}-`
   const cacheResult = await Utils.presence.redis.get(key)
 
   if (isString(cacheResult)) {
@@ -36,11 +37,17 @@ const getIdentityFromSession = async ({ session_id, conversation_id }) => {
   }
 
   const results = await queryIdentity({ session_id, conversation_id })
-  const result = get(results, '[0]', null)
+  let result = get(results, '[0]', null)
   if (isNull(result)) {
-    return null
+    await Models.session_conversations.create({ session_id, conversation_id })
+    const retry = await queryIdentity({ session_id, conversation_id })
+    result = get(retry, '[0]', null)
+    if (isNull(result)) {
+      return null
+    }
   }
-  Utils.presence.redis.set(key, JSON.stringify(result))
+  const ttl = Math.abs(moment().diff(result.expires_at, 'seconds'))
+  Utils.presence.redis.set(key, JSON.stringify(result), 'EX', ttl)
   return result
 }
 
