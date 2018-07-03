@@ -1,3 +1,5 @@
+import { Op } from 'sequelize'
+import { isNull } from 'lodash'
 import { broadcastList } from './activeConversations'
 import Models from '../models'
 
@@ -13,9 +15,29 @@ export default async (_, { presence, conversation_id }, { session }) => {
     existing.participation_status = optInStatus
     await existing.save()
   } else {
+    const conversation = await Models.conversations.findOne({
+      where: { id: conversation_id },
+      attributes: ['id', 'board'],
+    })
+    if (isNull(conversation)) {
+      return null
+    }
+
+    const identity = await Models.identity.findOne({
+      where: {
+        board: conversation.board,
+        session_id: session.id,
+        expires_at: {
+          [Op.gt]: new Date(),
+        },
+      },
+      attributes: ['id'],
+    })
+
     await Models.session_conversations.create({
       conversation_id,
       session_id: session.id,
+      identity_id: identity.id,
       participation_status: optInStatus,
     })
   }

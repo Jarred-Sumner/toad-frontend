@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
-import { isObject, get } from 'lodash'
+import GraphQLJSON from 'graphql-type-json'
+import { isObject, get, isNull } from 'lodash'
 import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
 import Models from './models'
 import * as Utils from './utils'
@@ -18,6 +19,7 @@ export const pubsub = new RedisPubSub({
 const resolvers = {
   DateTime: GraphQLDateTime,
   Date: GraphQLDate,
+  JSON: GraphQLJSON,
   Query: {
     Board: Resolvers.board,
     ActiveConversations: Resolvers.activeConversations,
@@ -32,11 +34,15 @@ const resolvers = {
   DirectConversation: {
     messages: Resolvers.conversationMessages,
     user_identity: Resolvers.conversationIdentity,
+    participants: Resolvers.directParticipants,
     board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   BoardConversation: {
     messages: Resolvers.conversationMessages,
     user_identity: Resolvers.conversationIdentity,
+    participants: Resolvers.boardParticipants,
+    participation_status: _ =>
+      isNull(_.participation_status) ? 'auto' : _.participation_status,
     board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   Post: {

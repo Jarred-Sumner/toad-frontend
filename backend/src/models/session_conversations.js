@@ -4,6 +4,7 @@ export default (sequelize, DataTypes) => {
     {
       session_id: DataTypes.INTEGER,
       conversation_id: DataTypes.UUID,
+      identity_id: DataTypes.UUID,
       participation_status: {
         type: DataTypes.ENUM('auto', 'explicit_opt_in', 'declined', 'expired'),
         defaultValue: 'auto',
@@ -18,6 +19,13 @@ export default (sequelize, DataTypes) => {
     })
     models.session.hasMany(session_conversations, {
       foreign_key: 'session_id',
+    })
+
+    session_conversations.belongsTo(models.identity, {
+      foreign_key: 'identity_id',
+    })
+    models.identity.hasMany(session_conversations, {
+      foreign_key: 'identity_id',
     })
 
     models.conversation.hasMany(session_conversations, {
