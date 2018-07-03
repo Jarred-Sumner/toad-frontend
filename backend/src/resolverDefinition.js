@@ -31,10 +31,12 @@ const resolvers = {
   },
   DirectConversation: {
     messages: Resolvers.conversationMessages,
+    user_identity: Resolvers.conversationIdentity,
     board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   BoardConversation: {
     messages: Resolvers.conversationMessages,
+    user_identity: Resolvers.conversationIdentity,
     board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   Post: {
