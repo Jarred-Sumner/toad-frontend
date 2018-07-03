@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { isObject, get } from 'lodash'
 import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date'
@@ -69,10 +70,25 @@ const resolvers = {
   Subscription: {
     ConversationMessages: {
       subscribe: async (_, { conversation_id }, { session }) => {
-        const convo = await Models.session_conversations.findOne({
+        const identity = await Utils.cache.getIdentityFromSession({
+          conversation_id,
+          session_id: session.id,
+        })
+        const convo = await Models.conversation.findOne({
           where: {
-            conversation_id,
-            session_id: session.id,
+            id: conversation_id,
+            [Op.or]: [
+              {
+                type: 'board_conversation',
+              },
+              {
+                type: 'direct_conversation',
+
+                participants: {
+                  [Op.contains]: [identity.id],
+                },
+              },
+            ],
           },
         })
 
