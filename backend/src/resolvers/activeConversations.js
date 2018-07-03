@@ -5,6 +5,11 @@ import Models from '../models'
 
 export const getConversations = async sessionId => {
   const uc = await Models.conversation.findAll({
+    where: {
+      expiry_date: {
+        [Op.gt]: Date.now(),
+      },
+    },
     include: [
       {
         model: Models.session_conversations,
