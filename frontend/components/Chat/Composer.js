@@ -69,12 +69,12 @@ class RawChatComposer extends React.PureComponent {
       }
     }
 
-    this.props.onSend({
+    await this.props.onSend({
       body: normalizeEmoji(body),
       attachmentID
     });
 
-    this.setState({ body: "", attachment: null, file: null });
+    this.setState({ body: "", attachment: null, file: null, isTyping: false });
   };
 
   handleReturn = event => {
@@ -101,7 +101,7 @@ class RawChatComposer extends React.PureComponent {
 
   render() {
     const { body, file } = this.state;
-    const { colorScheme } = this.props;
+    const { colorScheme, onTypingChange } = this.props;
 
     return (
       <form onSubmit={this.handleSend} className="Container">
@@ -141,6 +141,7 @@ class RawChatComposer extends React.PureComponent {
             placeholder="Type a message..."
             onChange={this.handleChange}
             onKeyDown={this.handleReturn}
+            onTypingChange={onTypingChange}
             emojiPickerDirection={EMOJI_PICKER_DIRECTIONS.bottom}
             type="text"
           />

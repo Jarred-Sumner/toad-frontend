@@ -1,10 +1,13 @@
 import { ErrorPage, LoadingPage } from "components/LoadingPage";
+import { MAX_PAGE, MIN_PAGE, Paginator } from "components/Paginator";
 import { BoardHeader } from "components/Post/BoardHeader";
 import { ListThreadsContainer } from "components/Post/ListThreads";
+import { buildBoardURL } from "lib/routeHelpers";
 import _ from "lodash";
 import { withRouter } from "next/router";
 import React from "react";
 import { compose, Query } from "react-apollo";
+import Head from "Toads/components/head";
 import {
   isError,
   isInitialLoading,
@@ -14,11 +17,6 @@ import { Page } from "../components/Page";
 import { Spacer } from "../components/Spacer";
 import { SPACING } from "../lib/spacing";
 import { Queries } from "../Queries";
-import { Router } from "Toads/routes";
-import Head from "Toads/components/head";
-import { buildBoardURL } from "lib/routeHelpers";
-import { Paginator, MAX_PAGE, MIN_PAGE } from "components/Paginator";
-import { BoardChat } from "components/Chat/BoardChat";
 
 class ViewBoardPage extends React.Component {
   state = {
@@ -50,7 +48,7 @@ class ViewBoardPage extends React.Component {
     const { color_scheme: colorScheme } = board;
 
     return (
-      <Page renderSubheader={this.renderHeader}>
+      <Page board={board} renderSubheader={this.renderHeader}>
         <Head
           title={`${board.label} | Toads`}
           description={`/${board.id}/ - ${
@@ -67,8 +65,6 @@ class ViewBoardPage extends React.Component {
         >
           <Paginator page={page} colorScheme={colorScheme} boardId={board.id} />
         </ListThreadsContainer>
-
-        <BoardChat board={board} colorScheme={colorScheme} />
       </Page>
     );
   }

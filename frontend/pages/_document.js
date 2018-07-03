@@ -1,8 +1,8 @@
-import PageHead from "../components/head";
-import Document, { Head, Main, NextScript } from "next/document";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import Document, { Head, Main, NextScript } from "next/document";
 import Raven from "raven-js";
 import { SENTRY_URL } from "Toads/config";
+import PageHead from "../components/head";
 
 if (typeof window !== "undefined") {
   window.Promise = require("bluebird");

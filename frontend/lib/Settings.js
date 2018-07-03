@@ -1,22 +1,25 @@
 import localForage from "localforage";
 
 const KEYS = {
-  hide_board_chat: "hide_board_chat"
+  collapse_conversation: "collapse_conversation"
 };
 
-const key = (boardID, key) => `Settings.${boardID}.${key}`;
+const key = (namespace, ...keys) =>
+  `Settings.${namespace}.${Array(keys).join(".")}`;
 
 export class Settings {
-  static async isBoardChatHidden(boardID) {
+  static async isConversationCollapsed(conversationID) {
     return (
-      (await localForage.getItem(key(boardID, KEYS.hide_board_chat))) === "true"
+      (await localForage.getItem(
+        key(conversationID, KEYS.collapse_conversation)
+      )) === "true"
     );
   }
 
-  static setHideBoardChat(boardID, hideBoardChat) {
+  static setCollapseConversation(conversationID, collapseConversation) {
     return localForage.setItem(
-      key(boardID, KEYS.hide_board_chat),
-      String(hideBoardChat)
+      key(conversationID, KEYS.collapse_conversation),
+      String(collapseConversation)
     );
   }
 }

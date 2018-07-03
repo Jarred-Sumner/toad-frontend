@@ -95,7 +95,7 @@ export class MessageGroup extends React.PureComponent {
             flex-direction: column;
             align-self: flex-start;
             flex-wrap: wrap;
-            flex: 1;
+            flex-grow: 0;
             flex-shrink: 0;
           }
 

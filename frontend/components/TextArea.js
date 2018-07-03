@@ -42,6 +42,8 @@ const getEmojiKeyword = ({ string, cursorPosition }) => {
   };
 };
 
+const TYPING_TIMEOUT = 5000;
+
 export class TextArea extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -49,6 +51,7 @@ export class TextArea extends React.PureComponent {
     this.state = {
       isEmojiPickerVisible: false,
       isEmojiPickerEnabled: false,
+      isTyping: false,
       cursorPosition: 0
     };
   }
@@ -84,7 +87,37 @@ export class TextArea extends React.PureComponent {
     }
   }
 
+  handleStoppedTyping = () => {
+    this.setState({ isTyping: false });
+  };
+
+  componentWillUnmount() {
+    window.clearTimeout(this.stoppedTypingTimeout);
+    delete this.stoppedTypingTimeout;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.onTypingChange &&
+      prevState.isTyping !== this.state.isTyping
+    ) {
+      this.props.onTypingChange(this.state.isTyping);
+    }
+  }
+
   handleKeyDown = evt => {
+    if (!this.state.isTyping) {
+      this.setState({ isTyping: true });
+    }
+
+    if (this.stoppedTypingTimeout) {
+      window.clearTimeout(this.stoppedTypingTimeout);
+      this.stoppedTypingTimeout = window.setTimeout(
+        this.handleStoppedTyping,
+        TYPING_TIMEOUT
+      );
+    }
+
     if (
       _.values(SPECIAL_KEYCODES).includes(evt.keyCode) &&
       this.emojiRef &&
@@ -137,7 +170,7 @@ export class TextArea extends React.PureComponent {
   };
 
   handleBlur = evt => {
-    this.setState({ isEmojiPickerEnabled: false });
+    this.setState({ isEmojiPickerEnabled: false, isTyping: false });
 
     if (this.props.onBlur) {
       this.props.onBlur(evt);

@@ -69,12 +69,23 @@ fragments.conversation = gql`
   fragment ConversationFragment on Conversation {
     id
     participation_status
-    participants
-    participants_count
+    participants {
+      ...IdentityFragmnet
+    }
+    participant_count
+
+    board {
+      id
+      color_scheme
+    }
+
+    user_identity {
+      ...IdentityFragment
+    }
+
     typing {
       ...IdentityFragment
     }
-    expiry_date
   }
 
   ${fragments.identity}
@@ -187,9 +198,40 @@ export const Queries = {
 
     ${fragments.activity}
   `,
-  SubscribeToBoardChat: gql`
-    subscription NewBoardMessage($boardID: ID!) {
-      NewBoardMessage(board: $boardID) {
+  ViewBoardConversation: gql`
+    query ViewBoardConversation($boardID: ID!) {
+      Board(id: $boardID) {
+        id
+
+        board_conversation {
+          ...ConversationFragment
+        }
+      }
+    }
+
+    ${fragments.conversation}
+  `,
+  ActiveConversations: gql`
+    query ActiveConversations {
+      ActiveConversations {
+        ...ConversationFragment
+      }
+    }
+
+    ${fragments.conversation}
+  `,
+  SubscribeToConversationParticipationStatusUpdates: gql`
+    subscription ConversationUpdates {
+      VisibleConversations {
+        ...ConversationFragment
+      }
+    }
+
+    ${fragments.conversation}
+  `,
+  SubscribeToMessageUpdates: gql`
+    subscription SubscribeToMessageUpdates($conversationID: ID!) {
+      ConversationMessages(conversation_id: $conversationID) {
         ...MessageFragment
       }
     }
@@ -220,6 +262,15 @@ export const Queries = {
 
     ${fragments.conversation}
   `,
+  LeaveConversation: gql`
+    mutation LeaveConversation($conversationID: ID!) {
+      ConversationPresence(conversation_id: $conversationID, presence: false) {
+        ...ConversationFragment
+      }
+    }
+
+    ${fragments.conversation}
+  `,
   SendMessage: gql`
     mutation SendMessage(
       $conversationID: ID!
@@ -236,6 +287,11 @@ export const Queries = {
     }
 
     ${fragments.chatMessage}
+  `,
+  UpdateTypingStatus: gql`
+    mutation UpdateTypingStatus($conversationID: ID!, $isTyping: Boolean!) {
+      ConversationTyping(conversation_id: $conversationID, is_typing: $isTyping)
+    }
   `
 };
 

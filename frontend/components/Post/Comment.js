@@ -30,7 +30,8 @@ export class Comment extends React.PureComponent {
       boardId,
       threadId,
       minimized,
-      colorScheme
+      colorScheme,
+      currentIdentityId
     } = this.props;
     const dimensions = calculateDimensions({
       photo: comment.attachment,
@@ -55,6 +56,7 @@ export class Comment extends React.PureComponent {
           <PostHeader
             onClick={this.handleShowReply}
             post={comment}
+            currentIdentityId={currentIdentityId}
             boardId={boardId}
             muted
             minimized={minimized}

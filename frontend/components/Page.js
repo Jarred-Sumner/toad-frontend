@@ -10,6 +10,11 @@ import { Text } from "./Text";
 import { Router } from "Toads/routes";
 import { GITHUB_REPO_URL } from "config";
 import { ImagePreviewProvider, ImagePreviewViewer } from "./ImagePreview";
+import dynamic from "next/dynamic";
+
+const DesktopChat = dynamic(import("./Chat/DesktopChat"), {
+  ssr: false
+});
 
 // import Headroom from "react-headroom";
 
@@ -27,7 +32,7 @@ export class Page extends React.Component {
   }
 
   render() {
-    const { children, renderSubheader } = this.props;
+    const { children, renderSubheader, board } = this.props;
 
     return (
       <article className="Page">
@@ -66,6 +71,7 @@ export class Page extends React.Component {
           </div>
         </footer>
 
+        <DesktopChat board={board} />
         <ReactTooltip />
 
         <style jsx>{`

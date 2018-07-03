@@ -1,21 +1,13 @@
 import { ErrorPage, LoadingPage } from "components/LoadingPage";
-import { BoardTitle } from "components/Post/BoardHeader";
+import { ThreadHeader } from "components/Post/ThreadHeader";
 import { ViewThreadContainer } from "components/Post/ViewThread";
 import _ from "lodash";
 import { withRouter } from "next/router";
 import React from "react";
 import { compose, Query } from "react-apollo";
 import { isInitialLoading, withApollo } from "../components/ApolloProvider";
-import { Gradient, GRADIENT_COLORS } from "../components/Gradient";
 import { Page } from "../components/Page";
-import { Spacer } from "../components/Spacer";
-import { SPACING } from "../lib/spacing";
 import { Queries } from "../Queries";
-import { Text } from "components/Text";
-import { Author } from "components/Post/Author";
-import { COLORS } from "lib/colors";
-import { BoardChat } from "components/Chat/BoardChat";
-import { ThreadHeader } from "components/Post/ThreadHeader";
 
 class ViewThreadPage extends React.Component {
   constructor(props) {
@@ -49,7 +41,7 @@ class ViewThreadPage extends React.Component {
     const { showCommentForm } = this.state;
 
     return (
-      <Page renderSubheader={this.renderHeader}>
+      <Page board={board} renderSubheader={this.renderHeader}>
         <ViewThreadContainer
           board={board}
           threadID={threadID}
@@ -59,8 +51,6 @@ class ViewThreadPage extends React.Component {
           initialFocus={initialFocus}
           onDismissCommentForm={this.handleDismissNewComment}
         />
-
-        <BoardChat board={board} colorScheme={colorScheme} />
       </Page>
     );
   }

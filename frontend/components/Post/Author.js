@@ -1,6 +1,8 @@
 import React from "react";
 import { Text } from "../Text";
 import { convertEmojiToNative } from "lib/emoji";
+import { Mutation } from "react-apollo";
+import { Queries } from "Queries";
 
 export const normalizeAnonymousName = name => {
   return `@Anon${convertEmojiToNative(name)}`;
@@ -37,10 +39,60 @@ export class Author extends React.PureComponent {
 
   render() {
     const { name } = this.state;
+    const { onClick } = this.props;
+
     return (
-      <Text size="12px" color="inherit" weight="bold" wrap={false}>
+      <Text
+        size="12px"
+        hoverable={!!onClick}
+        onClick={onClick}
+        color="inherit"
+        weight="bold"
+        wrap={false}
+      >
         {name}
       </Text>
     );
   }
 }
+
+class RawMessagableAuthor extends React.PureComponent {
+  handleOnClick = async () => await this.props.createDirectMessage();
+
+  render() {
+    const { identity, anonymous, boardID } = this.props;
+
+    return (
+      <Author
+        onClick={this.handleOnClick}
+        identity={identity}
+        anonymous={anonymous}
+        boardID={boardID}
+      />
+    );
+  }
+}
+
+export const MessageableAuthor = ({
+  identity,
+  anonymous,
+  boardID,
+  enabled = false
+}) => {
+  return (
+    <Mutation
+      mutation={Queries.CreateDirectConversation}
+      variables={{ identityID: identity.id, boardID }}
+    >
+      {createDirectMessage => (
+        <RawMessagableAuthor
+          identity={identity}
+          anonymous={anonymous}
+          enabled={enabled}
+          createDirectMessage={createDirectMessage}
+          boardID={boardID}
+        />
+      )}
+    </Mutation>
+  );
+};

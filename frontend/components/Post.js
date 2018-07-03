@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment-shortformat";
-import { Author } from "./Post/Author";
+import { Author, MessageableAuthor } from "./Post/Author";
 import { Text } from "./Text";
 import { SPACING } from "../lib/spacing";
 import { Body } from "./Post/Body";
@@ -42,6 +42,7 @@ export const PostHeader = ({
   post,
   threadId,
   boardId,
+  currentIdentityId,
   colorScheme = GRADIENT_COLORS.blue,
   onClick,
   muted,
@@ -55,7 +56,11 @@ export const PostHeader = ({
         "Header--muted": muted
       })}
     >
-      <Author identity={post.identity} />
+      <MessageableAuthor
+        enabled={currentIdentityId !== post.identity.id}
+        boardID={boardId}
+        identity={post.identity}
+      />
       <Spacer width={SPACING.small} />
 
       <Link
@@ -310,6 +315,7 @@ export class Post extends React.PureComponent {
               onClick={this.handleReplyToPost}
               boardId={board.id}
               colorScheme={colorScheme}
+              currentIdentityId={identity.id}
               post={post}
               minimized={minimized}
               threadId={post.id}

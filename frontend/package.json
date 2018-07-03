@@ -2,7 +2,7 @@
   "name": "create-next-example-app",
   "scripts": {
     "dev": "REACT_SPINKIT_NO_STYLES=true node server.js",
-    "update-introspection-json": "node update-introspection-matcher.js",
+    "update-fragments": "node update-introspection-matcher.js",
     "build": "REACT_SPINKIT_NO_STYLES=true next build",
     "start": "REACT_SPINKIT_NO_STYLES=true NODE_ENV=production node server.js"
   },
