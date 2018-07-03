@@ -6,10 +6,10 @@ const conversationActivity = async conversation => {
 
   await pubsub.publish(`ConversationActivity-${conversation.id}`, {
     ConversationActivity: {
-      ...conversation,
+      ...conversation.dataValues,
       typing: typingUsers,
     },
   })
 }
 
-export { conversationActivity }
+export default { conversationActivity }

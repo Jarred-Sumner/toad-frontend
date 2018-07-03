@@ -14,8 +14,8 @@ export default async (_, { conversation_id, is_typing }, { session }) => {
           participation_status: {
             [Op.not]: ['declined', 'expired'],
           },
-          required: true,
         },
+        required: true,
       },
     ],
   })
