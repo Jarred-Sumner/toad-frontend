@@ -148,8 +148,9 @@ interface Conversation {
   id: ID!
   participation_status: ParticipationStatus
   messages(limit: Int, offset: Int): [Message]
-  user_identity: Identity
   participants: [ID]
+  user_identity: Identity
+  board: Board
   participant_count: Int
   typing: [Identity]
   expiry_date: DateTime
@@ -170,10 +171,10 @@ type DirectConversation implements Conversation {
 type BoardConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
-  board: Board
-  user_identity: Identity
   messages(limit: Int, offset: Int): [Message]
   participants: [ID]
+  user_identity: Identity
+  board: Board
   participant_count: Int
   typing: [Identity]
   expiry_date: DateTime
