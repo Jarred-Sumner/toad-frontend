@@ -23,7 +23,7 @@ const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
   if (isObject(existing)) {
     return existing
   }
-  const identity = await Models.identity.create({
+  return Models.identity.create({
     name: Utils.namegen(),
     board: boardId,
     session_id: sessionId,
