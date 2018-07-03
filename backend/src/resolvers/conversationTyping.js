@@ -34,7 +34,7 @@ export default async (_, { conversation_id, is_typing }, { session }) => {
     : Utils.presence.setNotTyping
 
   await typingMethod({
-    conversation_id,
+    conversation: conversation_id,
     identity,
   })
 
