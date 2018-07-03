@@ -3,6 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
+import Dataloader from 'dataloader'
 import NoIntrospection from 'graphql-disable-introspection'
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
 import depthLimit from 'graphql-depth-limit'
@@ -10,6 +11,7 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
 import auth, { wsAuth } from './auth'
+import * as Utils from './utils'
 import schema from './schema'
 import config from './config'
 
@@ -67,9 +69,12 @@ app.post(
   bodyParser.json(),
   graphqlExpress(req => {
     const { session } = req
+    const loaders = {
+      participation: new Dataloader(Utils.participation),
+    }
     return {
       ...graphqlOptions,
-      context: { session },
+      context: { session, loaders },
     }
   })
 )

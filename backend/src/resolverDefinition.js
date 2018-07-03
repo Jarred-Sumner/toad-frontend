@@ -34,13 +34,13 @@ const resolvers = {
   DirectConversation: {
     messages: Resolvers.conversationMessages,
     user_identity: Resolvers.conversationIdentity,
-    participants: Resolvers.directParticipants,
+    participants: Resolvers.participation,
     board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   BoardConversation: {
     messages: Resolvers.conversationMessages,
     user_identity: Resolvers.conversationIdentity,
-    participants: Resolvers.boardParticipants,
+    participants: Resolvers.participation,
     participation_status: _ =>
       isNull(_.participation_status) ? 'auto' : _.participation_status,
     board: _ => get(Models, `Boards[${_.board}]`, null),

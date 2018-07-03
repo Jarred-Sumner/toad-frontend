@@ -40,6 +40,7 @@
     "cookie": "^0.3.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "dataloader": "^1.4.0",
     "deo": "^0.0.2",
     "email-templates": "^4.0.1",
     "express": "^4.16.3",

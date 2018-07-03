@@ -4,7 +4,7 @@ import Models from '../models'
 import * as Utils from '../utils'
 
 export default async (_, { conversation_id, is_typing }, { session }) => {
-  const convo = await Models.conversations.findOne({
+  const convo = await Models.conversation.findOne({
     include: [
       {
         model: Models.session_conversations,
