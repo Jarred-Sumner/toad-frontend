@@ -1,18 +1,23 @@
 import { Op } from 'sequelize'
 import { isObject } from 'lodash'
-import { pubsub } from '../resolverDefinition'
 import Models from '../models'
 import * as Utils from '../utils'
 
 export default async (_, { conversation_id, is_typing }, { session }) => {
-  const convo = await Models.session_conversations.findOne({
-    where: {
-      session_id: session.id,
-      conversation_id,
-      participation_status: {
-        [Op.not]: ['declined', 'expired'],
+  const convo = await Models.conversations.findOne({
+    include: [
+      {
+        model: Models.session_conversations,
+        where: {
+          session_id: session.id,
+          conversation_id,
+          participation_status: {
+            [Op.not]: ['declined', 'expired'],
+          },
+          required: true,
+        },
       },
-    },
+    ],
   })
 
   if (!isObject(convo)) {
@@ -28,17 +33,12 @@ export default async (_, { conversation_id, is_typing }, { session }) => {
     ? Utils.presence.setTyping
     : Utils.presence.setNotTyping
 
-  const typingUsers = await typingMethod({
+  await typingMethod({
     conversation_id,
     identity,
   })
 
-  await pubsub.publish(`ConversationActivity-${conversation_id}`, {
-    ConversationActivity: {
-      id: conversation_id,
-      typing: typingUsers,
-    },
-  })
+  await Utils.subscriptions.conversationActivity(convo)
 
   return is_typing
 }

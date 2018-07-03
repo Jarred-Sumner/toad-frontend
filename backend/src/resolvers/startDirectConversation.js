@@ -55,12 +55,14 @@ export default async ({ id, identity }, { target }, { session }) => {
           // Conversation creator:
           session_id: session.id,
           conversation_id: newConvo.id,
+          identity_id: identity.id,
           participation_status: 'explicit_opt_in',
         },
         {
           // Message receipient:
           session_id: targetIdentity.session_id,
           conversation_id: newConvo.id,
+          identity_id: target,
           participation_status: 'auto',
         },
       ],

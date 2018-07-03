@@ -3,6 +3,7 @@ import resolvers from './resolverDefinition'
 
 const typeDefs = `
 scalar DateTime
+scalar JSON
 scalar Date
 
 enum auth_type {
@@ -144,11 +145,13 @@ enum ParticipationStatus {
   expired
 }
 
+
 interface Conversation {
   id: ID!
   participation_status: ParticipationStatus
   messages(limit: Int, offset: Int): [Message]
-  participants: [ID]
+  active_participants: JSON
+  participants: [Identity]
   user_identity: Identity
   board: Board
   participant_count: Int
@@ -160,7 +163,8 @@ type DirectConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
   messages(limit: Int, offset: Int): [Message]
-  participants: [ID]
+  active_participants: JSON
+  participants: [Identity]
   user_identity: Identity
   board: Board
   participant_count: Int
@@ -172,7 +176,8 @@ type BoardConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
   messages(limit: Int, offset: Int): [Message]
-  participants: [ID]
+  active_participants: JSON
+  participants: [Identity]
   user_identity: Identity
   board: Board
   participant_count: Int

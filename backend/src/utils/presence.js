@@ -39,13 +39,11 @@ const setInactive = async ({ board, identity_id }) => {
 const setTyping = async ({ conversation, identity }) => {
   const setKey = `${conversation}-typing`
   await redis.zadd(setKey, [ts(), JSON.stringify(identity)])
-  return getTyping(conversation)
 }
 
 const setNotTyping = async ({ conversation, identity }) => {
   const setKey = `${conversation}-typing`
   await redis.zrem(setKey, JSON.stringify(identity))
-  return getTyping(conversation)
 }
 
 export default {
