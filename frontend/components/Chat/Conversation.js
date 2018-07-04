@@ -52,6 +52,8 @@ class TypingIndicator extends React.PureComponent {
         isExpired: false,
         typing: props.typing
       };
+    } else {
+      return {};
     }
   }
 
@@ -104,7 +106,7 @@ class TypingIndicator extends React.PureComponent {
   }
 }
 
-class ChatConversation extends React.PureComponent {
+class ChatConversation extends React.Component {
   state = {
     messageGroups: []
   };
