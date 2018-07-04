@@ -44,7 +44,7 @@ export default async ({ id, identity }, { target }, { session }) => {
         participants: identityIds,
         type: 'direct_conversation',
         expiry_date: moment()
-          .add(5, 'minutes')
+          .add(24, 'hours')
           .toISOString(),
       },
       { transaction: t }

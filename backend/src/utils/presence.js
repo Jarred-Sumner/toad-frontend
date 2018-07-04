@@ -6,7 +6,7 @@ const redis = new Redis({
   port: Number(config('redis_port')),
 })
 const ts = () => Math.round(new Date().getTime() / 1000)
-const statusTTL = 30
+const statusTTL = process.env.NODE_ENV === 'production' ? 30 : 600
 const typingTTL = 15
 
 const getVisible = board => {

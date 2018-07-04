@@ -35,12 +35,14 @@ const resolvers = {
     messages: Resolvers.conversationMessages,
     user_identity: Resolvers.conversationIdentity,
     participants: Resolvers.participation,
+    active_participants: Resolvers.activeParticipants,
     board: _ => get(Models, `Boards[${_.board}]`, null),
   },
   BoardConversation: {
     messages: Resolvers.conversationMessages,
     user_identity: Resolvers.conversationIdentity,
     participants: Resolvers.participation,
+    active_participants: Resolvers.activeParticipants,
     participation_status: _ =>
       isNull(_.participation_status) ? 'auto' : _.participation_status,
     board: _ => get(Models, `Boards[${_.board}]`, null),
