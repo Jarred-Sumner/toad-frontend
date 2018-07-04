@@ -47,7 +47,7 @@ class TypingIndicator extends React.PureComponent {
     typing: []
   };
   static getDerivedStateFromProps(props, state) {
-    if (props.typing !== state.typing) {
+    if (props.typing.join("-") !== state.typing.join("-")) {
       return {
         isExpired: false,
         typing: props.typing

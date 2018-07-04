@@ -1,14 +1,12 @@
+import _ from "lodash";
 import React from "react";
-import { COLORS } from "Toads/lib/colors";
-import { SPACING } from "Toads/lib/spacing";
-import { Spacer } from "../Spacer";
-import { Post } from "../Post";
 import { Query } from "react-apollo";
+import { SPACING } from "Toads/lib/spacing";
 import { Queries } from "Toads/Queries";
 import { isInitialLoading } from "../ApolloProvider";
+import { Post } from "../Post";
+import { Spacer } from "../Spacer";
 import { Spinner } from "../Spinner";
-import _ from "lodash";
-import { Text } from "../Text";
 
 class ListThreads extends React.PureComponent {
   static defaultProps = {
