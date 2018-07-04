@@ -23,11 +23,9 @@ export default async ({ id, identity }, { target }, { session }) => {
   // get target_user's identity, return null if not found
 
   const targetIdentity = await Model.identity.findOne({
-    where: {
-      id: target,
-      expires_at: {
-        [Op.gt]: new Date(),
-      },
+    id: target,
+    expires_at: {
+      [Op.gt]: new Date(),
     },
   })
 
@@ -44,7 +42,7 @@ export default async ({ id, identity }, { target }, { session }) => {
         participants: identityIds,
         type: 'direct_conversation',
         expiry_date: moment()
-          .add(24, 'hours')
+          .add(5, 'minutes')
           .toISOString(),
       },
       { transaction: t }
