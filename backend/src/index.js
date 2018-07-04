@@ -73,7 +73,6 @@ app.post(
     const { session } = req
     const loaders = {
       participation: new Dataloader(Loaders.participation),
-      conversation: new Dataloader(Loaders.conversation),
       identity: new Dataloader(Loaders.identity),
       boardActivity: new Dataloader(Loaders.boardActivity),
     }
