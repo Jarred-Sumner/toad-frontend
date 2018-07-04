@@ -9,7 +9,17 @@ export const wsAuth = async (params, socket) => {
   if (isNull(token)) {
     return {}
   }
-  const session = await Models.session.findOne({ where: { token } })
+  const session = await Models.session.findOne({
+    where: { token, is_valid: true },
+    attributes: [
+      'id',
+      'token',
+      'authentication',
+      'account_id',
+      'created_at',
+      'updated_at',
+    ],
+  })
   if (!isObject(session)) {
     return {}
   }
@@ -22,7 +32,17 @@ export default async (req, res, next) => {
     res.status(401)
     return res.json({ error: 'Missing session cookie.' })
   }
-  const session = await Models.session.findOne({ where: { token } })
+  const session = await Models.session.findOne({
+    where: { token, is_valid: true },
+    attributes: [
+      'id',
+      'token',
+      'authentication',
+      'account_id',
+      'created_at',
+      'updated_at',
+    ],
+  })
 
   if (!isObject(session)) {
     res.status(401)

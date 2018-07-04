@@ -4,7 +4,13 @@ export default (sequelize, DataTypes) => {
     {
       token: DataTypes.STRING,
       is_valid: DataTypes.BOOLEAN,
-      authentication: DataTypes.STRING,
+      authentication: {
+        type: DataTypes.ENUM('anonymous', 'account'),
+        defaultValue: 'anonymous',
+        allowNull: false,
+      },
+      source_ip: DataTypes.STRING,
+      user_agent: DataTypes.TEXT,
       account_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
