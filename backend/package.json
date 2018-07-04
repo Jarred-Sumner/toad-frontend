@@ -44,6 +44,7 @@
     "deo": "^0.0.2",
     "email-templates": "^4.0.1",
     "express": "^4.16.3",
+    "faker": "^4.1.0",
     "graphql": "^0.13.2",
     "graphql-depth-limit": "^1.1.0",
     "graphql-disable-introspection": "^1.0.1",
