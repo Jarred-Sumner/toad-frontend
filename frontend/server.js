@@ -9,6 +9,7 @@ const app = next({ dev: !config.isProduction() });
 const handler = routes.getRequestHandler(app);
 const path = require("path");
 const Raven = require("raven");
+const requestIp = require("request-ip");
 
 Raven.config(config.SENTRY_URL).install();
 
@@ -20,6 +21,7 @@ const PORT = process.env.PORT || 3000;
 app.prepare().then(() => {
   const server = express();
   server.use("/static", express.static(path.join(__dirname, ".next/static")));
+  server.use(requestIp.mw());
   server.use(handler);
 
   server.listen(PORT, err => {

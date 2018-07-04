@@ -29,6 +29,7 @@ import introspectionQueryResultData from "Toads/fragmentTypes.json";
 let cookieJar;
 let wsLink;
 
+let defaultFetchHeaders = {};
 const { fetch: rawFetch } = fetchPonyfill();
 
 let fetch;
@@ -36,7 +37,18 @@ if (typeof window === "undefined") {
   const toughCookie = require("tough-cookie");
   cookieJar = new toughCookie.CookieJar();
 
-  fetch = require("fetch-cookie")(rawFetch, cookieJar);
+  const nodeFetch = require("fetch-cookie")(rawFetch, cookieJar);
+  fetch = (url, rawOptions = {}) => {
+    const options = {
+      ...rawOptions,
+      headers: {
+        ...(rawOptions.headers || {}),
+        ...defaultFetchHeaders
+      }
+    };
+
+    return nodeFetch(url, options);
+  };
 } else {
   fetch = rawFetch;
 
@@ -207,6 +219,11 @@ export const withApollo = Component => {
   NewComponent.getInitialProps = async ctx => {
     if (ctx.req) {
       const sessionCookie = await fetchSessionCookie(ctx);
+
+      defaultFetchHeaders = {
+        "User-Agent": ctx.req.headers["user-agent"],
+        "X-Client-IP": ctx.req.clientIp
+      };
 
       if (sessionCookie) {
         cookieJar.setCookieSync(

@@ -12,6 +12,7 @@ import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
 import auth, { wsAuth } from './auth'
 import * as Loaders from './loaders'
+import requestIp from 'request-ip'
 import schema from './schema'
 import config from './config'
 
@@ -34,6 +35,7 @@ app.options('*', cors(corsOptions))
 app.use(cors(corsOptions))
 app.use(logger('dev'))
 app.use(cookieParser())
+app.use(requestIp.mw())
 
 app.post('/session', sessionMiddleware)
 app.use('/graphql', auth)
