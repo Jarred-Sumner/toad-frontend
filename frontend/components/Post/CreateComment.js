@@ -205,6 +205,7 @@ class RawCreateCommentForm extends React.PureComponent {
               min-width: 525px;
               width: min-content;
               position: fixed;
+              z-index: 999;
               top: ${SPACING.large}px;
               right: ${SPACING.large}px;
               border-radius: 4px;

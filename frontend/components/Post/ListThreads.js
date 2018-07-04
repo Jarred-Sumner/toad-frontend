@@ -21,7 +21,7 @@ class ListThreads extends React.PureComponent {
     return (
       <div className="Container">
         {threads.map(thread => (
-          <React.Fragment>
+          <React.Fragment key={thread.id}>
             <div className="PageWrapper PostWrapper" key={thread.id}>
               <div className="ClearFix">
                 <Post

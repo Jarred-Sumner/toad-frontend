@@ -62,10 +62,6 @@ class RawBoardPresence extends React.Component {
   };
 
   stopUpdatingPresence = () => {
-    if (!this.presencePoller) {
-      return;
-    }
-
     window.clearInterval(this.presencePoller);
     delete this.presencePoller;
     this.presencePoller = undefined;
@@ -128,6 +124,7 @@ export const BoardPresence = ({ boardID, onlineCount, ...otherProps }) => {
       {updatePresence => (
         <RawBoardPresence
           boardID={boardID}
+          key={boardID}
           updatePresence={updatePresence}
           onlineCount={onlineCount}
         />

@@ -129,7 +129,16 @@ export const buildPhotoSrcSet = ({ url, mimetype, width, height, size }) => {
 };
 
 export const Photo = pure(
-  ({ onClick, width, height, size, photo, circle, ...otherProps }) => {
+  ({
+    onClick,
+    width,
+    height,
+    size,
+    photo,
+    circle,
+    minHeight,
+    ...otherProps
+  }) => {
     const { url, mimetype } = photo || {};
 
     const dimensions = _.pick(_.get(photo, "metadata"), ["width", "height"]);
