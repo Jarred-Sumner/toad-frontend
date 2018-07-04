@@ -41,10 +41,7 @@ if (typeof window === "undefined") {
   fetch = (url, rawOptions = {}) => {
     const options = {
       ...rawOptions,
-      headers: {
-        ...(rawOptions.headers || {}),
-        ...defaultFetchHeaders
-      }
+      headers: Object.assign({}, rawOptions.headers, defaultFetchHeaders)
     };
 
     return nodeFetch(url, options);
