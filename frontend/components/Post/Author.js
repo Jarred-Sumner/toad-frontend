@@ -5,7 +5,7 @@ import { Mutation } from "react-apollo";
 import { Queries } from "Queries";
 
 export const normalizeAnonymousName = name => {
-  return `@Anon${convertEmojiToNative(name)}`;
+  return convertEmojiToNative(name);
 };
 
 // This will have more stuff later.

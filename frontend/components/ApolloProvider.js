@@ -37,15 +37,14 @@ if (typeof window === "undefined") {
   const toughCookie = require("tough-cookie");
   cookieJar = new toughCookie.CookieJar();
 
-  const nodeFetch = require("fetch-cookie")(rawFetch, cookieJar);
-  fetch = (url, rawOptions = {}) => {
+  fetch = require("fetch-cookie")((url, rawOptions = {}) => {
     const options = {
       ...rawOptions,
       headers: Object.assign({}, rawOptions.headers, defaultFetchHeaders)
     };
 
-    return nodeFetch(url, options);
-  };
+    return rawFetch(url, options);
+  }, cookieJar);
 } else {
   fetch = rawFetch;
 
