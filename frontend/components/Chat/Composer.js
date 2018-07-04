@@ -101,7 +101,7 @@ class RawChatComposer extends React.PureComponent {
 
   render() {
     const { body, file } = this.state;
-    const { colorScheme, onTypingChange } = this.props;
+    const { colorScheme, onTypingChange, innerRef } = this.props;
 
     return (
       <form onSubmit={this.handleSend} className="Container">
@@ -137,6 +137,7 @@ class RawChatComposer extends React.PureComponent {
             value={body}
             maxRows={20}
             colorScheme={colorScheme}
+            innerRef={innerRef}
             rows={1}
             placeholder="Type a message..."
             onChange={this.handleChange}

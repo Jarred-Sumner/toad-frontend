@@ -44,6 +44,8 @@ class RawViewConversation extends React.PureComponent {
     });
   };
 
+  setTextAreaRef = textAreaRef => (this.textAreaRef = textAreaRef);
+
   render() {
     const { colorScheme, conversation, identity, isVisible } = this.props;
 
@@ -70,6 +72,7 @@ class RawViewConversation extends React.PureComponent {
             <ChatComposer
               colorScheme={colorScheme}
               onSend={this.handleSendMessage}
+              innerRef={this.setTextAreaRef}
               onTypingChange={this.handleTypingChange}
             />
           </React.Fragment>
