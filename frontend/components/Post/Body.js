@@ -107,7 +107,7 @@ export const Body = pure(
           const LineComponent = COMPONENT_BY_TYPE[type];
 
           return (
-            <div className="BodyTextLine">
+            <div key={`${index}-${text}`} className="BodyTextLine">
               <LineComponent
                 boardId={boardId}
                 threadId={threadId}

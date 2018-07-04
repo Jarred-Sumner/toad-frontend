@@ -202,6 +202,7 @@ export class TextArea extends React.PureComponent {
       onChange,
       emojiPickerDirection,
       colorScheme,
+      onTypingChange,
       ...otherProps
     } = this.props;
     const {

@@ -40,8 +40,40 @@ const groupMessages = _.memoize(messages => {
   return messageGroups;
 });
 
-const TypingIndicator = pure(
-  ({ participants, typing: allTyping = [], excludedID }) => {
+const TYPING_UPDATE_EXPIRY = 60000;
+class TypingIndicator extends React.PureComponent {
+  state = {
+    isExpired: false,
+    typing: []
+  };
+  static getDerivedStateFromProps(props, state) {
+    if (props.typing !== state.typing) {
+      return {
+        isExpired: false,
+        typing: props.typing
+      };
+    } else {
+      return {};
+    }
+  }
+
+  expireTypingIndicator = () => this.setState({ isExpired: true });
+
+  componentWillUnmount() {
+    window.clearTimeout(this.expireTypingIndicatorTimeout);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.typing !== this.state.typing) {
+      window.clearTimeout(this.expireTypingIndicator);
+      window.setTimeout(this.expireTypingIndicator, TYPING_UPDATE_EXPIRY);
+    }
+  }
+
+  render() {
+    const { participants, typing: allTyping = [], excludedID } = this.props;
+    const { isExpired } = this.state;
+
     const names = participants
       .filter(({ id }) => id !== excludedID && allTyping.includes(id))
       .map(({ name }) => normalizeAnonymousName(name));
@@ -51,14 +83,14 @@ const TypingIndicator = pure(
     return (
       <div
         className={classNames("TypingIndicator", {
-          "TypingIndicator--hidden": _.isEmpty(names)
+          "TypingIndicator--hidden": _.isEmpty(names) || isExpired
         })}
       >
         <Text size="12px" color={COLORS.gray}>
           <Text size="inherit" weight="semiBold" color="inherit">
             {namesString}
           </Text>
-          &nbsp; is typing
+          is typing
         </Text>
         <style jsx>{`
           .TypingIndicator {
@@ -66,15 +98,15 @@ const TypingIndicator = pure(
           }
 
           .TypingIndicator--hidden {
-            visibility: hidden;
+            display: none;
           }
         `}</style>
       </div>
     );
   }
-);
+}
 
-class ChatConversation extends React.PureComponent {
+class ChatConversation extends React.Component {
   state = {
     messageGroups: []
   };
@@ -101,9 +133,9 @@ class ChatConversation extends React.PureComponent {
 
         return Object.assign({}, prev, {
           Conversation: {
-            ...this.props.conversation,
+            ...prev.Conversation,
             messages: _.sortedUniqBy(
-              [newMessage, ...(this.props.conversation.messages || [])],
+              [newMessage, ...(prev.Conversation.messages || [])],
               "id"
             )
           }
@@ -146,16 +178,18 @@ class ChatConversation extends React.PureComponent {
           subscription={Queries.SubscribeToConversationUpdates}
           variables={{ conversationID: conversation.id }}
         >
-          {({ data = {} }) => (
-            <TypingIndicator
-              typing={_.map(
-                _.get(data, "ConversationActivity.typing") || [],
-                "id"
-              )}
-              participants={conversation.participants || []}
-              excludedID={identity.id}
-            />
-          )}
+          {({ data = {} }) => {
+            return (
+              <TypingIndicator
+                typing={_.map(
+                  _.get(data, "ConversationActivity.typing") || [],
+                  "id"
+                )}
+                participants={conversation.participants || []}
+                excludedID={identity.id}
+              />
+            );
+          }}
         </Subscription>
         <style jsx>{`
           .Container {
