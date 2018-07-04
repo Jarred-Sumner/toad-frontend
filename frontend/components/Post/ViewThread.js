@@ -13,6 +13,7 @@ import Head from "../head";
 import { CreateCommentForm } from "./CreateComment";
 import { buildPostDOMID } from "lib/routeHelpers";
 import { Router } from "Toads/routes";
+import requestIdleCallback from "ric-shim";
 
 class ViewThread extends React.PureComponent {
   constructor(props) {
@@ -27,9 +28,7 @@ class ViewThread extends React.PureComponent {
 
   componentDidMount() {
     if (this.props.initialFocus) {
-      window.requestIdleCallback(() => {
-        this.scrollFocusElementIntoView();
-      });
+      requestIdleCallback(this.scrollFocusElementIntoView);
     }
   }
 
@@ -64,9 +63,7 @@ class ViewThread extends React.PureComponent {
       this.props.initialFocus !== prevProps.initialFocus &&
       this.props.initialFocus
     ) {
-      window.requestIdleCallback(() => {
-        this.scrollFocusElementIntoView();
-      });
+      requestIdleCallback(this.scrollFocusElementIntoView);
     }
   }
 
