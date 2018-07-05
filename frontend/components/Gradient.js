@@ -58,7 +58,7 @@ export class Gradient extends React.Component {
             );
           }
           .Gradient--green {
-            background-image: linear-gradient(44deg, #57ca84 0%, #194f68 100%);
+            background-image: linear-gradient(44deg, #194f68 0%, #57ca84 100%);
           }
         `}</style>
       </div>
