@@ -1,6 +1,6 @@
 import Chance from 'chance'
 
-import { sample, random, times } from 'lodash'
+import { sample, random } from 'lodash'
 import { random as randomEmoji } from 'node-emoji'
 
 const chance = new Chance()

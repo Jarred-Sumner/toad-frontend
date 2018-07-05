@@ -1,5 +1,4 @@
 import { Op } from 'sequelize'
-import moment from 'moment'
 import Models from '../models'
 import * as Utils from '../utils'
 
