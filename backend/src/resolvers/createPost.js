@@ -65,12 +65,12 @@ export default async (_, args, ctx) => {
     return null // Don't allow OPs without attachment
   }
 
-  const bumped_at = post.parent_id === undefined ? new Date() : null
+  if (post.parent_id === undefined) {
+    post.expires_at = Utils.expiry()
+    post.bumped_at = new Date()
+  }
 
-  const newPost = await Models[id].create({
-    bumped_at,
-    ...post,
-  })
+  const newPost = await Models[id].create(post)
 
   const postWithData = await Models[id].findOne({
     where: { id: newPost.id },

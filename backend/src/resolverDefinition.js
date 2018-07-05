@@ -71,6 +71,7 @@ const resolvers = {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
     activity: Resolvers.activity,
+    expires_at: () => Utils.expiry(),
   },
   Thread: {
     replies: Resolvers.threadReplies,

@@ -47,6 +47,7 @@ type Board {
   color_scheme: BoardColorScheme
   activity: BoardActivity
   board_conversation: BoardConversation
+  expires_at: DateTime
 }
 
 type BoardActivity {
