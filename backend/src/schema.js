@@ -86,6 +86,7 @@ type Thread implements Post {
   body: String
   identity: Identity
   attachment: Attachment
+  expires_at: DateTime
   replies: [Reply]
   reply_count: Int
 }

@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { isObject, isString, isNumber } from 'lodash'
 import Models from '../models'
 import * as Utils from '../utils'
@@ -63,6 +64,10 @@ export default async (_, args, ctx) => {
   const { post, foundParent } = validation
   if (foundParent === undefined && post.attachment_id === undefined) {
     return null // Don't allow OPs without attachment
+  }
+
+  if (foundParent && moment(foundParent.expires_at).isAfter()) {
+    return null // Don't allow replies to expired posts
   }
 
   if (post.parent_id === undefined) {
