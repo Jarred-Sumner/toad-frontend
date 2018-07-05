@@ -66,7 +66,7 @@ export default async (_, args, ctx) => {
     return null // Don't allow OPs without attachment
   }
 
-  if (foundParent && moment(foundParent.expires_at).isAfter()) {
+  if (foundParent && moment(foundParent.expires_at).isBefore()) {
     return null // Don't allow replies to expired posts
   }
 
