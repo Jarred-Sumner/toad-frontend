@@ -47,6 +47,6 @@ export default {
       },
     })
   },
-  down: (queryInterface, Sequelize) =>
+  down: queryInterface =>
     queryInterface.dropTable('identities', { cascade: true }),
 }

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import moment from 'moment'
 import Models from '../models'
+import * as Utils from '../utils'
 
 export default async ({ id }) => {
   const convo = await Models.conversation.findOrCreate({
@@ -12,7 +12,7 @@ export default async ({ id }) => {
       },
     },
     defaults: {
-      expiry_date: moment().add(1, 'day'),
+      expiry_date: Utils.expiry(),
     },
   })
   return convo[0]

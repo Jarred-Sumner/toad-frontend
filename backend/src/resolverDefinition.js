@@ -20,6 +20,10 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   Date: GraphQLDate,
   JSON: GraphQLJSON,
+  IdentityBase: {
+    __resolveType: (_, args, { session }) =>
+      _.session_id === session.id ? 'PersonalIdentity' : 'Identity',
+  },
   Query: {
     Board: Resolvers.board,
     ActiveConversations: Resolvers.activeConversations,
@@ -71,6 +75,7 @@ const resolvers = {
     threads: Resolvers.boardThreads,
     thread: Resolvers.thread,
     activity: Resolvers.activity,
+    expires_at: () => Utils.expiry(),
   },
   Thread: {
     replies: Resolvers.threadReplies,

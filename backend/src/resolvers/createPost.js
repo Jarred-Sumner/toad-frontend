@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { isObject, isString, isNumber } from 'lodash'
 import Models from '../models'
 import * as Utils from '../utils'
@@ -65,12 +66,16 @@ export default async (_, args, ctx) => {
     return null // Don't allow OPs without attachment
   }
 
-  const bumped_at = post.parent_id === undefined ? new Date() : null
+  if (foundParent && moment(foundParent.expires_at).isBefore()) {
+    return null // Don't allow replies to expired posts
+  }
 
-  const newPost = await Models[id].create({
-    bumped_at,
-    ...post,
-  })
+  if (post.parent_id === undefined) {
+    post.expires_at = Utils.expiry()
+    post.bumped_at = new Date()
+  }
+
+  const newPost = await Models[id].create(post)
 
   const postWithData = await Models[id].findOne({
     where: { id: newPost.id },

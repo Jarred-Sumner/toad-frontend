@@ -23,8 +23,6 @@ export default (sequelize, DataTypes) => {
       underscored: true,
     }
   )
-  conversation.associate = models => {
-    // associations can be defined here
-  }
+
   return conversation
 }

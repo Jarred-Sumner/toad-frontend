@@ -1,6 +1,6 @@
-import moment from 'moment'
 import { isObject } from 'lodash'
 import { Op } from 'sequelize'
+import * as Utils from '../utils'
 import Model from '../models'
 import { broadcastList } from './activeConversations'
 
@@ -41,9 +41,7 @@ export default async ({ id, identity }, { target }, { session }) => {
         board,
         participants: identityIds,
         type: 'direct_conversation',
-        expiry_date: moment()
-          .add(5, 'minutes')
-          .toISOString(),
+        expiry_date: Utils.expiry(),
       },
       { transaction: t }
     )

@@ -28,9 +28,7 @@ const findOrCreateIdentity = async ({ boardId, sessionId, accountId }) => {
     board: boardId,
     session_id: sessionId,
     account_id: accountId,
-    expires_at: moment()
-      .add(24, 'hours')
-      .toISOString(), // update with correct date calc
+    expires_at: Utils.expiry(),
   })
 }
 

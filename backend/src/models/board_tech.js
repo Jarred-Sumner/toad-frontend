@@ -7,6 +7,7 @@ export default (sequelize, DataTypes) => {
       identity_id: DataTypes.UUID,
       attachment_id: DataTypes.INTEGER,
       bumped_at: DataTypes.DATE,
+      expires_at: DataTypes.DATE,
     },
     {
       underscored: true,

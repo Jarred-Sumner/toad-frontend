@@ -47,6 +47,7 @@ type Board {
   color_scheme: BoardColorScheme
   activity: BoardActivity
   board_conversation: BoardConversation
+  expires_at: DateTime
 }
 
 type BoardActivity {
@@ -85,6 +86,7 @@ type Thread implements Post {
   body: String
   identity: Identity
   attachment: Attachment
+  expires_at: DateTime
   replies: [Reply]
   reply_count: Int
 }
@@ -152,7 +154,7 @@ interface Conversation {
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
-  user_identity: Identity
+  user_identity: PersonalIdentity
   board: Board
   typing: [Identity]
   expiry_date: DateTime
@@ -164,7 +166,7 @@ type DirectConversation implements Conversation {
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
-  user_identity: Identity
+  user_identity: PersonalIdentity
   board: Board
   typing: [Identity]
   expiry_date: DateTime
@@ -176,7 +178,7 @@ type BoardConversation implements Conversation {
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
-  user_identity: Identity
+  user_identity: PersonalIdentity
   board: Board
   typing: [Identity]
   expiry_date: DateTime
