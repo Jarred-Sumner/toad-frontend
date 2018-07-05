@@ -3,7 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
-import Dataloader from 'dataloader'
+import requestIp from 'request-ip'
 import NoIntrospection from 'graphql-disable-introspection'
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
 import depthLimit from 'graphql-depth-limit'
@@ -11,8 +11,7 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { execute, subscribe } from 'graphql'
 import sessionMiddleware from './session'
 import auth, { wsAuth } from './auth'
-import * as Loaders from './loaders'
-import requestIp from 'request-ip'
+import Loaders from './loaders'
 import schema from './schema'
 import config from './config'
 
@@ -71,14 +70,10 @@ app.post(
   bodyParser.json(),
   graphqlExpress(req => {
     const { session } = req
-    const loaders = {
-      participation: new Dataloader(Loaders.participation),
-      identity: new Dataloader(Loaders.identity),
-      boardActivity: new Dataloader(Loaders.boardActivity),
-    }
+
     return {
       ...graphqlOptions,
-      context: { session, loaders },
+      context: { session, loaders: Loaders({ cache: true }) },
     }
   })
 )
@@ -90,6 +85,10 @@ const server = app.listen(PORT, () => {
       execute,
       subscribe,
       onConnect: wsAuth,
+      onOperation: (message, params) => ({
+        ...params,
+        context: { ...params.context, loaders: Loaders({ cache: false }) },
+      }),
     },
     {
       server,
