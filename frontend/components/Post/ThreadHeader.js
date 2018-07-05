@@ -57,8 +57,10 @@ export class ThreadHeader extends React.PureComponent {
 
           <div className="HeaderContent HeaderContent--right">
             <div className="HeaderContentRow">
-              <Text color="inherit">You:</Text>&nbsp;
-              <Author identity={identity} />
+              <Text size="24px">
+                Today, you are:
+                <Author size="inherit" identity={identity} />
+              </Text>
             </div>
           </div>
         </div>

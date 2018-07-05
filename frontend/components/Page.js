@@ -37,10 +37,7 @@ export class Page extends React.Component {
     return (
       <article className="Page">
         <AlertHost />
-        <React.Fragment>
-          <NavHeader />
-          {renderSubheader && renderSubheader()}
-        </React.Fragment>
+        {renderSubheader && renderSubheader()}
 
         <ImagePreviewProvider>
           <main className="PageContainer">

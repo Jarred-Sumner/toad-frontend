@@ -39,11 +39,11 @@ export class Author extends React.PureComponent {
 
   render() {
     const { name } = this.state;
-    const { onClick } = this.props;
+    const { onClick, size = "12px" } = this.props;
 
     return (
       <Text
-        size="12px"
+        size={size}
         hoverable={!!onClick}
         onClick={onClick}
         color="inherit"
