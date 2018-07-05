@@ -13,7 +13,7 @@ export const COLORS = {
   [GRADIENT_COLORS.blue]: "#5b247a",
   [GRADIENT_COLORS.purple_red]: "#c53364",
   [GRADIENT_COLORS.pink]: "#f54ea2",
-  [GRADIENT_COLORS.red]: "#ff4a0a",
+  [GRADIENT_COLORS.red]: "#db0b73",
   [GRADIENT_COLORS.green]: "#194f68"
 };
 
