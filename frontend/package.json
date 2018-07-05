@@ -42,7 +42,6 @@
     "emoji-mart": "^2.6.1",
     "emojilib": "^2.2.12",
     "express": "^4.16.3",
-    "faker": "^4.1.0",
     "fetch-cookie": "^0.7.0",
     "fetch-ponyfill": "^6.0.2",
     "gql": "^1.1.2",
