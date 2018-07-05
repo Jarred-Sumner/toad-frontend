@@ -153,7 +153,7 @@ interface Conversation {
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
-  user_identity: Identity
+  user_identity: PersonalIdentity
   board: Board
   typing: [Identity]
   expiry_date: DateTime
@@ -165,7 +165,7 @@ type DirectConversation implements Conversation {
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
-  user_identity: Identity
+  user_identity: PersonalIdentity
   board: Board
   typing: [Identity]
   expiry_date: DateTime
@@ -177,7 +177,7 @@ type BoardConversation implements Conversation {
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
-  user_identity: Identity
+  user_identity: PersonalIdentity
   board: Board
   typing: [Identity]
   expiry_date: DateTime
