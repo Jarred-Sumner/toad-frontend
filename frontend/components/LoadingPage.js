@@ -9,6 +9,7 @@ import { defaultProps } from "recompose";
 export class LoadingPage extends React.PureComponent {
   render() {
     const { children } = this.props;
+
     return (
       <Page>
         <div className="LoadingContainer">

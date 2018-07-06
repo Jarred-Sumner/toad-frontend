@@ -143,14 +143,13 @@ export const createApolloSSRClient = ({ headers }) => {
     credentials: "include"
   });
 
-  console.log(headers);
   //   console.log("Reset Apollo Cache");
   // });
 
   return {
     link: httpLink,
-    cache: createCache(),
-    fetchPolicy: "network-only"
+    createCache,
+    fetchPolicy: "cache-and-network"
   };
 };
 
