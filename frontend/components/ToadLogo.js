@@ -1,7 +1,7 @@
 import React from "react";
 
-export default ({ width = "20", height = "19" }) => (
-  <svg width={width} height={height}>
+export default ({ width = "30", height = "30" }) => (
+  <svg width={width} height={height} viewBox="0 0 20 19">
     <defs>
       <linearGradient
         x1="100%"
@@ -10,8 +10,8 @@ export default ({ width = "20", height = "19" }) => (
         y2="36.887%"
         id="ToadLogoGradient"
       >
-        <stop stopColor="rgba(255, 255, 255, 0.75)" offset="0%" />
-        <stop stopColor="rgba(255, 255, 255, 0.45)" offset="100%" />
+        <stop stopColor="rgba(255, 255, 255, 0.9)" offset="0%" />
+        <stop stopColor="rgba(255, 255, 255, 0.8)" offset="100%" />
       </linearGradient>
     </defs>
     <g

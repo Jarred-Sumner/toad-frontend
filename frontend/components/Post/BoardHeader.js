@@ -12,6 +12,10 @@ import { Spacer } from "../Spacer";
 import { Text } from "../Text";
 import { normalizeAnonymousName } from "./Author";
 import { CreatePostForm } from "./CreatePost";
+import ToadLogo from "../ToadLogo";
+import Countdown from "react-countdown-now";
+import moment from "moment";
+import { Link } from "Toads/routes";
 
 const NewPostButton = ({ classes, onPress }) => (
   <Button
@@ -24,11 +28,51 @@ const NewPostButton = ({ classes, onPress }) => (
 );
 
 export const BoardTitle = defaultProps({
-  size: "32px",
+  size: "18px",
   letterSpacing: "0px",
   weight: "normal",
   color: COLORS.white
 })(Text);
+
+export const GreatReset = ({ hours, minutes }) => (
+  <div className="ResetContainer">
+    <div className="TimerBox">
+      <Text size="12px" lineHeight="12px" color="inherit" weight="semiBold">
+        {hours}:{minutes}
+      </Text>
+    </div>
+    <Spacer width={SPACING.small} />
+    <Text weight="bold" color="inherit" size="14px">
+      Great Reset™
+    </Text>
+    <style jsx>{`
+      .TimerBox {
+        padding: ${SPACING.xsmall}px ${SPACING.small}px;
+        border: 1px solid ${COLORS.white};
+        display: flex;
+        align-items: center;
+        border-radius: 2px;
+      }
+
+      .TimerBox :global(.Text) {
+        height: 12px;
+        display: flex;
+      }
+
+      .ResetContainer {
+        display: flex;
+        color: white;
+        align-items: center;
+      }
+    `}</style>
+  </div>
+);
+
+export const GreatResetCountdown = defaultProps({
+  intervalDelay: 60000,
+  daysInHours: true,
+  renderer: GreatReset
+})(Countdown);
 
 export class BoardHeader extends React.PureComponent {
   render() {
@@ -71,23 +115,44 @@ export class BoardHeader extends React.PureComponent {
                 </Typist>
               </BoardTitle>
             </div>
-            <Spacer height={SPACING.large} />
-            <div className="OnlineNowBar">
-              <NewPostButton
-                pressed={isCreatePostVisible}
-                onPress={showCreatePost}
-              />
-              {isCreatePostVisible && (
-                <CreatePostForm
-                  boardId={id}
-                  identity={board.identity}
-                  dropZoneRef={dropZoneRef}
-                  colorScheme={colorScheme}
-                  onDismiss={hideCreatePost}
+
+            <div className="HeaderContentRow">
+              <div className="OnlineNowBar">
+                <Link route="board" params={{ board: board.id }}>
+                  <a>
+                    <ToadLogo />
+                  </a>
+                </Link>
+
+                <Spacer width={SPACING.medium} />
+                <NewPostButton
+                  pressed={isCreatePostVisible}
+                  onPress={showCreatePost}
                 />
-              )}
-              <Spacer width={SPACING.normal} />
-              <BoardPresence boardID={id} onlineCount={activity.active_count} />
+                <Spacer width={SPACING.normal} />
+                {isCreatePostVisible && (
+                  <CreatePostForm
+                    boardId={id}
+                    identity={board.identity}
+                    dropZoneRef={dropZoneRef}
+                    colorScheme={colorScheme}
+                    onDismiss={hideCreatePost}
+                  />
+                )}
+                <BoardPresence
+                  boardID={id}
+                  onlineCount={activity.active_count}
+                />
+
+                <Spacer width={SPACING.medium} />
+
+                <GreatResetCountdown
+                  date={moment()
+                    .add(1, "day")
+                    .startOf("day")
+                    .toDate()}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -108,8 +173,8 @@ export class BoardHeader extends React.PureComponent {
           .HeaderBackground {
             padding-left: ${SPACING.huge}px;
             padding-right: ${SPACING.huge}px;
-            padding-top: ${SPACING.large}px;
-            padding-bottom: ${SPACING.large}px;
+            padding-top: ${SPACING.normal}px;
+            padding-bottom: ${SPACING.normal}px;
           }
 
           .HeaderBackground {
@@ -143,6 +208,10 @@ export class BoardHeader extends React.PureComponent {
 
           .HeaderContent {
             color: ${COLORS.white};
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            width: 100%;
           }
 
           .HeaderContentRow {

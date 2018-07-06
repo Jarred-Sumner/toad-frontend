@@ -57,7 +57,7 @@ export class Button extends React.PureComponent {
           .Button {
             display: flex;
             align-self: flex-start;
-            padding: ${SPACING.ten}px ${SPACING.normal}px;
+            padding: ${SPACING.small}px ${SPACING.normal}px;
             align-items: center;
             justify-content: center;
             transition: opacity 0.05s linear;
