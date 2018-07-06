@@ -56,43 +56,42 @@ class ViewThreadPage extends React.Component {
   }
 }
 
-export const ViewThreadPageContainer = compose(
-  withApollo,
-  withRouter
-)(({ url, ...otherProps }) => {
-  return (
-    <Query
-      notifyOnNetworkStatusChange
-      fetchPolicy="cache-and-network"
-      query={Queries.ViewBoard}
-      variables={{ id: url.query.board }}
-    >
-      {({ data = null, networkStatus }) => {
-        const board = _.get(data, "Board");
-        if (!board && isInitialLoading(networkStatus)) {
-          return <LoadingPage>Toading /{url.query.board}/...</LoadingPage>;
-        } else if (!board && isError(networkStatus)) {
-          return <ErrorPage />;
-        } else if (board) {
-          return (
-            <ViewThreadPage
-              {...otherProps}
-              board={board}
-              identity={board.identity}
-              threadID={url.query.id}
-              onDismissCommentForm={this.handleDismissNewComment}
-              showCommentForm={!!url.query.r}
-              colorScheme={board.color_scheme}
-              initialFocus={url.query.h}
-              networkStatus={networkStatus}
-            />
-          );
-        } else {
-          return <ErrorPage>I CANT FIND {url.query.board}!</ErrorPage>;
-        }
-      }}
-    </Query>
-  );
-});
+export const ViewThreadPageContainer = withApollo(
+  ({ url: { query }, ...otherProps }) => {
+    return (
+      <Query
+        notifyOnNetworkStatusChange
+        fetchPolicy="cache-and-network"
+        query={Queries.ViewBoard}
+        variables={{ id: query.board }}
+      >
+        {({ data = null, networkStatus }) => {
+          const board = _.get(data, "Board");
+          if (!board && isInitialLoading(networkStatus)) {
+            return <LoadingPage>Toading /{query.board}/...</LoadingPage>;
+          } else if (!board && isError(networkStatus)) {
+            return <ErrorPage />;
+          } else if (board) {
+            return (
+              <ViewThreadPage
+                {...otherProps}
+                board={board}
+                identity={board.identity}
+                threadID={query.id}
+                onDismissCommentForm={this.handleDismissNewComment}
+                showCommentForm={!!query.r}
+                colorScheme={board.color_scheme}
+                initialFocus={query.h}
+                networkStatus={networkStatus}
+              />
+            );
+          } else {
+            return <ErrorPage>I CANT FIND {query.board}!</ErrorPage>;
+          }
+        }}
+      </Query>
+    );
+  }
+);
 
 export default ViewThreadPageContainer;

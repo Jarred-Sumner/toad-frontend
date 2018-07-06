@@ -10,6 +10,8 @@ const handler = routes.getRequestHandler(app);
 const path = require("path");
 const Raven = require("raven");
 const requestIp = require("request-ip");
+const cookieParser = require("cookie-parser");
+const fetch = require("node-fetch");
 
 Raven.config(config.SENTRY_URL).install();
 
@@ -22,6 +24,49 @@ app.prepare().then(() => {
   const server = express();
   server.use("/static", express.static(path.join(__dirname, ".next/static")));
   server.use(requestIp.mw());
+  server.use(cookieParser());
+  server.use((req, res, next) => {
+    if (!req.headers["accept"] || !req.headers["accept"].includes("html")) {
+      next();
+      return;
+    }
+
+    const sessionCookie = req.cookies["toads_session"];
+
+    if (!sessionCookie) {
+      fetch(config.BASE_HOSTNAME + "/session", {
+        method: "POST",
+        credentials: "include"
+      })
+        .then(response => response.json())
+        .then(json => {
+          if (json.toads_session) {
+            return json.toads_session;
+          } else {
+            return null;
+          }
+        })
+        .then(
+          sessionCookie => {
+            res.cookie("toads_session", sessionCookie, {
+              expires: new Date(
+                new Date().setFullYear(new Date().getFullYear() + 1)
+              ),
+              httpOnly: true,
+              domain: config.isProduction()
+                ? `.${config.BASE_DOMAIN}`
+                : undefined,
+              secure: config.isProduction()
+            });
+            req.headers["Cookie"] = "toads_session=" + sessionCookie;
+            next();
+          },
+          () => next()
+        );
+    } else {
+      next();
+    }
+  });
   server.use(handler);
 
   server.listen(PORT, err => {

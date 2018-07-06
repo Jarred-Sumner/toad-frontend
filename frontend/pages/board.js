@@ -70,44 +70,43 @@ class ViewBoardPage extends React.Component {
   }
 }
 
-export const ViewBoardPageContainer = compose(
-  withApollo,
-  withRouter
-)(({ url, ...otherProps }) => {
-  // Ensure page is between MIN_PAGE and MAX_PAGE. If you try to go to page 9999, it'll just make it 10, and if you try to go < page 1, it'll just make it 1.
-  const page = Math.min(
-    Math.max(parseInt(url.query.p || MIN_PAGE, 10), MIN_PAGE),
-    MAX_PAGE
-  );
-  return (
-    <Query
-      notifyOnNetworkStatusChange
-      fetchPolicy="cache-and-network"
-      query={Queries.ViewBoard}
-      variables={{ id: url.query.board }}
-    >
-      {({ data = null, networkStatus }) => {
-        const board = data ? _.get(data, "Board") : null;
-        if (!board && isInitialLoading(networkStatus)) {
-          return <LoadingPage>Toading /{url.query.board}/...</LoadingPage>;
-        } else if (!board && isError(networkStatus)) {
-          return <ErrorPage />;
-        } else if (board) {
-          return (
-            <ViewBoardPage
-              {...otherProps}
-              board={board}
-              identity={board.identity}
-              page={page}
-              networkStatus={networkStatus}
-            />
-          );
-        } else {
-          return <ErrorPage>Four Oh Four.</ErrorPage>;
-        }
-      }}
-    </Query>
-  );
-});
+export const ViewBoardPageContainer = withApollo(
+  ({ url: { query, pathname }, ...otherProps }) => {
+    // Ensure page is between MIN_PAGE and MAX_PAGE. If you try to go to page 9999, it'll just make it 10, and if you try to go < page 1, it'll just make it 1.
+    const page = Math.min(
+      Math.max(parseInt(query.p || MIN_PAGE, 10), MIN_PAGE),
+      MAX_PAGE
+    );
+    return (
+      <Query
+        notifyOnNetworkStatusChange
+        fetchPolicy="cache-and-network"
+        query={Queries.ViewBoard}
+        variables={{ id: query.board }}
+      >
+        {({ data = null, networkStatus }) => {
+          const board = data ? _.get(data, "Board") : null;
+          if (!board && isInitialLoading(networkStatus)) {
+            return <LoadingPage>Toading /{query.board}/...</LoadingPage>;
+          } else if (!board && isError(networkStatus)) {
+            return <ErrorPage />;
+          } else if (board) {
+            return (
+              <ViewBoardPage
+                {...otherProps}
+                board={board}
+                identity={board.identity}
+                page={page}
+                networkStatus={networkStatus}
+              />
+            );
+          } else {
+            return <ErrorPage>Four Oh Four.</ErrorPage>;
+          }
+        }}
+      </Query>
+    );
+  }
+);
 
 export default ViewBoardPageContainer;

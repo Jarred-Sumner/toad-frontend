@@ -25,52 +25,22 @@ import {
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import introspectionQueryResultData from "Toads/fragmentTypes.json";
+import _ from "lodash";
+import { HttpLink } from "apollo-link-http";
 
 let cookieJar;
-let wsLink;
 
 let defaultFetchHeaders = {};
-const { fetch: rawFetch } = fetchPonyfill();
+const { fetch } = fetchPonyfill();
 
-let fetch;
-if (typeof window === "undefined") {
-  const toughCookie = require("tough-cookie");
-  cookieJar = new toughCookie.CookieJar();
-
-  fetch = require("fetch-cookie")(rawFetch, cookieJar);
-} else {
-  fetch = rawFetch;
-
-  wsLink = new WebSocketLink({
-    uri: `${WEBSOCKET_HOSTNAME}/graphql`,
-    options: {
-      reconnect: true
-    }
-  });
-}
-
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) =>
-      console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
-    );
-    const displayMessage = _.first(graphQLErrors).message;
-    Alert.error(null, displayMessage);
-  }
-
-  if (networkError) console.log(`[Network error]: ${networkError}`);
-});
-
-const GRAPHQL_URL = `${BASE_HOSTNAME}/graphql`;
-
-console.log("Initializing Apollo –", GRAPHQL_URL);
-const httpLink = new BatchHttpLink({
-  uri: GRAPHQL_URL,
-  fetch,
-  credentials: "include"
-});
+export const isInitialLoading = networkStatus => networkStatus === 1;
+export const isActivelyRefetching = networkStatus => networkStatus === 4;
+export const isPassivelyRefetching = networkStatus =>
+  networkStatus === 2 || networkStatus === 6;
+export const isFetchingMore = networkStatus => networkStatus === 3;
+export const isReady = networkStatus => networkStatus === 7;
+// Error States
+export const isError = networkStatus => networkStatus === 8;
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData
@@ -148,97 +118,101 @@ const createCache = () => {
   return cache;
 };
 
-// persistor.purge().then(() => {
-//   console.log("Reset Apollo Cache");
-// });
-
-export const isInitialLoading = networkStatus => networkStatus === 1;
-export const isActivelyRefetching = networkStatus => networkStatus === 4;
-export const isPassivelyRefetching = networkStatus =>
-  networkStatus === 2 || networkStatus === 6;
-export const isFetchingMore = networkStatus => networkStatus === 3;
-export const isReady = networkStatus => networkStatus === 7;
-// Error States
-export const isError = networkStatus => networkStatus === 8;
-
-const fetchSessionCookie = async ctx => {
-  const allCookies = cookies(ctx);
-  const sessionCookie = allCookies.toads_session;
-
-  if (sessionCookie) {
-    return sessionCookie;
-  } else {
-    const response = await fetch(BASE_HOSTNAME + "/session", {
-      method: "POST",
-      credentials: "include"
-    });
-
-    const json = await response.json();
-
-    if (json.toads_session) {
-      return json.toads_session;
-    } else {
-      return null;
+export const createApolloSSRClient = ({ headers }) => {
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      graphQLErrors.map(({ message, locations, path }) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+      const displayMessage = _.first(graphQLErrors).message;
+      Alert.error(null, displayMessage);
     }
-  }
+
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
+  const GRAPHQL_URL = `${BASE_HOSTNAME}/graphql`;
+
+  console.log("Initializing Apollo –", GRAPHQL_URL);
+  const httpLink = new BatchHttpLink({
+    uri: GRAPHQL_URL,
+    fetch,
+    headers,
+    credentials: "include"
+  });
+
+  console.log(headers);
+  //   console.log("Reset Apollo Cache");
+  // });
+
+  return {
+    link: httpLink,
+    cache: createCache(),
+    fetchPolicy: "network-only"
+  };
 };
 
-const link =
-  typeof window !== "undefined"
-    ? split(
-        // split based on operation type
-        ({ query }) => {
-          const { kind, operation } = getMainDefinition(query);
-          return kind === "OperationDefinition" && operation === "subscription";
-        },
-        wsLink,
-        httpLink
-      )
-    : httpLink;
+const createApolloWebClient = () => {
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      graphQLErrors.map(({ message, locations, path }) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+      const displayMessage = _.first(graphQLErrors).message;
+      Alert.error(null, displayMessage);
+    }
 
-export const withApollo = Component => {
-  const NewComponent = withData({
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
+  const GRAPHQL_URL = `${BASE_HOSTNAME}/graphql`;
+
+  console.log("Initializing Apollo –", GRAPHQL_URL);
+  const httpLink = new BatchHttpLink({
+    uri: GRAPHQL_URL,
+    fetch,
+    credentials: "include"
+  });
+
+  const link = split(
+    // split based on operation type
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query);
+      return kind === "OperationDefinition" && operation === "subscription";
+    },
+    new WebSocketLink({
+      uri: `${WEBSOCKET_HOSTNAME}/graphql`,
+      options: {
+        reconnect: true
+      }
+    }),
+    httpLink
+  );
+
+  // persistor.purge().then(() => {
+  //   console.log("Reset Apollo Cache");
+  // });
+
+  return {
     link,
     createCache,
     fetchPolicy: "cache-and-network"
-  })(Component);
-
-  const oldInitialProps = NewComponent.getInitialProps;
-
-  NewComponent.getInitialProps = async ctx => {
-    if (ctx.req) {
-      const sessionCookie = await fetchSessionCookie(ctx);
-
-      defaultFetchHeaders = {
-        "User-Agent": ctx.req.headers["user-agent"],
-        "X-Client-IP": ctx.req.clientIp
-      };
-
-      if (sessionCookie) {
-        cookieJar.setCookieSync(
-          `toads_session=${sessionCookie}`,
-          BASE_HOSTNAME
-        );
-
-        ctx.res.cookie("toads_session", sessionCookie, {
-          expires: new Date(
-            new Date().setFullYear(new Date().getFullYear() + 1)
-          ),
-          httpOnly: true,
-          domain: isProduction() ? `.${BASE_DOMAIN}` : undefined,
-          secure: isProduction()
-        });
-      }
-    }
-
-    if (oldInitialProps) {
-      return oldInitialProps(ctx);
-    } else {
-      return {};
-    }
   };
-
-  return NewComponent;
 };
 
+export const configureApolloClient = (opts = {}) => {
+  if (typeof window === "undefined") {
+    return createApolloSSRClient({
+      headers: _.get(opts, "req.headers")
+    });
+  } else {
+    return createApolloWebClient();
+  }
+};
+
+export const withApollo = withData(configureApolloClient);
 export default withApollo;
