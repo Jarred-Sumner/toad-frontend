@@ -36,7 +36,8 @@ app.prepare().then(() => {
     if (!sessionCookie) {
       fetch(config.BASE_HOSTNAME + "/session", {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
+        headers: req.headers
       })
         .then(response => response.json())
         .then(json => {
