@@ -3,7 +3,8 @@ import { isObject } from 'lodash'
 import Models from '../models'
 import * as Utils from '../utils'
 
-export default async (_, { conversation_id, is_typing }, { session }) => {
+export default async (_, { conversation_id, is_typing }, ctx) => {
+  const { session, loaders } = ctx
   const convo = await Models.conversation.findOne({
     include: [
       {
@@ -38,7 +39,7 @@ export default async (_, { conversation_id, is_typing }, { session }) => {
     identity,
   })
 
-  await Utils.subscriptions.conversationActivity(convo)
+  await Utils.subscriptions.conversationActivity(convo, ctx)
 
   return is_typing
 }
