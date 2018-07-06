@@ -10,6 +10,16 @@ export default (sequelize, DataTypes) => {
         defaultValue: 'auto',
         allowNull: false,
       },
+      visibility: {
+        type: DataTypes.ENUM('open', 'minimize', 'dismiss'),
+        defaultValue: 'open',
+        allowNull: false,
+      },
+      toggled_at: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.fn('now'),
+        allowNull: false,
+      },
     },
     { underscored: true }
   )

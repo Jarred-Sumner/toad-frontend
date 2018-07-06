@@ -3,8 +3,11 @@ import { isNull } from 'lodash'
 import { broadcastList } from './activeConversations'
 import Models from '../models'
 
-export default async (_, { presence, conversation_id }, { session }) => {
-  const optInStatus = presence ? 'explicit_opt_in' : 'declined'
+export default async (
+  _,
+  { participation_status, visibility, conversation_id },
+  { session }
+) => {
   const existing = await Models.session_conversations.findOne({
     where: {
       conversation_id,
@@ -12,7 +15,13 @@ export default async (_, { presence, conversation_id }, { session }) => {
     },
   })
   if (existing) {
-    existing.participation_status = optInStatus
+    if (participation_status) {
+      existing.participation_status = participation_status
+    }
+    if (visibility) {
+      existing.visibility = visibility
+      existing.toggled_at = new Date()
+    }
     await existing.save()
   } else {
     const conversation = await Models.conversations.findOne({
@@ -34,12 +43,21 @@ export default async (_, { presence, conversation_id }, { session }) => {
       attributes: ['id'],
     })
 
-    await Models.session_conversations.create({
+    const newSC = {
       conversation_id,
       session_id: session.id,
       identity_id: identity.id,
-      participation_status: optInStatus,
-    })
+    }
+
+    if (participation_status) {
+      newSC.participation_status = participation_status
+    }
+    if (visibility) {
+      newSC.visibility = visibility
+      existing.toggled_at = new Date()
+    }
+
+    await Models.session_conversations.create(newSC)
   }
 
   const usersConversations = await broadcastList(session.id, conversation_id)

@@ -1,36 +1,6 @@
-import { Op } from 'sequelize'
 import { isObject } from 'lodash'
 import { pubsub } from '../resolverDefinition'
 import Models from '../models'
-
-export const getConversations = async sessionId => {
-  const uc = await Models.conversation.findAll({
-    where: {
-      expiry_date: {
-        [Op.gt]: Date.now(),
-      },
-    },
-    include: [
-      {
-        model: Models.session_conversations,
-        attributes: ['participation_status'],
-        where: {
-          session_id: sessionId,
-          participation_status: {
-            [Op.or]: ['explicit_opt_in', 'auto'],
-          },
-        },
-        required: true,
-      },
-    ],
-    raw: true,
-  })
-  const usersConversations = uc.map(c => ({
-    ...c,
-    participation_status: c['session_conversations.participation_status'],
-  }))
-  return usersConversations
-}
 
 export const broadcastList = async (sessionId, conversationId) => {
   const uc = await Models.conversation.findOne({
@@ -38,7 +8,7 @@ export const broadcastList = async (sessionId, conversationId) => {
     include: [
       {
         model: Models.session_conversations,
-        attributes: ['participation_status'],
+        attributes: ['participation_status', 'visibility', 'toggled_at'],
         where: {
           session_id: sessionId,
         },
@@ -51,6 +21,8 @@ export const broadcastList = async (sessionId, conversationId) => {
     return null
   }
   uc.participation_status = uc['session_conversations.participation_status']
+  uc.visibility = uc['session_conversations.visibility']
+  uc.toggled_at = uc['session_conversations.toggled_at']
 
   pubsub.publish(`VisibleConversations-${sessionId}`, {
     VisibleConversations: uc,
@@ -59,4 +31,5 @@ export const broadcastList = async (sessionId, conversationId) => {
 }
 
 // Main resolver function
-export default (_, args, { session }) => getConversations(session.id)
+export default (_, args, { session, loaders }) =>
+  loaders.activeConversations.load(session.id)

@@ -63,7 +63,7 @@ const resolvers = {
     Login: Resolvers.login,
     Attachment: Resolvers.createAttachment,
     Message: Resolvers.message,
-    ConversationPresence: Resolvers.conversationPresence,
+    ConversationState: Resolvers.conversationState,
     ConversationTyping: Resolvers.conversationTyping,
   },
   BoardMutation: {

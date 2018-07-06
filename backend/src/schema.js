@@ -130,14 +130,10 @@ type BoardMutation {
   Activity(visible: Boolean!): BoardActivity
 }
 
-type Mutation {
-  Attachment(mimetype: String!, filename: String!): NewAttachment
-  Board(id:ID!): BoardMutation
-  Session(email_token: String!): String
-  Message(conversation_id: ID!, body: String, attachment_id: ID): Message
-  Login(email: String!): Boolean
-  ConversationPresence(conversation_id: ID!, presence: Boolean!): Conversation
-  ConversationTyping(conversation_id: ID!, is_typing: Boolean!): Boolean
+enum Visibility {
+  open
+  minimize
+  dismiss
 }
 
 enum ParticipationStatus {
@@ -147,10 +143,21 @@ enum ParticipationStatus {
   expired
 }
 
+type Mutation {
+  Attachment(mimetype: String!, filename: String!): NewAttachment
+  Board(id:ID!): BoardMutation
+  Session(email_token: String!): String
+  Message(conversation_id: ID!, body: String, attachment_id: ID): Message
+  Login(email: String!): Boolean
+  ConversationState(conversation_id: ID!, participation_status: ParticipationStatus, visibility: Visibility): Conversation
+  ConversationTyping(conversation_id: ID!, is_typing: Boolean!): Boolean
+}
 
 interface Conversation {
   id: ID!
   participation_status: ParticipationStatus
+  visibility: Visibility
+  toggled_at: DateTime
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
@@ -163,6 +170,8 @@ interface Conversation {
 type DirectConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
+  visibility: Visibility
+  toggled_at: DateTime
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
@@ -175,6 +184,8 @@ type DirectConversation implements Conversation {
 type BoardConversation implements Conversation {
   id: ID!
   participation_status: ParticipationStatus
+  visibility: Visibility
+  toggled_at: DateTime
   messages(limit: Int, offset: Int): [Message]
   active_participants: JSON
   participants: [Identity]
