@@ -3,6 +3,7 @@ import Typist from "react-typist";
 import "react-typist/dist/Typist";
 import { defaultProps } from "recompose";
 import { COLORS } from "../../lib/colors";
+import { Settings } from "../../lib/Settings";
 import { SPACING } from "../../lib/spacing";
 import { Button } from "../Button";
 import { BoardPresence } from "../Chat/BoardPresence";
@@ -75,6 +76,14 @@ export const GreatResetCountdown = defaultProps({
 })(Countdown);
 
 export class BoardHeader extends React.PureComponent {
+  state = {
+    showTyping: null
+  };
+  async componentDidMount() {
+    const { identity } = this.props;
+    const newIdentity = await Settings.setIdentity(identity.id);
+    this.setState({ showTyping: newIdentity });
+  }
   render() {
     const {
       board,
@@ -87,12 +96,14 @@ export class BoardHeader extends React.PureComponent {
     if (!board) {
       return null;
     }
+    const { showTyping } = this.state;
 
     const {
       online_count: onlineCount = 12,
       color_scheme: colorScheme,
       id,
       label,
+      expires_at,
       activity
     } = board;
 
@@ -106,13 +117,23 @@ export class BoardHeader extends React.PureComponent {
           <div className="HeaderContent HeaderContent--left">
             <div className="HeaderContentRow">
               <BoardTitle>
-                <Typist hidewhenDoneDelay={100} cursor={{ hideWhenDone: true }}>
-                  <span>Today, you are</span>
-                  &nbsp;
+                {showTyping === true && (
+                  <Typist
+                    hidewhenDoneDelay={100}
+                    cursor={{ hideWhenDone: true }}
+                  >
+                    <span>Today, you are</span>
+                    &nbsp;
+                    <span className="BoldText">
+                      {normalizeAnonymousName(identity.name)}
+                    </span>
+                  </Typist>
+                )}
+                {showTyping === false && (
                   <span className="BoldText">
                     {normalizeAnonymousName(identity.name)}
                   </span>
-                </Typist>
+                )}
               </BoardTitle>
             </div>
 
@@ -146,12 +167,7 @@ export class BoardHeader extends React.PureComponent {
 
                 <Spacer width={SPACING.medium} />
 
-                <GreatResetCountdown
-                  date={moment()
-                    .add(1, "day")
-                    .startOf("day")
-                    .toDate()}
-                />
+                <GreatResetCountdown date={moment(expires_at).toDate()} />
               </div>
             </div>
           </div>

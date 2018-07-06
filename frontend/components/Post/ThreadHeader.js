@@ -2,6 +2,7 @@ import React from "react";
 import Typist from "react-typist";
 import "react-typist/dist/Typist";
 import { defaultProps } from "recompose";
+import Settings from "../../lib/Settings";
 import { COLORS } from "../../lib/colors";
 import { SPACING } from "../../lib/spacing";
 import { Button } from "../Button";
@@ -75,9 +76,20 @@ export const GreatResetCountdown = defaultProps({
 })(Countdown);
 
 export class ThreadHeader extends React.PureComponent {
+  state = {
+    showTyping: null
+  };
+
+  async componentDidMount() {
+    const { identity } = this.props;
+    const newIdentity = await Settings.setIdentity(identity.id);
+    console.log("newid", newIdentity);
+    this.setState({ showTyping: newIdentity });
+  }
+
   render() {
     const { board, onClick, identity } = this.props;
-
+    const { showTyping } = this.state;
     if (!board) {
       return null;
     }
@@ -100,13 +112,23 @@ export class ThreadHeader extends React.PureComponent {
           <div className="HeaderContent HeaderContent--left">
             <div className="HeaderContentRow">
               <BoardTitle>
-                <Typist hidewhenDoneDelay={100} cursor={{ hideWhenDone: true }}>
-                  <span>Today, you are</span>
-                  &nbsp;
+                {showTyping === true && (
+                  <Typist
+                    hidewhenDoneDelay={100}
+                    cursor={{ hideWhenDone: true }}
+                  >
+                    <span>Today, you are</span>
+                    &nbsp;
+                    <span className="BoldText">
+                      {normalizeAnonymousName(identity.name)}
+                    </span>
+                  </Typist>
+                )}
+                {showTyping === false && (
                   <span className="BoldText">
                     {normalizeAnonymousName(identity.name)}
                   </span>
-                </Typist>
+                )}
               </BoardTitle>
             </div>
 

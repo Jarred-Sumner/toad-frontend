@@ -94,6 +94,7 @@ export const Queries = {
       Board(id: $id) {
         id
         label
+        expires_at
         color_scheme
         activity {
           ...ActivityFragment

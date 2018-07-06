@@ -1,7 +1,8 @@
 import localForage from "localforage";
 
 const KEYS = {
-  collapse_conversation: "collapse_conversation"
+  collapse_conversation: "collapse_conversation",
+  identity: "identity"
 };
 
 const key = (namespace, ...keys) =>
@@ -21,6 +22,14 @@ export class Settings {
       key(conversationID, KEYS.collapse_conversation),
       String(collapseConversation)
     );
+  }
+
+  static async setIdentity(identityID) {
+    // returns if changed
+    const idkey = key("user", KEYS.identity);
+    const changed = (await localForage.getItem(idkey)) !== identityID;
+    await localForage.setItem(idkey, String(identityID));
+    return changed;
   }
 }
 
