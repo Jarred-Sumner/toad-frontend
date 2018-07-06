@@ -56,7 +56,7 @@ spec:
             secretKeyRef:
               key: AWS_SECRET_ACCESS_KEY
               name: aws-email
-        image: gcr.io/toads-208000/toads-backend:7677068b55089d16d52a6241fcc4fbd439882e58
+        image: gcr.io/toads-208000/toads-backend:ab24be17234ac1a7fb2cb198dfa45512bb989e4e
         imagePullPolicy: Always
         name: backend
         volumeMounts:
