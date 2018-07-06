@@ -83,7 +83,6 @@ export class ThreadHeader extends React.PureComponent {
   async componentDidMount() {
     const { identity } = this.props;
     const newIdentity = await Settings.setIdentity(identity.id);
-    console.log("newid", newIdentity);
     this.setState({ showTyping: newIdentity });
   }
 
