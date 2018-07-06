@@ -7,7 +7,7 @@ export default ids =>
     const uc = await Models.conversation.findAll({
       where: {
         expiry_date: {
-          [Op.gt]: Date.now(),
+          [Op.gt]: Models.sequelize.fn('now'),
         },
       },
       include: [

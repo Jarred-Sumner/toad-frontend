@@ -1,10 +1,16 @@
+import { Op } from 'sequelize'
 import { isObject } from 'lodash'
 import { pubsub } from '../resolverDefinition'
 import Models from '../models'
 
 export const broadcastList = async (sessionId, conversationId) => {
   const uc = await Models.conversation.findOne({
-    where: { id: conversationId },
+    where: {
+      id: conversationId,
+      expiry_date: {
+        [Op.gt]: Models.sequelize.fn('now'),
+      },
+    },
     include: [
       {
         model: Models.session_conversations,
