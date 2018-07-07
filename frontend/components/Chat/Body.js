@@ -18,23 +18,23 @@ export const parseBody = _.memoize(string => {
 
 const LineBreak = defaultProps({ height: SPACING.small })(Spacer);
 const EmbedLine = defaultProps({
-  size: "12px",
+  size: "0.8rem",
   underline: true,
   className: "BodyText BodyText--EmbedLine"
 })(Text);
 const QuoteLine = defaultProps({
-  size: "12px",
+  size: "0.8rem",
   color: COLORS.greentext,
   className: "BodyText BodyText--QuoteLine"
 })(Text);
 const NormalLine = defaultProps({
-  size: "12px",
-  lineHeight: "16px",
+  size: "0.8rem",
+  lineHeight: "1rem",
   color: "inherit",
   className: "BodyText BodyText--NormalLine"
 })(Text);
 export const EmojiLine = defaultProps({
-  size: "36px",
+  size: "2.5rem",
   lineHeight: "unset",
   color: COLORS.black,
   className: "BodyText BodyText--EmojiLine"

@@ -9,7 +9,7 @@ import { GRADIENT_COLORS } from "../Gradient";
 import { Text } from "../Text";
 import moment from "moment";
 import _ from "lodash";
-import { Photo, calculateDimensions } from "../Photo";
+import Photo, { calculateDimensions } from "../Photo";
 import { convertEmojiToNative } from "lib/emoji";
 
 export class MessageGroup extends React.PureComponent {

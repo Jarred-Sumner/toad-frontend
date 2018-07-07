@@ -16,34 +16,34 @@ const parseBody = _.memoize(_parseBody);
 
 const LineBreak = defaultProps({ height: SPACING.small })(Spacer);
 const TitleLine = defaultProps({
-  size: "18px",
-  lineHeight: "24px",
+  size: "1.4rem",
+  lineHeight: "1.6rem",
   weight: "semiBold",
   color: COLORS.black,
   className: "BodyText BodyText--TitleLine"
 })(Text);
 const EmbedLineText = defaultProps({
-  size: "14px",
-  lineHeight: "19px",
+  size: "1rem",
+  lineHeight: "1.5rem",
   underline: false,
   weight: "semiBold",
   className: "BodyText BodyText--EmbedLine"
 })(Text);
 const QuoteLine = defaultProps({
-  size: "14px",
-  lineHeight: "19px",
+  size: "1rem",
+  lineHeight: "1.5rem",
   color: COLORS.greentext,
   className: "BodyText BodyText--QuoteLine"
 })(Text);
 const EmojiLine = defaultProps({
-  size: "36px",
+  size: "2.5rem",
   lineHeight: "unset",
   color: COLORS.black,
   className: "BodyText BodyText--EmojiLine"
 })(Text);
 const NormalLine = defaultProps({
-  size: "14px",
-  lineHeight: "19px",
+  size: "1rem",
+  lineHeight: "1.5rem",
   color: COLORS.black,
   className: "BodyText BodyText--NormalLine"
 })(Text);

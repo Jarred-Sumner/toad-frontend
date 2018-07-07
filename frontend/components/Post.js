@@ -6,7 +6,7 @@ import { SPACING } from "../lib/spacing";
 import { Body } from "./Post/Body";
 import Photo, { calculateDimensions, PreviewablePhoto } from "./Photo";
 import { Spacer } from "./Spacer";
-import { MEDIUM_BEAKPOINT } from "../lib/mobile";
+import { MEDIUM_BEAKPOINT, MOBILE_BEAKPOINT } from "../lib/mobile";
 import { Comment } from "./Post/Comment";
 import { COLORS } from "../lib/colors";
 import { GRADIENT_COLORS } from "./Gradient";
@@ -98,53 +98,59 @@ export const PostHeader = ({
           </Text>
         </a>
       </Link>
-      <Spacer width={SPACING.small} />
-      <Text color={COLORS.medium_white}>|</Text>
-      <Spacer width={SPACING.small} />
       <div className="Group">
-        <Icon
-          data-tip="Report"
-          icon={ICONS.flag}
-          size="xs"
-          color={COLORS.gray}
-        />
-        <Spacer width={SPACING.small} />
-        <CopyToClipboard
-          onCopy={copiedToClipboard}
-          text={buildPostURL(boardId, threadId, buildPostDOMID(post.id))}
-        >
+        <div className="Group DesktopOnly">
+          <Spacer width={SPACING.small} />
+          <Text color={COLORS.medium_white}>|</Text>
+          <Spacer width={SPACING.small} />
+
           <Icon
-            data-tip="Copy link"
-            icon={ICONS.link}
+            data-tip="Report"
+            icon={ICONS.flag}
             size="xs"
             color={COLORS.gray}
           />
-        </CopyToClipboard>
+          <Spacer width={SPACING.small} />
+          <CopyToClipboard
+            onCopy={copiedToClipboard}
+            text={buildPostURL(boardId, threadId, buildPostDOMID(post.id))}
+          >
+            <Icon
+              data-tip="Copy link"
+              icon={ICONS.link}
+              size="xs"
+              color={COLORS.gray}
+            />
+          </CopyToClipboard>
+        </div>
+
+        <Spacer width={SPACING.small} />
+        <Text color={COLORS.medium_white}>|</Text>
+
+        <Spacer width={SPACING.small} />
+
+        <Link
+          route="thread"
+          shallow={!minimized}
+          replace={!minimized}
+          scroll={minimized}
+          params={{
+            board: String(boardId),
+            id: String(threadId),
+            r: String(post.id)
+          }}
+        >
+          <a>
+            <div className="Group" onClick={onClick}>
+              <Text size="inherit" weight="semiBold" color="inherit">
+                Reply
+              </Text>
+              <Spacer width={SPACING.small} />
+              <Icon icon={ICONS.chevronRight} size="xs" color="inherit" />
+            </div>
+          </a>
+        </Link>
       </div>
-      <Spacer width={SPACING.small} />
-      <Text color={COLORS.medium_white}>|</Text>
-      <Spacer width={SPACING.small} />
-      <Link
-        route="thread"
-        shallow={!minimized}
-        replace={!minimized}
-        scroll={minimized}
-        params={{
-          board: String(boardId),
-          id: String(threadId),
-          r: String(post.id)
-        }}
-      >
-        <a>
-          <div className="Group" onClick={onClick}>
-            <Text size="inherit" weight="semiBold" color="inherit">
-              Reply
-            </Text>
-            <Spacer width={SPACING.small} />
-            <Icon icon={ICONS.chevronRight} size="xs" color="inherit" />
-          </div>
-        </a>
-      </Link>
 
       <style jsx>{`
         .Header {
@@ -176,6 +182,7 @@ export const PostHeader = ({
           display: flex;
           cursor: pointer;
           align-items: center;
+          font-size: 14px;
         }
       `}</style>
     </div>
@@ -311,16 +318,18 @@ export class Post extends React.PureComponent {
           )}
 
           <div className="ContentContainer">
-            <PostHeader
-              onClick={this.handleReplyToPost}
-              boardId={board.id}
-              colorScheme={colorScheme}
-              currentIdentityId={identity.id}
-              post={post}
-              minimized={minimized}
-              threadId={post.id}
-            />
-            <Spacer height={SPACING.small} />
+            <div className="PostHeaderContainer">
+              <PostHeader
+                onClick={this.handleReplyToPost}
+                boardId={board.id}
+                colorScheme={colorScheme}
+                currentIdentityId={identity.id}
+                post={post}
+                minimized={minimized}
+                threadId={post.id}
+              />
+              <Spacer white height={SPACING.small} />
+            </div>
             <div className="BodyContainer">
               <Body
                 colorScheme={colorScheme}
@@ -330,29 +339,33 @@ export class Post extends React.PureComponent {
               >
                 {post.body}
               </Body>
+
+              {post.reply_count > 0 &&
+                minimized && (
+                  <React.Fragment>
+                    <Spacer height={SPACING.small} />
+
+                    <div className="Actions">
+                      <Link
+                        route="thread"
+                        params={{ board: board.id, id: post.id }}
+                      >
+                        <a>
+                          <Text weight="semiBold" color={color}>
+                            {post.reply_count} replies
+                          </Text>
+                        </a>
+                      </Link>
+                    </div>
+
+                    <Spacer height={SPACING.small} />
+                  </React.Fragment>
+                )}
+
+              <Spacer height={SPACING.normal} />
             </div>
 
-            {post.reply_count > 0 &&
-              minimized && (
-                <React.Fragment>
-                  <Spacer height={SPACING.small} />
-
-                  <div className="Actions">
-                    <Link
-                      route="thread"
-                      params={{ board: board.id, id: post.id }}
-                    >
-                      <a>
-                        <Text weight="semiBold" color={color}>
-                          {post.reply_count} replies
-                        </Text>
-                      </a>
-                    </Link>
-                  </div>
-                </React.Fragment>
-              )}
-
-            <Spacer height={SPACING.normal} />
+            <Spacer height={SPACING.small} />
 
             {comments.map((comment, index) => (
               <React.Fragment key={comment.id}>
@@ -386,9 +399,19 @@ export class Post extends React.PureComponent {
             position: relative;
           }
 
+          .Group {
+            display: flex;
+            align-items: center;
+          }
+
+          .Actions {
+            width: auto;
+            color: ${COLORS[GRADIENT_COLORS[colorScheme]]};
+          }
+
           .ContentContainer {
             display: block;
-            width: 100%;
+            width: auto;
             word-wrap: break-word;
             max-width: 1024px;
           }
@@ -397,9 +420,38 @@ export class Post extends React.PureComponent {
             flex-direction: column;
           }
 
-          @media (max-width: ${MEDIUM_BEAKPOINT}px) {
+          @media (max-width: ${MOBILE_BEAKPOINT}px) {
             .Post {
               max-width: 100%;
+            }
+
+            .PhotoContainer {
+              margin-right: 0;
+              margin-bottom: ${SPACING.normal}px;
+              width: 100%;
+            }
+
+            .PostHeaderContainer,
+            .Actions,
+            .BodyContainer {
+              background-color: ${COLORS.white};
+            }
+
+            .ContentContainer {
+              padding: 0;
+              max-width: 100%;
+            }
+
+            .Group,
+            .Actions {
+              justify-content: flex-end;
+              text-align: right;
+            }
+
+            .PostHeaderContainer,
+            .Actions,
+            .BodyContainer {
+              padding: 0 ${SPACING.normal}px;
             }
           }
         `}</style>

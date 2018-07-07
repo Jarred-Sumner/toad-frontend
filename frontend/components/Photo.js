@@ -10,8 +10,15 @@ import { SPACING } from "lib/spacing";
 import { DownloadLink } from "./DownloadLink";
 import { ImagePreviewContext } from "./ImagePreview";
 import { pure } from "recompose";
+import { MOBILE_BEAKPOINT } from "lib/mobile";
+import { MediaQuery } from "./MediaQueries";
 
 const DEFAULT_SIZE = "126px";
+
+export const SCREEN_WIDTH =
+  typeof window !== "undefined" ? window.outerWidth : null;
+export const SCREEN_HEIGHT =
+  typeof window !== "undefined" ? window.outerHeight : null;
 
 const SUPPORTED_RESIZE_MIMETYPES = [
   "image/png",
@@ -128,7 +135,7 @@ export const buildPhotoSrcSet = ({ url, mimetype, width, height, size }) => {
   }
 };
 
-export const Photo = pure(
+export const _Photo = pure(
   ({
     onClick,
     width,
@@ -137,6 +144,7 @@ export const Photo = pure(
     photo,
     circle,
     minHeight,
+    isMobile,
     ...otherProps
   }) => {
     const { url, mimetype } = photo || {};
@@ -148,7 +156,8 @@ export const Photo = pure(
         {...otherProps}
         className={classNames("photo", {
           "photo--hoverable": !!onClick,
-          "photo--circle": !!circle
+          "photo--circle": !!circle,
+          "photo--mobile": !!isMobile
         })}
         onClick={onClick}
       >
@@ -238,6 +247,7 @@ export const Photo = pure(
             display: inline-block;
             border-radius: 2px;
             object-fit: contain;
+            object-position: 0 0;
             transition: transform 0.1s linear;
           }
 
@@ -249,15 +259,16 @@ export const Photo = pure(
             transform: scale(1.05, 1.05);
           }
 
-          @media (max-width: 500px) {
-            .photo--hoverable img:hover {
-              transform: scale(1);
+          @media (max-width: ${MOBILE_BEAKPOINT}px) {
+            .photo img,
+            .photo {
+              max-width: 100%;
             }
-          }
 
-          .photo--circle img {
-            border-radius: 50%;
-            box-shadow: none;
+            .photo img {
+              width: 100%;
+              padding: 0 ${SPACING.normal}px;
+            }
           }
         `}</style>
       </div>
@@ -265,4 +276,5 @@ export const Photo = pure(
   }
 );
 
+export const Photo = MediaQuery(_Photo);
 export default Photo;

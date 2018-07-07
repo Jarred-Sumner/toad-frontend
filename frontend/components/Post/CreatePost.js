@@ -167,6 +167,7 @@ class _CreatePostForm extends React.PureComponent {
             width: min-content;
             position: absolute;
             top: 100%;
+            text-shadow: 0;
             z-index: 999;
             margin-top: -6px;
             border-radius: 4px;

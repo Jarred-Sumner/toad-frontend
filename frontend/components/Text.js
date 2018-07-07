@@ -6,7 +6,7 @@ const TextComponent = ({
   type,
   className,
   children,
-  size = "14px",
+  size = "1rem",
   color = COLORS.black,
   componentType = "div",
   weight = "regular",

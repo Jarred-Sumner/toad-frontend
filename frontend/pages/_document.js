@@ -3,6 +3,7 @@ import Document, { Head, Main, NextScript } from "next/document";
 import Raven from "raven-js";
 import { SENTRY_URL } from "Toads/config";
 import PageHead from "../components/head";
+import { MOBILE_BEAKPOINT } from "lib/mobile";
 
 if (typeof window !== "undefined") {
   window.Promise = require("bluebird");
@@ -20,7 +21,10 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <meta charSet="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"
+          />
           <style key="root-style" jsx global>{`
             html,
             body,
@@ -165,6 +169,7 @@ export default class MyDocument extends Document {
             html,
             body {
               -webkit-tap-highlight-color: transparent;
+              font-size: 14px;
             }
 
             html,
@@ -176,6 +181,25 @@ export default class MyDocument extends Document {
 
             a {
               text-decoration: none;
+            }
+
+            .MobileOnly {
+              display: none !important;
+            }
+
+            @media (max-width: ${MOBILE_BEAKPOINT}px) {
+              .DesktopOnly {
+                display: none !important;
+              }
+
+              html,
+              body {
+                font-size: 16px;
+              }
+
+              .MobileOnly {
+                display: flex !important;
+              }
             }
           `}</style>
 

@@ -14,12 +14,13 @@ import { CreateCommentForm } from "./CreateComment";
 import { buildPostDOMID } from "lib/routeHelpers";
 import { Router } from "Toads/routes";
 import requestIdleCallback from "ric-shim";
+import { MOBILE_BEAKPOINT } from "lib/mobile";
 
 class ViewThread extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showBottomCommentForm: props.thread.reply_count > 7
+      showBottomCommentForm: true
     };
   }
 
@@ -153,6 +154,13 @@ class ViewThread extends React.PureComponent {
           .PageWrapper {
             display: block;
             padding-left: ${SPACING.huge}px;
+          }
+
+          @media (max-width: ${MOBILE_BEAKPOINT}px) {
+            .PageWrapper {
+              padding-left: 0;
+              padding-right: 0;
+            }
           }
         `}</style>
       </div>

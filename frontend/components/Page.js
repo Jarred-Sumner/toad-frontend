@@ -11,6 +11,8 @@ import { Router } from "Toads/routes";
 import { GITHUB_REPO_URL } from "config";
 import { ImagePreviewProvider, ImagePreviewViewer } from "./ImagePreview";
 import dynamic from "next/dynamic";
+import moment from "moment";
+import { GreatResetCountdown } from "./PageHeader";
 
 const DesktopChat = dynamic(import("./Chat/DesktopChat"), {
   ssr: false
@@ -47,6 +49,17 @@ export class Page extends React.Component {
         </ImagePreviewProvider>
 
         <footer>
+          {board && (
+            <div className="MobileOnly">
+              <Spacer height={SPACING.normal} />
+              <GreatResetCountdown
+                color={COLORS.gray}
+                date={moment(board.expires_at).toDate()}
+              />
+              <Spacer height={SPACING.normal} />
+            </div>
+          )}
+
           <div className="FooterContent">
             <Text size="12px" color={COLORS.medium_white}>
               Toads is{" "}
@@ -107,6 +120,10 @@ export class Page extends React.Component {
             overflow: hidden;
           }
 
+          footer .MobileOnly {
+            flex-direction: column;
+          }
+
           footer {
             flex-direction: column;
           }
@@ -115,6 +132,7 @@ export class Page extends React.Component {
             footer {
               padding: ${SPACING.small}px;
               align-items: center;
+              margin-bottom: ${SPACING.large}px;
             }
           }
         `}</style>

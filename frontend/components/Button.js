@@ -5,6 +5,7 @@ import { GRADIENT_COLORS } from "./Gradient";
 import { Text } from "./Text";
 import { COLORS } from "../lib/colors";
 import { Spacer } from "./Spacer";
+import { MOBILE_BEAKPOINT } from "lib/mobile";
 
 export class Button extends React.PureComponent {
   render() {
@@ -127,6 +128,12 @@ export class Button extends React.PureComponent {
 
           .Button--disabled {
             cursor: disabled;
+          }
+
+          @media (max-width: ${MOBILE_BEAKPOINT}px) {
+            .Button {
+              padding: ${SPACING.small}px ${SPACING.small}px;
+            }
           }
         `}</style>
       </div>

@@ -7,6 +7,7 @@ import { isInitialLoading } from "../ApolloProvider";
 import { Post } from "../Post";
 import { Spacer } from "../Spacer";
 import { Spinner } from "../Spinner";
+import { MOBILE_BEAKPOINT } from "lib/mobile";
 
 class ListThreads extends React.PureComponent {
   static defaultProps = {
@@ -56,6 +57,13 @@ class ListThreads extends React.PureComponent {
             display: block;
             height: 0;
             clear: both;
+          }
+
+          @media (max-width: ${MOBILE_BEAKPOINT}px) {
+            .PageWrapper {
+              padding-left: 0;
+              padding-right: 0;
+            }
           }
         `}</style>
       </div>
