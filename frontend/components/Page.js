@@ -122,6 +122,7 @@ export class Page extends React.Component {
 
           footer .MobileOnly {
             flex-direction: column;
+            color: ${COLORS.gray};
           }
 
           footer {

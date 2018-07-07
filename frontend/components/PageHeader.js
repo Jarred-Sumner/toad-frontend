@@ -23,7 +23,7 @@ export const Title = defaultProps({
   color: COLORS.white
 })(Text);
 
-export const GreatReset = ({ hours, minutes, color = COLORS.white }) => (
+export const GreatReset = ({ hours, minutes }) => (
   <div className="ResetContainer">
     <div className="TimerBox">
       <Text size="12px" lineHeight="12px" color="inherit" weight="semiBold">
@@ -37,7 +37,7 @@ export const GreatReset = ({ hours, minutes, color = COLORS.white }) => (
     <style jsx>{`
       .TimerBox {
         padding: ${SPACING.xsmall}px ${SPACING.small}px;
-        border: 1px solid ${color};
+        border: 1px solid currentColor;
         display: flex;
         align-items: center;
         border-radius: 2px;
@@ -50,7 +50,7 @@ export const GreatReset = ({ hours, minutes, color = COLORS.white }) => (
 
       .ResetContainer {
         display: flex;
-        color: ${color};
+        color: inherit;
         align-items: center;
       }
     `}</style>
@@ -121,7 +121,10 @@ export class PageHeader extends React.PureComponent {
 
                 <Spacer width={SPACING.medium} />
 
-                <GreatResetCountdown date={moment(expires_at).toDate()} />
+                <GreatResetCountdown
+                  color={COLORS.white}
+                  date={moment(expires_at).toDate()}
+                />
               </div>
             </div>
 

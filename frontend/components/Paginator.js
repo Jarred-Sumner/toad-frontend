@@ -74,16 +74,12 @@ export class Paginator extends React.PureComponent {
         <div className="PageNumbers">
           {_.range(MIN_PAGE, MAX_PAGE + 1).map(_page => (
             <div
+              key={_page}
               className={classNames({
                 DesktopOnly: Math.abs(_page - page) > 2
               })}
             >
-              <Link
-                key={_page}
-                shallow
-                route="board"
-                params={{ board, p: _page }}
-              >
+              <Link shallow route="board" params={{ board, p: _page }}>
                 <a>
                   <PageNumber
                     key={_page}
