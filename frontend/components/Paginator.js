@@ -9,6 +9,7 @@ import _ from "lodash";
 import { GRADIENT_COLORS } from "./Gradient";
 import { Spacer } from "./Spacer";
 import { Link } from "Toads/routes";
+import { MOBILE_BEAKPOINT } from "lib/mobile";
 
 export const MIN_PAGE = 1;
 export const MAX_PAGE = 10;
@@ -72,21 +73,27 @@ export class Paginator extends React.PureComponent {
 
         <div className="PageNumbers">
           {_.range(MIN_PAGE, MAX_PAGE + 1).map(_page => (
-            <Link
-              key={_page}
-              shallow
-              route="board"
-              params={{ board, p: _page }}
+            <div
+              className={classNames({
+                DesktopOnly: Math.abs(_page - page) > 2
+              })}
             >
-              <a>
-                <PageNumber
-                  key={_page}
-                  colorScheme={colorScheme}
-                  isActive={_page === page}
-                  page={_page}
-                />
-              </a>
-            </Link>
+              <Link
+                key={_page}
+                shallow
+                route="board"
+                params={{ board, p: _page }}
+              >
+                <a>
+                  <PageNumber
+                    key={_page}
+                    colorScheme={colorScheme}
+                    isActive={_page === page}
+                    page={_page}
+                  />
+                </a>
+              </Link>
+            </div>
           ))}
         </div>
 
@@ -144,6 +151,12 @@ export class Paginator extends React.PureComponent {
             filter: grayscale(100%);
             opacity: 0.25;
             pointer-events: none;
+          }
+
+          @media (max-width: ${MOBILE_BEAKPOINT}px) {
+            .Paginator {
+              justify-content: center;
+            }
           }
         `}</style>
       </div>

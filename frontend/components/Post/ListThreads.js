@@ -39,7 +39,9 @@ class ListThreads extends React.PureComponent {
           </React.Fragment>
         ))}
 
-        {children && <div className="PageWrapper">{children}</div>}
+        {children && (
+          <div className="PageWrapper PaginatorContainer">{children}</div>
+        )}
 
         <style jsx>{`
           .PostWrapper {
@@ -63,6 +65,13 @@ class ListThreads extends React.PureComponent {
             .PageWrapper {
               padding-left: 0;
               padding-right: 0;
+            }
+
+            .PaginatorContainer {
+              display: flex;
+              justify-content: center;
+              width: 100%;
+              text-align: center;
             }
           }
         `}</style>
