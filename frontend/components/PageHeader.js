@@ -1,5 +1,9 @@
 import { BoardPresence } from "./Chat/BoardPresence";
-import { Gradient, GRADIENT_COLORS } from "./Gradient";
+import {
+  Gradient,
+  GRADIENT_COLORS,
+  SECONDARY_GRADIENT_COLORS
+} from "./Gradient";
 import moment from "moment";
 import React from "react";
 import Countdown from "react-countdown-now";
@@ -15,6 +19,7 @@ import { Settings } from "../lib/Settings";
 import { SPACING } from "../lib/spacing";
 import { normalizeAnonymousName } from "./Post/Author";
 import { MEDIUM_BEAKPOINT, MOBILE_BEAKPOINT } from "lib/mobile";
+import { MediaQuery } from "./MediaQueries";
 
 export const Title = defaultProps({
   size: "1rem",
@@ -80,7 +85,8 @@ export class PageHeader extends React.PureComponent {
       showCreatePost,
       dropZoneRef,
       identity,
-      children
+      children,
+      isMobile
     } = this.props;
     if (!board) {
       return null;
@@ -99,58 +105,74 @@ export class PageHeader extends React.PureComponent {
     const color = COLORS[colorScheme];
 
     return (
-      <Gradient color={GRADIENT_COLORS[colorScheme]}>
-        <div className="Header">
-          <div className="HeaderBackground" />
+      <React.Fragment>
+        <Gradient color={GRADIENT_COLORS[colorScheme]}>
+          <div className="Header">
+            <div className="HeaderBackground" />
 
-          <div className="HeaderContent ">
-            <div className="HeaderContentRow">
-              <Link route="board" params={{ board: board.id }}>
-                <a>
-                  <ToadLogo />
-                </a>
-              </Link>
-
-              <Spacer width={SPACING.medium} />
-              {children}
-              <div className="HeaderContentRow DesktopOnly">
-                <BoardPresence
-                  boardID={id}
-                  onlineCount={activity.active_count}
-                />
+            <div className="HeaderContent ">
+              <div className="HeaderContentRow">
+                <Link route="board" params={{ board: board.id }}>
+                  <a>
+                    <ToadLogo />
+                  </a>
+                </Link>
 
                 <Spacer width={SPACING.medium} />
+                {children}
+                <div className="HeaderContentRow DesktopOnly">
+                  <BoardPresence
+                    boardID={id}
+                    onlineCount={activity.active_count}
+                  />
 
-                <GreatResetCountdown
-                  color={COLORS.white}
-                  date={moment(expires_at).toDate()}
-                />
+                  <Spacer width={SPACING.medium} />
+
+                  <GreatResetCountdown
+                    color={COLORS.white}
+                    date={moment(expires_at).toDate()}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="HeaderContentRow">
-              <Title>
-                {showTyping === true && (
-                  <Typist
-                    hidewhenDoneDelay={100}
-                    cursor={{ hideWhenDone: true }}
-                  >
-                    <span>Today, you are</span>
-                    &nbsp;
+              <div className="HeaderContentRow">
+                <Title>
+                  {showTyping === true &&
+                    !isMobile && (
+                      <Typist
+                        hidewhenDoneDelay={100}
+                        cursor={{ hideWhenDone: true }}
+                      >
+                        <span>Today, you are</span>
+                        &nbsp;
+                        <span className="BoldText">
+                          {normalizeAnonymousName(identity.name)}
+                        </span>
+                      </Typist>
+                    )}
+                  {showTyping === false && (
                     <span className="BoldText">
                       {normalizeAnonymousName(identity.name)}
                     </span>
-                  </Typist>
-                )}
-                {showTyping === false && (
-                  <span className="BoldText">
-                    {normalizeAnonymousName(identity.name)}
-                  </span>
-                )}
-              </Title>
+                  )}
+                </Title>
+              </div>
             </div>
           </div>
-        </div>
+        </Gradient>
+
+        {showTyping &&
+          isMobile && (
+            <div className="MobileOnly Well">
+              <Title color={COLORS.white}>
+                <span>Today, you are</span>
+                &nbsp;
+                <span className="BoldText">
+                  {normalizeAnonymousName(identity.name)}
+                </span>
+              </Title>
+            </div>
+          )}
 
         <style jsx>{`
           .Header {
@@ -161,7 +183,6 @@ export class PageHeader extends React.PureComponent {
 
           .BoldText {
             font-weight: bold;
-            color: white;
           }
 
           .Header,
@@ -170,6 +191,12 @@ export class PageHeader extends React.PureComponent {
             padding-right: ${SPACING.huge}px;
             padding-top: ${SPACING.normal}px;
             padding-bottom: ${SPACING.normal}px;
+          }
+
+          .Well {
+            background-color: ${COLORS[
+              SECONDARY_GRADIENT_COLORS[GRADIENT_COLORS[colorScheme]]
+            ]};
           }
 
           .HeaderBackground {
@@ -232,6 +259,7 @@ export class PageHeader extends React.PureComponent {
           }
 
           @media (max-width: ${MOBILE_BEAKPOINT}px) {
+            .Well,
             .Header,
             .HeaderBackground {
               padding-left: ${SPACING.normal}px;
@@ -241,9 +269,9 @@ export class PageHeader extends React.PureComponent {
             }
           }
         `}</style>
-      </Gradient>
+      </React.Fragment>
     );
   }
 }
 
-export default PageHeader;
+export default MediaQuery(PageHeader);

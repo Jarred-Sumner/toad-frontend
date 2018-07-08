@@ -9,7 +9,16 @@ export const GRADIENT_COLORS = {
   red: `red`,
   green: `green`
 };
-``;
+
+export const SECONDARY_GRADIENT_COLORS = {
+  [GRADIENT_COLORS.blue]: `secondary-blue`,
+  [GRADIENT_COLORS.purple_red]: `secondary-purple_red`,
+  [GRADIENT_COLORS.pink]: `secondary-pink`,
+  [GRADIENT_COLORS.slate]: `secondary-slate`,
+  [GRADIENT_COLORS.red]: `secondary-red`,
+  [GRADIENT_COLORS.green]: `secondary-green`
+};
+
 export class Gradient extends React.Component {
   render() {
     const { children, color } = this.props;

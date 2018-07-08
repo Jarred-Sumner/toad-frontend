@@ -18,7 +18,7 @@ import Countdown from "react-countdown-now";
 import moment from "moment";
 import { Link } from "Toads/routes";
 import { MEDIUM_BEAKPOINT } from "lib/mobile";
-import { PageHeader } from "../PageHeader";
+import PageHeader from "../PageHeader";
 
 const NewPostButton = ({ classes, onPress }) => (
   <Button

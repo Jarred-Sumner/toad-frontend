@@ -140,7 +140,6 @@ class _Comment extends React.PureComponent {
         <style jsx>{`
           .CommentContainer {
             display: inline-flex;
-            background-color: ${backgroundColor};
             border-radius: 2px;
             overflow: hidden;
           }
@@ -165,14 +164,15 @@ class _Comment extends React.PureComponent {
           @media (max-width: ${MOBILE_BEAKPOINT}px) {
             .CommentHeader,
             .Comment {
-              padding: ${SPACING.small}px ${SPACING.normal}px;
+              margin: 0 ${SPACING.normal}px;
+              padding: ${SPACING.small}px 0;
               width: 100%;
               max-width: 100%;
+              background-color: ${COLORS.white};
             }
 
             .CommentContainer {
               flex-direction: column;
-              background-color: white;
               width: 100%;
             }
           }
